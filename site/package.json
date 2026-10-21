@@ -6,10 +6,11 @@
   "description": "Sitio oficial de Felipe Linares Vargas, cartonero de la Ciudad de México.",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/build-paletas.mjs && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "verify": "node scripts/verify-links.mjs"
+    "verify": "node scripts/verify-links.mjs",
+    "paletas": "node scripts/build-paletas.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",

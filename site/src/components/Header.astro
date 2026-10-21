@@ -1,6 +1,7 @@
 ---
 import { t } from '@/i18n/ui';
 import { route, otherLang, type Lang, type RouteKey } from '@/i18n/routes';
+import paletas from '@/data/paletas.json';
 interface Props { lang: Lang; alternates: Record<Lang, string> }
 const { lang, alternates } = Astro.props;
 const ui = t(lang);
@@ -8,11 +9,14 @@ const other = otherLang(lang);
 const items: RouteKey[] = ['artist', 'works', 'workshop', 'legacy', 'archive', 'contact'];
 const current = Astro.url.pathname;
 const isActive = (key: RouteKey) => current.startsWith(route(key, lang));
+const es = lang === 'es';
+const txtPaleta = es ? 'Paleta' : 'Palette';
+const txtElegir = es ? 'Elegir paleta de colores' : 'Choose a color palette';
 ---
 <header class="encabezado" data-header>
   <div class="contenedor">
     <a class="marca" href={route('home', lang)}>
-      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#b9321c"/><path d="M14 36c6-14 30-14 36 0" fill="none" stroke="#e8a01a" stroke-width="4" stroke-linecap="round"/><path d="M20 22l-6-10M44 22l6-10" stroke="#17807f" stroke-width="4" stroke-linecap="round"/><ellipse cx="24" cy="31" rx="5" ry="3.6" fill="#fffaf0"/><ellipse cx="40" cy="31" rx="5" ry="3.6" fill="#fffaf0"/><circle cx="24" cy="31" r="2" fill="#1c1612"/><circle cx="40" cy="31" r="2" fill="#1c1612"/><path d="M26 44c4 3 8 3 12 0" fill="none" stroke="#1c1612" stroke-width="3" stroke-linecap="round"/><path d="M32 44v8" stroke="#e8a01a" stroke-width="4" stroke-linecap="round"/><circle cx="12" cy="40" r="2.2" fill="#e8a01a"/><circle cx="52" cy="40" r="2.2" fill="#e8a01a"/><circle cx="16" cy="48" r="2.2" fill="#fffaf0"/><circle cx="48" cy="48" r="2.2" fill="#fffaf0"/></svg>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--bermellon)"/><path d="M14 36c6-14 30-14 36 0" fill="none" stroke="var(--cempasuchil)" stroke-width="4" stroke-linecap="round"/><path d="M20 22l-6-10M44 22l6-10" stroke="var(--turquesa)" stroke-width="4" stroke-linecap="round"/><ellipse cx="24" cy="31" rx="5" ry="3.6" fill="var(--blanco)"/><ellipse cx="40" cy="31" rx="5" ry="3.6" fill="var(--blanco)"/><circle cx="24" cy="31" r="2" fill="var(--tinta)"/><circle cx="40" cy="31" r="2" fill="var(--tinta)"/><path d="M26 44c4 3 8 3 12 0" fill="none" stroke="var(--tinta)" stroke-width="3" stroke-linecap="round"/><path d="M32 44v8" stroke="var(--cempasuchil)" stroke-width="4" stroke-linecap="round"/><circle cx="12" cy="40" r="2.2" fill="var(--cempasuchil)"/><circle cx="52" cy="40" r="2.2" fill="var(--cempasuchil)"/><circle cx="16" cy="48" r="2.2" fill="var(--blanco)"/><circle cx="48" cy="48" r="2.2" fill="var(--blanco)"/></svg>
       <span>Felipe Linares Vargas <small>{lang === 'es' ? 'Cartonero · Ciudad de México' : 'Cartonería artist · Mexico City'}</small></span>
     </a>
     <button class="menu-boton" type="button" aria-expanded="false" aria-controls="navegacion" data-nav-toggle>
@@ -25,6 +29,12 @@ const isActive = (key: RouteKey) => current.startsWith(route(key, lang));
         <li class="idioma"><a href={alternates[other]} hreflang={other} lang={other} aria-label={ui.lang.label}>{other.toUpperCase()}</a></li>
       </ul>
     </nav>
+    <details class="paletas" data-paletas>
+      <summary aria-label={txtElegir} title={txtElegir}><span class="muestra" aria-hidden="true"><i></i><i></i><i></i></span><span class="etiqueta">{txtPaleta}</span></summary>
+      <ul class="paletas-lista" role="radiogroup" aria-label={txtElegir}>
+        {paletas.map((p) => <li><button type="button" role="radio" aria-checked={p.id === 'taller' ? 'true' : 'false'} data-paleta={p.id}><span class="muestra" aria-hidden="true"><i style={`background:${p.t.bermellon}`}></i><i style={`background:${p.t.cempasuchil}`}></i><i style={`background:${p.t.turquesa}`}></i></span><span><strong>{p.nombre[lang]}</strong><span>{p.desc[lang]}</span></span></button></li>)}
+      </ul>
+    </details>
   </div>
 </header>
 
@@ -39,6 +49,29 @@ const isActive = (key: RouteKey) => current.startsWith(route(key, lang));
     nav.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) cerrar(false); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('abierta')) cerrar(true); });
   }
-  initNav();
-  document.addEventListener('astro:after-swap', initNav);
+  const CLAVE = 'flv:paleta';
+  function paletaActual(): string { try { return localStorage.getItem(CLAVE) || 'taller'; } catch { return 'taller'; } }
+  function aplicarPaleta(id: string) {
+    if (id === 'taller') document.documentElement.removeAttribute('data-paleta'); else document.documentElement.setAttribute('data-paleta', id);
+    document.querySelectorAll<HTMLButtonElement>('[data-paleta]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.paleta === id)));
+  }
+  function initPaletas() {
+    aplicarPaleta(paletaActual());
+    const det = document.querySelector<HTMLDetailsElement>('[data-paletas]');
+    if (!det || det.dataset.ready) return;
+    det.dataset.ready = '1';
+    det.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-paleta]');
+      if (!b) return;
+      const id = b.dataset.paleta!;
+      try { localStorage.setItem(CLAVE, id); } catch {}
+      aplicarPaleta(id);
+      det.open = false;
+      (det.querySelector('summary') as HTMLElement).focus();
+    });
+    document.addEventListener('click', (e) => { if (det.open && !det.contains(e.target as Node)) det.open = false; });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && det.open) { det.open = false; (det.querySelector('summary') as HTMLElement).focus(); } });
+  }
+  initNav(); initPaletas();
+  document.addEventListener('astro:after-swap', () => { initNav(); initPaletas(); });
 </script>

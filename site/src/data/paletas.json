@@ -1,0 +1,272 @@
+[
+ {
+  "id": "taller",
+  "nombre": {
+   "es": "Taller",
+   "en": "Workshop"
+  },
+  "desc": {
+   "es": "Papel, bermellón, cempasúchil y turquesa",
+   "en": "Paper, vermilion, marigold and turquoise"
+  },
+  "t": {
+   "papel": "#f6eedd",
+   "papel-2": "#efe3c9",
+   "tinta": "#1c1612",
+   "tinta-suave": "#54473d",
+   "bermellon": "#b9321c",
+   "bermellon-oscuro": "#8f2414",
+   "cempasuchil": "#e8a01a",
+   "turquesa": "#17807f",
+   "verde": "#3b7a36",
+   "morado": "#6b3fa0",
+   "blanco": "#fffaf0",
+   "oscuro": "#14100d",
+   "crema-texto": "#e2d7c6",
+   "crema-suave": "#cbbfae"
+  }
+ },
+ {
+  "id": "terracota",
+  "nombre": {
+   "es": "Terracota",
+   "en": "Terracotta"
+  },
+  "desc": {
+   "es": "Terracota, verde nopal y amarillo dorado",
+   "en": "Terracotta, cactus green and golden yellow"
+  },
+  "t": {
+   "papel": "#f5e8d6",
+   "papel-2": "#ecd9bf",
+   "tinta": "#2e1a10",
+   "tinta-suave": "#5c4332",
+   "bermellon": "#a84822",
+   "bermellon-oscuro": "#88391a",
+   "cempasuchil": "#e0a52a",
+   "turquesa": "#4f7a46",
+   "verde": "#3d6b3a",
+   "morado": "#8a3b1f",
+   "blanco": "#fff8ee",
+   "oscuro": "#1f1309",
+   "crema-texto": "#e6d8c4",
+   "crema-suave": "#cdbba3"
+  }
+ },
+ {
+  "id": "rosa",
+  "nombre": {
+   "es": "Rosa mexicano",
+   "en": "Mexican pink"
+  },
+  "desc": {
+   "es": "Rosa mexicano, turquesa y rojo profundo",
+   "en": "Mexican pink, turquoise and deep red"
+  },
+  "t": {
+   "papel": "#fbf1ec",
+   "papel-2": "#f6e1da",
+   "tinta": "#2a1118",
+   "tinta-suave": "#5d3b45",
+   "bermellon": "#c0106a",
+   "bermellon-oscuro": "#900f50",
+   "cempasuchil": "#3ec4bd",
+   "turquesa": "#15908c",
+   "verde": "#8f1a2b",
+   "morado": "#a0124f",
+   "blanco": "#fffafa",
+   "oscuro": "#1c0b11",
+   "crema-texto": "#efdde2",
+   "crema-suave": "#d2bcc3"
+  }
+ },
+ {
+  "id": "talavera",
+  "nombre": {
+   "es": "Talavera",
+   "en": "Talavera"
+  },
+  "desc": {
+   "es": "Azul océano, mostaza y blanco",
+   "en": "Ocean blue, mustard and bright white"
+  },
+  "t": {
+   "papel": "#fbfaf5",
+   "papel-2": "#f1ede0",
+   "tinta": "#142a44",
+   "tinta-suave": "#3f5570",
+   "bermellon": "#1f5fa6",
+   "bermellon-oscuro": "#164679",
+   "cempasuchil": "#d9a521",
+   "turquesa": "#3a8ad0",
+   "verde": "#2f7f7a",
+   "morado": "#0f3d73",
+   "blanco": "#ffffff",
+   "oscuro": "#0f1f33",
+   "crema-texto": "#dde6f0",
+   "crema-suave": "#b9c7d8"
+  }
+ },
+ {
+  "id": "cobalto",
+  "nombre": {
+   "es": "Cobalto",
+   "en": "Cobalt"
+  },
+  "desc": {
+   "es": "Azul cobalto, terracota y verde oliva",
+   "en": "Cobalt blue, terracotta and olive green"
+  },
+  "t": {
+   "papel": "#f4ede0",
+   "papel-2": "#eadfcb",
+   "tinta": "#1b2238",
+   "tinta-suave": "#4a4f5e",
+   "bermellon": "#1e40b4",
+   "bermellon-oscuro": "#162f85",
+   "cempasuchil": "#d2793f",
+   "turquesa": "#6b7a2e",
+   "verde": "#556423",
+   "morado": "#b5532c",
+   "blanco": "#fffaf2",
+   "oscuro": "#121a2e",
+   "crema-texto": "#e2e0d8",
+   "crema-suave": "#c3c1b8"
+  }
+ },
+ {
+  "id": "muertos",
+  "nombre": {
+   "es": "Día de Muertos",
+   "en": "Day of the Dead"
+  },
+  "desc": {
+   "es": "Cempasúchil, borgoña y naranja quemado",
+   "en": "Marigold, deep burgundy and burnt orange"
+  },
+  "t": {
+   "papel": "#f8ecd9",
+   "papel-2": "#f1dfc0",
+   "tinta": "#2e0d16",
+   "tinta-suave": "#5e3540",
+   "bermellon": "#7d1f33",
+   "bermellon-oscuro": "#5b1424",
+   "cempasuchil": "#f2a900",
+   "turquesa": "#c8551a",
+   "verde": "#8f3b17",
+   "morado": "#5b1424",
+   "blanco": "#fff8ea",
+   "oscuro": "#1e0810",
+   "crema-texto": "#ecdccb",
+   "crema-suave": "#cfbba8"
+  }
+ },
+ {
+  "id": "salvia",
+  "nombre": {
+   "es": "Salvia",
+   "en": "Sage"
+  },
+  "desc": {
+   "es": "Rosa pálido, verde salvia y crema",
+   "en": "Blush pink, sage green and cream"
+  },
+  "t": {
+   "papel": "#f7e9e3",
+   "papel-2": "#f1dcd3",
+   "tinta": "#35312c",
+   "tinta-suave": "#645b53",
+   "bermellon": "#536b4b",
+   "bermellon-oscuro": "#43583d",
+   "cempasuchil": "#e4b9ad",
+   "turquesa": "#6f8c68",
+   "verde": "#536b4b",
+   "morado": "#b57a85",
+   "blanco": "#fdf8f2",
+   "oscuro": "#2b2824",
+   "crema-texto": "#ebe3da",
+   "crema-suave": "#cfc5b9"
+  }
+ },
+ {
+  "id": "costa",
+  "nombre": {
+   "es": "Costa",
+   "en": "Coast"
+  },
+  "desc": {
+   "es": "Turquesa, coral y arena",
+   "en": "Turquoise, coral and sand"
+  },
+  "t": {
+   "papel": "#f4ebdb",
+   "papel-2": "#ead9c0",
+   "tinta": "#1f3236",
+   "tinta-suave": "#4b5f63",
+   "bermellon": "#b93d29",
+   "bermellon-oscuro": "#983322",
+   "cempasuchil": "#ef9b7f",
+   "turquesa": "#1b9e9a",
+   "verde": "#1e7f7c",
+   "morado": "#d8694f",
+   "blanco": "#fffbf3",
+   "oscuro": "#142225",
+   "crema-texto": "#dfe6e4",
+   "crema-suave": "#bcc8c6"
+  }
+ },
+ {
+  "id": "oliva",
+  "nombre": {
+   "es": "Oliva",
+   "en": "Olive"
+  },
+  "desc": {
+   "es": "Verde oliva, óxido y oro suave",
+   "en": "Olive green, rust orange and soft gold"
+  },
+  "t": {
+   "papel": "#f2ecdf",
+   "papel-2": "#e8dfcb",
+   "tinta": "#2a271f",
+   "tinta-suave": "#585245",
+   "bermellon": "#b2451f",
+   "bermellon-oscuro": "#843217",
+   "cempasuchil": "#d6b45c",
+   "turquesa": "#6c7a3b",
+   "verde": "#4f5c2a",
+   "morado": "#8b6a2e",
+   "blanco": "#fcf8ef",
+   "oscuro": "#1e1c16",
+   "crema-texto": "#e6e1d4",
+   "crema-suave": "#c6c0b1"
+  }
+ },
+ {
+  "id": "carbon",
+  "nombre": {
+   "es": "Carbón",
+   "en": "Charcoal"
+  },
+  "desc": {
+   "es": "Azul cobalto, gris carbón y ámbar",
+   "en": "Cobalt blue, charcoal grey and amber"
+  },
+  "t": {
+   "papel": "#f1efeb",
+   "papel-2": "#e6e2db",
+   "tinta": "#25282c",
+   "tinta-suave": "#555a60",
+   "bermellon": "#2247b5",
+   "bermellon-oscuro": "#19348a",
+   "cempasuchil": "#c98a48",
+   "turquesa": "#4b6b8f",
+   "verde": "#5f6b5a",
+   "morado": "#8c5a3a",
+   "blanco": "#ffffff",
+   "oscuro": "#1a1c1f",
+   "crema-texto": "#e3e1dc",
+   "crema-suave": "#c2bfb8"
+  }
+ }
+]
