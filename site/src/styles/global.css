@@ -397,3 +397,10 @@ a.pieza-imagen:hover img { transform: scale(1.04); }
 .panel-persona .antetitulo { color: var(--bermellon); }
 .panel-persona a { color: var(--bermellon-oscuro); }
 @media (max-width: 900px) { .panel-persona { position: static; } }
+
+/* Citas dentro del texto corrido */
+.prosa blockquote { margin: 1.5rem 0; padding: 1.25rem 1.5rem; border-left: 6px solid var(--cempasuchil); background: var(--blanco); border-radius: 0 var(--radio) var(--radio) 0; }
+.prosa blockquote p { margin: 0; font-family: var(--fuente-titulos); font-style: italic; font-weight: 500; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.35; }
+.prosa blockquote p + p { margin-top: 0.6rem; font-family: var(--fuente-texto); font-style: normal; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bermellon); }
+.seccion-oscura .prosa blockquote { background: rgba(255, 250, 240, 0.06); }
+.seccion-crema .prosa blockquote { background: var(--blanco); }

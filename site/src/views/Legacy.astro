@@ -9,6 +9,8 @@ import { getPage, getPeople, getArchive } from '@/lib/content';
 import workshopImg from '@/assets/works/alebrije-astado-perfil-taller.jpg';
 import catrinaImg from '@/assets/works/catrina-emplumada-taller.jpg';
 import tigreImg from '@/assets/works/alebrije-tigre-frente.jpg';
+import famAlado from '@/assets/works/familia-alebrije-alado-rayado.jpg';
+import famRana from '@/assets/works/familia-alebrije-rana-mariposa.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -16,6 +18,8 @@ const ui = t(lang);
 const es = lang === 'es';
 const page = await getPage('legado', lang);
 const { Content } = await render(page);
+const historia = await getPage('historia', lang);
+const { Content: Historia } = await render(historia);
 const sections = page.data.sections ?? [];
 const people = await getPeople();
 const generations = Array.from(new Set(people.map((p) => p.data.generation))).sort();
@@ -37,7 +41,7 @@ const genLabel = (g: number) => ({ 1: es ? 'Antepasados' : 'Ancestors', 2: 'Pedr
         <h1 id="titulo-legado">Legado <em>Linares</em></h1>
         <p class="lema">{es ? 'Un sueño en 1936. Cinco generaciones de cartoneros.' : 'A dream in 1936. Five generations of cartoneros.'}</p>
         <p class="entrada">{page.data.lead}</p>
-        <div class="botones"><a class="boton boton-principal" href="#arbol">{ui.legacy.tree}</a><a class="boton boton-secundario" href="#cronologia">{ui.legacy.timeline}</a></div>
+        <div class="botones"><a class="boton boton-principal" href="#historia">{es ? 'Leer la historia' : 'Read the story'}</a><a class="boton boton-secundario" href="#arbol">{ui.legacy.tree}</a></div>
       </div>
       <figure class="portada-imagen">
         <div class="portada-marco"><Image src={tigreImg} alt={es ? 'Alebrije de tigre alado con cuerpo de jaguar, de frente.' : 'Winged tiger alebrije with a jaguar body, facing the viewer.'} widths={[480, 960]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="object-position:55% 40%" /></div>
@@ -66,6 +70,16 @@ const genLabel = (g: number) => ({ 1: es ? 'Antepasados' : 'Ancestors', 2: 'Pedr
         <div>
           {sections.slice(3).map((s, i) => <><h2 style={i ? 'margin-top:2rem' : ''}>{s.heading}</h2><p>{s.text}</p></>)}
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="historia" aria-labelledby="titulo-historia">
+    <div class="contenedor dos-columnas">
+      <div class="prosa historia"><p class="antetitulo">{historia.data.eyebrow}</p><h2 id="titulo-historia">{historia.data.title}</h2><Historia /></div>
+      <div class="foto-lado">
+        <figure class="foto"><Image src={famAlado} alt={es ? 'Alebrije de cartonería con cuerpo rayado en verde y amarillo, alas abiertas en naranja y rojo con textura de piedras, y cara de felino con colmillos.' : 'Cartonería alebrije with a green-and-yellow striped body, open orange-and-red wings with a stone texture, and a fanged feline face.'} widths={[480, 800, 1080]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Alebrije de la familia Linares · autoría y fotografía por confirmar.' : 'Alebrije by the Linares family · maker and photographer to be confirmed.'}</figcaption></figure>
+        <figure class="foto"><Image src={famRana} alt={es ? 'Alebrije con cuerpo de rana cubierto de escamas verdes, azules y naranjas, alas de mariposa en morado y azul, boca abierta con colmillos y lengua roja.' : 'Alebrije with a frog body covered in green, blue and orange scales, purple-and-blue butterfly wings, open mouth with fangs and a red tongue.'} widths={[480, 800, 1100]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Alebrije de la familia Linares · autoría y fotografía por confirmar.' : 'Alebrije by the Linares family · maker and photographer to be confirmed.'}</figcaption></figure>
       </div>
     </div>
   </section>

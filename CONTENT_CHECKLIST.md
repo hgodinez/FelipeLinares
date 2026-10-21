@@ -5,10 +5,11 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 ## 1. Datos del artista (página «El maestro»)
 
 - [ ] Año y lugar de nacimiento.
-- [ ] Formación: edad a la que empezó, con quién aprendió (padre, abuelo, tíos).
+- [x] Formación: aprendió con su padre en las tardes después de la secundaria; licenciatura en programación (según testimonio). Pendiente: años.
 - [ ] Especialidades y técnicas propias; qué animales prefiere combinar.
 - [ ] Retrato fotográfico (sustituye el marcador «Retrato del artista»).
-- [ ] Citas textuales del artista, si desea incluir alguna (el sitio no publica ninguna hoy).
+- [x] Citas textuales del artista: tomadas de los testimonios en video (Felipe, Leonardo y Felipe Linares Mendoza). Pendiente: título, productor y fecha de los videos para el crédito.
+- [ ] Fotogramas del video (Felipe pintando; Felipe con su padre en el taller): enviar como archivos para usarlos como retrato y foto de taller, con autorización.
 - [ ] Hitos personales para la cronología (primeras exposiciones, encargos, viajes, premios), cada uno con fecha y, si es posible, documento o enlace.
 - [ ] Confirmar que las frases editoriales del sitio («Lo extraordinario toma forma en papel.», «Ninguna criatura se parece a otra.», «Detrás de cada criatura hay una mano.», «Hay criaturas que aún no existen.») le parecen adecuadas. Son copy editorial, no citas.
 - [ ] Portada: si se desea la versión con la obra aislada del fondo, hace falta el archivo maestro del tigre alado y un recorte manual revisado por el artista (ver ASSETS.md). Mientras tanto se muestra la fotografía completa.
@@ -27,6 +28,8 @@ Para cada una de las cinco piezas fotografiadas:
 
 Obras documentadas sin fotografía:
 
+- [ ] **Barbas** (alebrije de gallo con cabeza de león, colaboración con su padre) — fotografía, título oficial, año; confirmar si es el gallo expuesto por el MOIFA.
+
 - [ ] **Tzompantli (2010)** — solicitar al Museo Nacional de Culturas Populares autorización para reproducir la imagen de su colección, o fotografía propia del artista.
 - [ ] **Alebrije de gallo (MOIFA, 2026–2028)** — título, año, dimensiones, propietario; fotografía con autorización del Museum of International Folk Art o del artista.
 
@@ -43,6 +46,8 @@ Cuando se confirme un título, cambia `titleStatus: provisional` por `confirmed`
 - [ ] Línea de descendencia de Gerardo Linares Gómez.
 - [ ] Nombres de generaciones anteriores a Pedro Linares López (padre, abuelo) si la familia desea incluirlos.
 - [ ] Fotografías históricas familiares, con permiso, para la página «Legado».
+- [ ] Las dos fotografías de alebrijes enviadas en octubre de 2026 (criatura rayada con alas naranjas; rana con alas de mariposa): ¿quién las hizo y quién las fotografió? Hoy aparecen en «Legado» como obras de la familia con autoría por confirmar.
+- [ ] Felipe Linares Mendoza: años de los cursos en San Antonio y de las demostraciones en Los Ángeles, San Diego y Disneylandia; fotografía del armadillo con calavera, si existe.
 - [ ] Numeración de generaciones: el árbol cuenta desde los antepasados documentados y señala que la familia se describe como «quinta generación». Confirmar la numeración que la familia prefiere.
 
 ## 4. Taller

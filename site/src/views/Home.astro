@@ -94,6 +94,7 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
         <div class="botones"><a class="boton boton-secundario" href={route('artist', lang)}>{ui.cta.artist}</a></div>
       </div>
       <div class="foto-lado">
+        <figure class="cita-grande" style="margin-bottom:1.5rem"><blockquote><p style="font-size:clamp(1.5rem,3vw,2.1rem)">{es ? '«Me atrajo más estar aquí con mi papá porque aquí expresaba mi creatividad».' : '“I was more drawn to being here with my dad, because here I expressed my creativity.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
         <figure class="foto"><Image src={manoImg} alt={es ? 'Una mano sostiene el alebrije de jaguar con astas: cabeza negra, ojos ámbar y lengua roja.' : 'A hand holds the antlered jaguar alebrije: black head, amber eyes and red tongue.'} widths={[480, 800, 1100]} sizes="(max-width: 820px) 100vw, 40rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;object-position:50% 40%" /><figcaption>{es ? 'La escala de una pieza en la mano.' : 'The scale of a piece in the hand.'}</figcaption></figure>
         <ul class="datos">
           <li><strong>{es ? 'Ciudad' : 'City'}</strong>{es ? 'Merced Balbuena, Ciudad de México' : 'Merced Balbuena, Mexico City'}</li>
@@ -191,7 +192,7 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
       <p class="antetitulo">{ui.nav.legacy}</p>
       <h2 id="titulo-legado">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
       <p class="texto-suave">{es ? 'El trabajo de la familia Linares ha llegado a museos de México, Estados Unidos y Europa, pero cada pieza nace en la Ciudad de México, en talleres que son al mismo tiempo casas. De don Pedro a sus hijos Enrique, Felipe y Miguel; de ellos a Felipe, Leonardo, David y Ricardo; y ya a una generación más.' : 'The Linares family’s work has reached museums in Mexico, the United States and Europe, but every piece is born in Mexico City, in workshops that are also homes. From don Pedro to his sons Enrique, Felipe and Miguel; from them to Felipe, Leonardo, David and Ricardo; and now to one more generation.'}</p>
-      <figure class="cita-grande" style="margin-top:2rem"><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? 'Un sueño de 1936 que cinco generaciones han seguido modelando con las manos.' : 'A dream from 1936 that five generations have kept shaping with their hands.'}</p></blockquote><figcaption>{es ? 'Línea editorial, no una cita del artista' : 'Editorial line, not a quotation from the artist'}</figcaption></figure>
+      <figure class="cita-grande" style="margin-top:2rem"><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? '«Queremos seguir la línea de mi abuelo y de mi padre, pero con una creatividad y con unas formas diferentes».' : '“We want to follow the line of my grandfather and my father, but with our own creativity and different forms.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
       <div class="botones"><a class="boton boton-principal" href={route('legacy', lang)}>{ui.cta.legacy}</a><a class="boton boton-secundario" style="color:var(--blanco);border-color:var(--blanco)" href={route('archive', lang)}>{ui.nav.archive}</a></div>
     </div>
   </section>

@@ -14,6 +14,7 @@ Works documented without an image ("Tzompantli", 2010; rooster alebrije, 2026) w
 
 The historical information on this site comes from verifiable public sources. Every artwork record, every profile and every archive entry links to its sources. The main ones are:
 
+- Video testimonies of Felipe Linares Mendoza, Felipe Linares Vargas and Leonardo Linares Vargas (transcript provided by the family, 2026). The site's quotations come from there.
 - Museo Nacional de Culturas Populares (Ministry of Culture), object records and stories published on Google Arts & Culture.
 - Ministry of Culture of the Government of Mexico, press release on the tribute to Pedro Linares (June 2025).
 - Museum of International Folk Art, Santa Fe: exhibition "Alebrijes: A Linares Family Tradition" (2026–2028).
@@ -24,4 +25,4 @@ The historical information on this site comes from verifiable public sources. Ev
 
 ## What has not been included
 
-No quotations attributed to Felipe Linares Vargas, personal dates, awards or exhibitions have been published unless documented in the sources above. Pending items are marked on the site as "to be confirmed".
+The quotations attributed to Felipe Linares Vargas and his family come from their video testimonies; no personal dates, awards or exhibitions have been published unless documented in the sources above. Pending items are marked on the site as "to be confirmed".

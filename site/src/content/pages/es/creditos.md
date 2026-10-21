@@ -14,6 +14,7 @@ Las obras que se documentan sin imagen («Tzompantli», 2010; alebrije de gallo,
 
 La información histórica de este sitio procede de fuentes públicas verificables. Cada ficha de obra, cada semblanza y cada registro del archivo enlaza a sus fuentes. Las principales son:
 
+- Testimonios en video de Felipe Linares Mendoza, Felipe Linares Vargas y Leonardo Linares Vargas (transcripción proporcionada por la familia, 2026). Las citas del sitio provienen de ahí.
 - Museo Nacional de Culturas Populares (Secretaría de Cultura), fichas de obra y relatos publicados en Google Arts & Culture.
 - Secretaría de Cultura del Gobierno de México, comunicado sobre el homenaje a Pedro Linares (junio de 2025).
 - Museum of International Folk Art, Santa Fe: exposición «Alebrijes: A Linares Family Tradition» (2026–2028).
@@ -24,4 +25,4 @@ La información histórica de este sitio procede de fuentes públicas verificabl
 
 ## Lo que no se ha incluido
 
-No se han publicado citas atribuidas a Felipe Linares Vargas, fechas personales, premios ni exposiciones que no estén documentados en las fuentes anteriores. Los elementos pendientes se marcan en el sitio como «por confirmar».
+Las citas atribuidas a Felipe Linares Vargas y a su familia proceden de sus testimonios en video; no se han publicado fechas personales, premios ni exposiciones que no estén documentados en las fuentes anteriores. Los elementos pendientes se marcan en el sitio como «por confirmar».
