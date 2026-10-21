@@ -10,7 +10,7 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 - [ ] Retrato fotográfico (sustituye el marcador «Retrato del artista»).
 - [x] Citas textuales del artista: tomadas de los testimonios en video (Felipe, Leonardo y Felipe Linares Mendoza). Pendiente: título, productor y fecha de los videos para el crédito.
 - [x] Fotogramas del video recibidos e integrados: retrato de Felipe (Felipe y Taller en Inicio), Felipe pintando (portada de Proceso), cabeza astada en proceso, alebrije astado a contraluz y Pedro Linares con un gallo (Legado).
-- [ ] Confirmar que el fotograma del hombre con el gallo es Pedro Linares López, y la fecha/origen de ese video.
+- [x] Confirmado por la familia: el fotograma muestra a Pedro Linares López con el gallo Barbas. Falta la fecha/origen de ese video.
 - [x] Recibidas e integradas (Felipe y Legado): Felipe pintando junto a su padre en la mesa del taller; Felipe con Felipe Mendoza frente a las calaveras de tamaño natural (confirmar lugar, fecha y autoría de las calaveras).
 - [ ] Fotografía de archivo de Pedro Linares pintando (archivo recibido como «images.jpg», 551 px, posible descarga de internet): confirmar autoría y derechos de reproducción; sustituir por una copia de mayor resolución si la familia la tiene.
 - [ ] Autorización explícita de Felipe para publicar su retrato y los fotogramas.

@@ -15,7 +15,7 @@ Las obras que se documentan sin imagen («Tzompantli», 2010; alebrije de gallo,
 La información histórica de este sitio procede de fuentes públicas verificables. Cada ficha de obra, cada semblanza y cada registro del archivo enlaza a sus fuentes. Las principales son:
 
 - Testimonios en video de Felipe Linares Mendoza, Felipe Linares Vargas y Leonardo Linares Vargas (transcripción proporcionada por la familia, 2026). Las citas del sitio provienen de ahí.
-- Fotogramas de video (retrato de Felipe, Felipe pintando, Felipe con su padre en la mesa, piezas en el taller y Pedro Linares López con un gallo): proporcionados por la familia; título, realización y fecha del video por confirmar.
+- Fotogramas de video (retrato de Felipe, Felipe pintando, Felipe con su padre en la mesa, piezas en el taller y Pedro Linares López con el gallo Barbas): proporcionados por la familia; título, realización y fecha del video por confirmar.
 - Fotografía de Felipe Linares Vargas y Felipe Linares Mendoza con calaveras de tamaño natural: proporcionada por la familia; lugar y fecha por confirmar.
 - Fotografía de archivo de Pedro Linares López pintando un alebrije: proporcionada por la familia; autoría, fecha y derechos por confirmar antes de su uso definitivo.
 - Museo Nacional de Culturas Populares (Secretaría de Cultura), fichas de obra y relatos publicados en Google Arts & Culture.
