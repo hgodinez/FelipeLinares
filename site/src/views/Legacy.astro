@@ -119,30 +119,21 @@ const genLabel = (g: number) => {
     </div>
   </section>
 
-  <!-- Cartonería vs wood -->
+  <!-- What defines an alebrije -->
   <section class="section section--alt">
     <div class="container grid">
       <div class="col-7 prose reveal"><Content /></div>
       <aside class="col-5 reveal" style="--delay:120ms">
-        <div class="compare">
-          <div class="compare__col">
-            <p class="eyebrow eyebrow--accent">{lang === 'es' ? 'Ciudad de México' : 'Mexico City'}</p>
-            <ul class="compare__list">
-              <li>{lang === 'es' ? 'Papel, cartón y engrudo' : 'Paper, cardboard and paste'}</li>
-              <li>{lang === 'es' ? 'Modelado sobre estructura; pieza hueca y ligera' : 'Modeled over an armature; hollow, light piece'}</li>
-              <li>{lang === 'es' ? 'Origen: Pedro Linares López, 1936' : 'Origin: Pedro Linares López, 1936'}</li>
-              <li>{lang === 'es' ? 'Tradición urbana de judas, calaveras y piñatas' : 'Urban tradition of Judas figures, skulls and piñatas'}</li>
-            </ul>
-          </div>
-          <div class="compare__col">
-            <p class="eyebrow" style="color:var(--turquoise-ink)">Oaxaca</p>
-            <ul class="compare__list">
-              <li>{lang === 'es' ? 'Madera de copal tallada' : 'Carved copal wood'}</li>
-              <li>{lang === 'es' ? 'Pieza maciza; talla y pintura miniaturista' : 'Solid piece; carving and miniature painting'}</li>
-              <li>{lang === 'es' ? 'Tradición de talla previa; colores vivos desde los años sesenta' : 'Prior carving tradition; vivid colors from the 1960s'}</li>
-              <li>{lang === 'es' ? 'San Antonio Arrazola, San Martín Tilcajete' : 'San Antonio Arrazola, San Martín Tilcajete'}</li>
-            </ul>
-          </div>
+        <div class="define">
+          <p class="eyebrow eyebrow--accent">{lang === 'es' ? 'Lo que define un alebrije' : 'What defines an alebrije'}</p>
+          <ul class="define__list">
+            <li>{lang === 'es' ? 'Papel, cartón y engrudo sobre una estructura ligera' : 'Paper, cardboard and paste over a light armature'}</li>
+            <li>{lang === 'es' ? 'Modelado a mano; pieza hueca y ligera' : 'Modeled by hand; hollow, light piece'}</li>
+            <li>{lang === 'es' ? 'Pintura a pincel: manchas, escamas, nervaduras y puntos' : 'Brush painting: spots, scales, veins and dots'}</li>
+            <li>{lang === 'es' ? 'Varias criaturas reunidas en un solo cuerpo' : 'Several creatures gathered in a single body'}</li>
+            <li>{lang === 'es' ? 'Origen: Pedro Linares López, Ciudad de México, 1936' : 'Origin: Pedro Linares López, Mexico City, 1936'}</li>
+            <li>{lang === 'es' ? 'Patrimonio cultural de la Ciudad de México desde 2019' : 'Cultural heritage of Mexico City since 2019'}</li>
+          </ul>
         </div>
       </aside>
     </div>
@@ -220,8 +211,7 @@ const genLabel = (g: number) => {
   .timeline__end { font-size: var(--step--1); color: var(--fg-muted); font-family: var(--font-text); }
   @media (max-width: 600px) { .timeline__item { grid-template-columns: 1fr; gap: 0.3rem; } }
 
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); border-top: 1px solid var(--line-strong); padding-top: var(--space-m); }
-  .compare__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--step--1); }
-  .compare__list li { padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
-  @media (max-width: 520px) { .compare { grid-template-columns: 1fr; } }
+  .define { border-top: 1px solid var(--line-strong); padding-top: var(--space-m); }
+  .define__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--step--1); }
+  .define__list li { padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
 </style>

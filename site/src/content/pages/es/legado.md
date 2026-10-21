@@ -3,7 +3,7 @@ title: Legado Linares
 eyebrow: Una tradición viva
 lead: Cinco generaciones de cartoneros en la Ciudad de México. Un sueño en 1936. Y una palabra, «alebrije», que hoy nombra un emblema de la ciudad.
 seoTitle: Legado Linares · Historia de los alebrijes de cartonería
-seoDescription: "Historia de la familia Linares de la Ciudad de México: Pedro Linares López, creador de los alebrijes en 1936; sus hijos Enrique, Felipe y Miguel; y la generación de Felipe, Leonardo, David y Ricardo Linares. Diferencia entre alebrijes de cartonería y tallas de Oaxaca."
+seoDescription: "Historia de la familia Linares de la Ciudad de México: Pedro Linares López, creador de los alebrijes en 1936; sus hijos Enrique, Felipe y Miguel; y la generación de Felipe, Leonardo, David y Ricardo Linares."
 sections:
   - heading: Antes del sueño
     text: La cartonería es un oficio antiguo en la Ciudad de México. Los cartoneros trabajaban al ritmo del calendario festivo —judas para la Semana Santa, calaveras para el Día de Muertos, piñatas para la Navidad— y la familia Linares lo practicaba ya antes de Pedro Linares López, cuyo padre y abuelo trabajaron el cartón.
@@ -18,12 +18,8 @@ sections:
   - heading: El alebrije como patrimonio
     text: Desde 2007, el Museo de Arte Popular organiza cada octubre un desfile de alebrijes monumentales por el Paseo de la Reforma. En octubre de 2019, el Gobierno de la Ciudad de México declaró a los alebrijes patrimonio cultural de la ciudad; el decreto se publicó en la Gaceta Oficial el 30 de diciembre de ese año. Museos como el Fowler Museum (UCLA), el Museo Nacional de Culturas Populares y el Museum of International Folk Art han dedicado exposiciones y catálogos a la familia.
 ---
-## Cartonería y madera: dos tradiciones distintas
+## El alebrije es de cartonería
 
-La palabra «alebrije» se usa hoy para dos cosas diferentes, y conviene distinguirlas.
+El alebrije nació en la Ciudad de México, en el taller de Pedro Linares López, a partir de 1936. Se construye con papel, cartón y engrudo sobre una estructura ligera, se modela a mano y se pinta a pincel. Es una pieza hueca y ligera, que puede alcanzar gran escala, y pertenece a la tradición urbana de la cartonería: la de los judas, las calaveras y las piñatas.
 
-**Los alebrijes de cartonería** nacieron en la Ciudad de México, en el taller de Pedro Linares López, a partir de 1936. Se construyen con papel, cartón y engrudo sobre una estructura ligera, se modelan a mano y se pintan con pinceles. Son piezas huecas, ligeras y de gran escala posible; pertenecen a la tradición urbana de los judas, las calaveras y las piñatas.
-
-**Las tallas de Oaxaca** son figuras de animales fantásticos esculpidas en madera de copal, principalmente en los pueblos de San Antonio Arrazola y San Martín Tilcajete, en los Valles Centrales. Esa región ya tenía una tradición de talla de animales en madera; a partir de la década de 1960, artesanos como Manuel Jiménez comenzaron a pintarlas con colores vivos y, con el tiempo, el mercado les aplicó también el nombre de «alebrijes».
-
-Ambas tradiciones son valiosas y ambas son mexicanas. Pero el nombre, el concepto y la técnica original —el sueño, el papel y el cartón— pertenecen a la Ciudad de México y a la familia Linares. Esta página documenta esa historia con fuentes verificables; lo que no está documentado se señala como pendiente de confirmación.
+El nombre, el concepto y la técnica —el sueño, el papel y el cartón— pertenecen a la Ciudad de México y a la familia Linares. Así lo reconoció el Gobierno de la Ciudad de México al declarar a los alebrijes patrimonio cultural de la ciudad en 2019. Esta página documenta esa historia con fuentes verificables; lo que no está documentado se señala como pendiente de confirmación.

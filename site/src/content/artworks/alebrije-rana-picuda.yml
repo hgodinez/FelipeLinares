@@ -29,8 +29,8 @@ availability: unknown
 images:
   - src: ../../assets/works/alebrije-rana-frente.jpg
     alt:
-      es: Alebrije con cuerpo verde de rana, patas amarillas, cabeza con pico negro de ave y grandes orejas rosadas, visto de frente sobre piso de madera.
-      en: Alebrije with a green frog body, yellow legs, a bird head with a black beak and large pink ears, seen from the front on a wooden floor.
+      es: Alebrije con cuerpo verde de rana, patas amarillas, cabeza con pico negro de ave y grandes orejas rosadas, visto de frente.
+      en: Alebrije with a green frog body, yellow legs, a bird head with a black beak and large pink ears, seen from the front.
     kind: final
   - src: ../../assets/works/alebrije-rana-cenital.jpg
     alt:

@@ -32,8 +32,8 @@ availability: unknown
 images:
   - src: ../../assets/works/alebrije-tigre-frente.jpg
     alt:
-      es: Alebrije con cabeza de tigre rugiendo, cuerpo moteado de jaguar, alas negras extendidas y patas escamosas rosadas, sobre piso de madera.
-      en: Alebrije with a roaring tiger head, jaguar-spotted body, spread black wings and pink scaled legs, on a wooden floor.
+      es: Alebrije con cabeza de tigre rugiendo, cuerpo moteado de jaguar, alas negras extendidas y patas escamosas rosadas.
+      en: Alebrije with a roaring tiger head, jaguar-spotted body, spread black wings and pink scaled legs.
     kind: final
   - src: ../../assets/works/alebrije-tigre-cenital.jpg
     alt:
