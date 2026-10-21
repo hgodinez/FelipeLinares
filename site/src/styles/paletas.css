@@ -1,4 +1,20 @@
 /* Generado por scripts/build-paletas.mjs. Edita src/data/paletas.json y ejecuta `npm run paletas`. */
+:root[data-paleta="fiesta"] {
+  --papel: #ffd100;
+  --papel-2: #ff8a1f;
+  --tinta: #1e0a33;
+  --tinta-suave: #4a1f6b;
+  --bermellon: #d6006e;
+  --bermellon-oscuro: #a80057;
+  --cempasuchil: #c8f000;
+  --turquesa: #0066ff;
+  --verde: #00954a;
+  --morado: #7a1fd1;
+  --blanco: #fff9d6;
+  --oscuro: #2a0b45;
+  --crema-texto: #fff1b8;
+  --crema-suave: #ffd9a8;
+}
 :root[data-paleta="terracota"] {
   --papel: #f5e8d6;
   --papel-2: #ecd9bf;

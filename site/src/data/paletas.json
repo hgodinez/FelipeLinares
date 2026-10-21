@@ -27,6 +27,33 @@
   }
  },
  {
+  "id": "fiesta",
+  "nombre": {
+   "es": "Fiesta",
+   "en": "Fiesta"
+  },
+  "desc": {
+   "es": "Amarillo vivo, rosa mexicano, azul eléctrico y verde limón",
+   "en": "Vivid yellow, Mexican pink, electric blue and lime"
+  },
+  "t": {
+   "papel": "#ffd100",
+   "papel-2": "#ff8a1f",
+   "tinta": "#1e0a33",
+   "tinta-suave": "#4a1f6b",
+   "bermellon": "#d6006e",
+   "bermellon-oscuro": "#a80057",
+   "cempasuchil": "#c8f000",
+   "turquesa": "#0066ff",
+   "verde": "#00954a",
+   "morado": "#7a1fd1",
+   "blanco": "#fff9d6",
+   "oscuro": "#2a0b45",
+   "crema-texto": "#fff1b8",
+   "crema-suave": "#ffd9a8"
+  }
+ },
+ {
   "id": "terracota",
   "nombre": {
    "es": "Terracota",
