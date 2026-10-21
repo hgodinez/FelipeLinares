@@ -18,7 +18,13 @@ const sections = page.data.sections ?? [];
 const people = await getPeople();
 const generations = Array.from(new Set(people.map((p) => p.data.generation))).sort();
 const byId = Object.fromEntries(people.map((p) => [p.id, p]));
-const timeline = (await getArchive()).sort((a, b) => a.data.year - b.data.year);
+type TimelineEvent = { year: number; endYear?: number; subject: 'artist' | 'family' | 'tradition'; text: string; href?: string };
+const fixedEvents: TimelineEvent[] = [
+  { year: 1906, subject: 'family', text: lang === 'es' ? 'Nace Pedro Linares López en la Ciudad de México (29 de junio).' : 'Pedro Linares López is born in Mexico City (June 29).' },
+  { year: 1992, subject: 'family', text: lang === 'es' ? 'Muere Pedro Linares López en enero; sus hijos y nietos continúan el oficio.' : 'Pedro Linares López dies in January; his sons and grandsons continue the craft.' },
+];
+const archiveEvents: TimelineEvent[] = (await getArchive()).map((e) => ({ year: e.data.year, endYear: e.data.endYear, subject: e.data.subject, text: e.data.title[lang], href: archivePath(e.id, lang) }));
+const timeline = [...fixedEvents, ...archiveEvents].sort((a, b) => a.year - b.year);
 const allSources = people.flatMap((p) => p.data.sources).filter((s, i, arr) => arr.findIndex((x) => x.title === s.title) === i);
 const genLabel = (g: number) => {
   const labels: Record<number, { es: string; en: string }> = {
@@ -104,17 +110,15 @@ const genLabel = (g: number) => {
     <div class="container">
       <div class="section-head"><div><p class="eyebrow eyebrow--accent">{ui.legacy.timeline}</p><h2 id="tl-title">{lang === 'es' ? 'De 1906 a hoy' : 'From 1906 to today'}</h2></div><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
       <ol class="timeline">
-        <li class="timeline__item reveal"><span class="timeline__year">1906</span><div><span class="tag">{ui.archive.subjects.family}</span><p>{lang === 'es' ? 'Nace Pedro Linares López en la Ciudad de México (29 de junio).' : 'Pedro Linares López is born in Mexico City (June 29).'}</p></div></li>
         {timeline.map((e, i) => (
           <li class="timeline__item reveal" style={`--delay:${(i % 3) * 60}ms`}>
-            <span class="timeline__year">{e.data.year}{e.data.endYear ? <span class="timeline__end">–{e.data.endYear}</span> : null}</span>
+            <span class="timeline__year">{e.year}{e.endYear ? <span class="timeline__end">–{e.endYear}</span> : null}</span>
             <div>
-              <span class:list={['tag', { 'tag--accent': e.data.subject === 'artist', 'tag--turquoise': e.data.subject === 'tradition' }]}>{ui.archive.subjects[e.data.subject]}</span>
-              <p><a href={archivePath(e.id, lang)}>{e.data.title[lang]}</a></p>
+              <span class:list={['tag', { 'tag--accent': e.subject === 'artist', 'tag--turquoise': e.subject === 'tradition' }]}>{ui.archive.subjects[e.subject]}</span>
+              <p>{e.href ? <a href={e.href}>{e.text}</a> : e.text}</p>
             </div>
           </li>
         ))}
-        <li class="timeline__item reveal"><span class="timeline__year">1992</span><div><span class="tag">{ui.archive.subjects.family}</span><p>{lang === 'es' ? 'Muere Pedro Linares López en enero; sus hijos y nietos continúan el oficio.' : 'Pedro Linares López dies in January; his sons and grandsons continue the craft.'}</p></div></li>
       </ol>
     </div>
   </section>
