@@ -2,18 +2,35 @@
 import { Image, getImage } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import ArtworkCard from '@/components/ArtworkCard.astro';
+import Macro from '@/components/Macro.astro';
+import Marquee from '@/components/Marquee.astro';
 import Paper from '@/components/Paper.astro';
-import Marks from '@/components/Marks.astro';
 import { t } from '@/i18n/ui';
 import { route, alternates, workPath, type Lang } from '@/i18n/routes';
 import { getPage, getPeople } from '@/lib/content';
 import site from '@/data/site.json';
-import heroImg from '@/assets/works/alebrije-tigre-cenital.jpg';
-import workshopImg from '@/assets/works/alebrije-astado-frente-taller.jpg';
-import paintImg from '@/assets/works/jinete-calavera-taller.jpg';
-import paintImg2 from '@/assets/works/alebrije-astado-cenital-taller.jpg';
-import finishedImg from '@/assets/works/alebrije-astado-repisa.jpg';
+import heroImg from '@/assets/works/alebrije-tigre-frente.jpg';
+import tigreCenital from '@/assets/works/alebrije-tigre-cenital.jpg';
+import heroMobile from '@/assets/works/alebrije-tigre-cenital.jpg';
+import jaguarRepisa from '@/assets/works/alebrije-astado-repisa.jpg';
+import ranaFrente from '@/assets/works/alebrije-rana-frente.jpg';
+import calaveraMesa from '@/assets/works/jinete-calavera-mesa.jpg';
+import catrina from '@/assets/works/catrina-emplumada-taller.jpg';
+import mTigreRugido from '@/assets/macro/tigre-rugido.jpg';
+import mJaguarColmillos from '@/assets/macro/jaguar-colmillos.jpg';
+import mJaguarRostro from '@/assets/macro/jaguar-rostro.jpg';
+import mJaguarEscamas from '@/assets/macro/jaguar-escamas.jpg';
+import mJaguarAlas from '@/assets/macro/jaguar-alas.jpg';
+import mRanaOjo from '@/assets/macro/rana-ojo.jpg';
+import mRanaLomo from '@/assets/macro/rana-lomo.jpg';
+import mTigreAlas from '@/assets/macro/tigre-alas.jpg';
+import mSerpiente from '@/assets/macro/tigre-serpiente-ala.jpg';
+import mCalaveraRostro from '@/assets/macro/calavera-rostro.jpg';
+import mCalaveraMontura from '@/assets/macro/calavera-montura.jpg';
+import mCatrina from '@/assets/macro/catrina-rostro.jpg';
+import tallerFrente from '@/assets/works/alebrije-astado-frente-taller.jpg';
+import tallerCenital from '@/assets/works/alebrije-astado-cenital-taller.jpg';
+import tallerJinete from '@/assets/works/jinete-calavera-taller.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -25,336 +42,282 @@ const stages = taller.data.sections ?? [];
 const people = await getPeople();
 const byId = Object.fromEntries(people.map((p) => [p.id, p]));
 const lineage = ['pedro-linares-lopez', 'felipe-linares-mendoza', 'felipe-linares-vargas'].map((id) => byId[id]).filter(Boolean);
-
 const w = async (id: string) => (await getEntry('artworks', id))!;
 const jaguar = await w('alebrije-jaguar-astado');
 const rana = await w('alebrije-rana-picuda');
 const calavera = await w('calavera-alada-sobre-alebrije');
-const catrina = await w('catrina-con-tocado-de-plumas');
+const catrinaW = await w('catrina-con-tocado-de-plumas');
 const tigre = await w('alebrije-tigre-alado');
 const tzompantli = await w('tzompantli-2010');
 const og = await getImage({ src: heroImg, width: 1200, format: 'jpg' });
+const es = lang === 'es';
 
-const personLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Felipe Linares Vargas',
-  jobTitle: lang === 'es' ? 'Cartonero' : 'Cartonería artist',
-  description: site.defaultDescription[lang],
-  url: new URL(route('home', lang), Astro.site).toString(),
-  address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' },
-  knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'],
-};
+const encounters = [
+  { work: jaguar, img: jaguarRepisa, macro: mJaguarColmillos, macro2: mJaguarAlas, pos: '55% 45%', line: es ? 'Astas de venado. Alas de murciélago. Garras verdes. Lengua de fuego.' : 'Deer antlers. Bat wings. Green claws. A tongue of fire.' },
+  { work: rana, img: ranaFrente, macro: mRanaOjo, macro2: mRanaLomo, pos: '50% 55%', line: es ? 'Cuerpo de rana. Pico de ave. Orejas que se abren como pétalos.' : 'A frog’s body. A bird’s beak. Ears that open like petals.' },
+  { work: calavera, img: calaveraMesa, macro: mCalaveraRostro, macro2: mCalaveraMontura, pos: '50% 40%', line: es ? 'Una calavera con alas de monarca cabalga sobre una criatura de cuernos morados.' : 'A monarch-winged skull rides a creature with purple horns.' },
+  { work: catrinaW, img: catrina, macro: mCatrina, macro2: null, pos: '50% 30%', line: es ? 'Sombrero de rosas, chal de plumas y dos grandes alas azules.' : 'A hat of roses, a feather shawl and two great blue wings.' },
+  { work: tigre, img: tigreCenital, macro: mTigreAlas, macro2: mSerpiente, pos: '50% 35%', line: es ? 'Rugido de tigre, manchas de jaguar, alas de ave y una cola que vigila.' : 'A tiger’s roar, a jaguar’s spots, a bird’s wings and a tail that keeps watch.' },
+];
+const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'Felipe Linares Vargas', jobTitle: es ? 'Cartonero' : 'Cartonería artist', description: site.defaultDescription[lang], url: new URL(route('home', lang), Astro.site).toString(), address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' }, knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'] };
 ---
 <Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd} overlayHeader topScene="ink">
 
-  <!-- 01 · EL ENCUENTRO ------------------------------------------------------ -->
-  <section class="hero scene-ink" aria-labelledby="hero-title">
-    <div class="container hero__grid">
-      <div class="hero__text">
-        <p class="eyebrow hero__eyebrow">{ui.tagline}</p>
-        <h1 id="hero-title" class="hero__name">Felipe Linares<br />Vargas</h1>
-        <p class="hero__intro lead">{h.heroIntro}</p>
+  <!-- 01 · EL ENCUENTRO: the creature fills the screen -->
+  <Macro src={heroImg} alt={es ? 'Alebrije con cabeza de tigre rugiendo, cuerpo moteado de jaguar, alas negras y patas escamosas rosadas, de frente.' : 'Alebrije with a roaring tiger head, jaguar-spotted body, black wings and pink scaled legs, facing the viewer.'} srcMobile={heroMobile} scrim="bottom" position="62% 38%" positionMobile="50% 18%" minHeight="100svh" eager class="hero" labelledby="hero-title">
+    <div class="container hero__inner">
+      <p class="eyebrow hero__eyebrow">{ui.tagline}</p>
+      <h1 id="hero-title" class="giant hero__name on-photo">Felipe<br />Linares<br />Vargas</h1>
+      <div class="hero__row">
+        <p class="lead on-photo hero__intro">{h.heroIntro}</p>
         <div class="hero__actions">
-          <a class="btn btn--lime" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="btn btn--lime btn--xl" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">↗</span></a>
           <a class="link-arrow hero__secondary" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
-
-      <div class="hero__stage" data-hero-stage>
-        <div class="sheet sheet--soft hero__cobalt"><Paper tone="cobalt" cut="b" /></div>
-        <div class="sheet hero__lime"><Paper tone="lime" cut="a" fold="tr" /></div>
-        <div class="sheet--soft hero__coral"><Paper tone="coral" cut="d" /></div>
-        <figure class="hero__window sheet--near">
-          <div class="hero__photo">
-            <Image src={heroImg} alt={h.heroAlt} widths={[480, 760, 1000, 1400]} sizes="(max-width: 900px) 80vw, 36vw" loading="eager" fetchpriority="high" decoding="sync" />
-          </div>
-          <figcaption class="hero__caption micro">{h.stageCaption}</figcaption>
-        </figure>
-      </div>
+      <p class="micro hero__caption">{h.stageCaption.replace(es ? 'Alebrije de tigre alado con cola de serpiente' : 'Winged tiger alebrije with serpent tail', tigre.data.title[lang])}</p>
     </div>
-    <a class="hero__next" href="#criaturas" aria-label={h.next}><Marks kind="wing" class="hero__wing" /><span class="micro">{h.ch2}</span></a>
-  </section>
+  </Macro>
 
-  <!-- Transition: the concept line -->
-  <div class="concept scene-ink" aria-hidden="true">
-    <div class="container"><p class="statement concept__line">{h.heroStatement}</p></div>
+  <div class="scene-lime concept bleed">
+    <Marquee items={[h.heroStatement, h.ch2Title, h.ch3Title, h.ch4Title, h.ch5Title]} />
   </div>
 
-  <!-- 02 · LAS CRIATURAS ------------------------------------------------------ -->
-  <section id="criaturas" class="creatures scene-paper section" aria-labelledby="creatures-title">
-    <div class="container">
-      <div class="unfold creatures__sheet"><Paper tone="deep" cut="c" class="creatures__sheet-paper" /></div>
-      <header class="creatures__head">
-        <p class="eyebrow eyebrow--accent">02 · {h.ch2}</p>
-        <h2 id="creatures-title">{h.ch2Title}</h2>
-        <p class="lead">{h.ch2Text}</p>
-      </header>
+  <!-- 02 · LAS CRIATURAS: five full-width encounters -->
+  <section id="criaturas" class="creatures scene-ink" aria-labelledby="creatures-title">
+    <div class="container creatures__head">
+      <p class="eyebrow eyebrow--accent rise">02 · {h.ch2}</p>
+      <h2 id="creatures-title" class="giant rise" style="--delay:80ms">{h.ch2Title}</h2>
+      <p class="lead rise" style="--delay:160ms">{h.ch2Text}</p>
+    </div>
 
-      <div class="creatures__grid">
-        <div class="creatures__item creatures__item--jaguar"><ArtworkCard work={jaguar} lang={lang} size="large" eager /></div>
-        <div class="creatures__item creatures__item--rana"><ArtworkCard work={rana} lang={lang} size="small" /></div>
-
-        <div class="creatures__item creatures__item--calavera">
-          <div class="creatures__field sheet--soft"><Paper tone="cobalt" cut="b" fold="bl" /></div>
-          <div class="creatures__field-inner scene-cobalt">
-            <div class="creatures__field-text">
-              <p class="eyebrow">{ui.works.categories.calaveras}</p>
-              <p class="statement creatures__field-line">{lang === 'es' ? 'Una calavera que cabalga.' : 'A skull that rides.'}</p>
-            </div>
-            <ArtworkCard work={calavera} lang={lang} size="medium" />
+    {encounters.map((e, i) => (
+      <article class:list={['encounter', `encounter--${i + 1}`, { 'encounter--flip': i % 2 === 1 }]}>
+        <a class="encounter__link" href={workPath(e.work.id, lang)} data-work-link={e.work.id} aria-label={`${ui.cta.viewWork}: ${e.work.data.title[lang]}`}>
+          <div class="encounter__main zoom-in">
+            <Image src={e.img} alt="" widths={[640, 1024, 1600, 2200]} sizes="(max-width: 900px) 100vw, 66vw" loading={i === 0 ? 'eager' : 'lazy'} style={`object-position:${e.pos}`} transition:name={`work-${e.work.id}`} />
           </div>
-        </div>
+          <div class="encounter__macros">
+            <div class="encounter__macro wipe"><Image src={e.macro} alt="" widths={[480, 800, 1200]} sizes="(max-width: 900px) 50vw, 34vw" loading="lazy" /></div>
+            {e.macro2 && <div class="encounter__macro wipe" style="--delay:160ms"><Image src={e.macro2} alt="" widths={[480, 800, 1200]} sizes="(max-width: 900px) 50vw, 34vw" loading="lazy" /></div>}
+          </div>
+          <div class="encounter__text">
+            <span class="num" aria-hidden="true">0{i + 1}</span>
+            <h3 class="encounter__title on-photo">{e.work.data.title[lang]}{e.work.data.titleStatus === 'provisional' && <span class="encounter__flag" aria-hidden="true">*</span>}</h3>
+            <p class="encounter__line on-photo">{e.line}</p>
+            <span class="btn btn--lime encounter__cta" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">↗</span></span>
+          </div>
+        </a>
+      </article>
+    ))}
 
-        <div class="creatures__item creatures__item--catrina"><ArtworkCard work={catrina} lang={lang} size="small" /></div>
-        <div class="creatures__item creatures__item--tigre"><ArtworkCard work={tigre} lang={lang} size="medium" /></div>
-      </div>
-
-      <div class="creatures__all">
-        <a class="btn btn--ink" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">↗</span></a>
-      </div>
+    <div class="container creatures__all">
+      <p class="small muted"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>
+      <a class="btn btn--paper btn--xl" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
   </section>
 
-  <!-- 03 · LAS MANOS QUE LAS CREAN -------------------------------------------- -->
-  <section class="hands scene-lime section" aria-labelledby="hands-title">
-    <div class="container hands__grid">
-      <figure class="hands__figure figure">
-        <div class="sheet hands__sheet"><Paper tone="light" cut="d" class="hands__paper">
-          <div class="hands__photo reveal-mask">
-            <Image src={workshopImg} alt={lang === 'es' ? 'Alebrije de cabeza negra y astas sobre la mesa del taller familiar, entre frascos de pintura y pinceles.' : 'Black-headed, antlered alebrije on the family workshop table, among paint jars and brushes.'} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 42vw" loading="lazy" />
-          </div>
-        </Paper></div>
-        <figcaption><span>{h.ch3Note}</span></figcaption>
-      </figure>
-      <div class="hands__text">
-        <p class="eyebrow">03 · {h.ch3}</p>
-        <h2 id="hands-title">{h.ch3Title}</h2>
-        <p class="lead">{h.ch3Text}</p>
-        <a class="btn btn--ink mt-m" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">↗</span></a>
-      </div>
+  <!-- 03 · LAS MANOS QUE LAS CREAN -->
+  <Macro src={mJaguarRostro} alt={es ? 'Primer plano del rostro negro del alebrije de jaguar, con ojos ámbar, orejas rojas y pelaje pintado a pincel.' : 'Close-up of the jaguar alebrije’s black face, with amber eyes, red ears and brush-painted fur.'} scrim="left" position="60% 40%" minHeight="90svh" labelledby="hands-title">
+    <div class="container hands__inner">
+      <p class="eyebrow rise">03 · {h.ch3}</p>
+      <h2 id="hands-title" class="rise on-photo" style="--delay:80ms">{h.ch3Title}</h2>
+      <p class="lead on-photo rise" style="--delay:160ms">{h.ch3Text}</p>
+      <p class="small rise hands__note" style="--delay:220ms">{h.ch3Note}</p>
+      <a class="btn btn--lime btn--xl rise" style="--delay:280ms" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
-  </section>
+  </Macro>
 
-  <!-- 04 · DE PAPEL A IMPOSIBLE ----------------------------------------------- -->
-  <section class="process scene-cobalt section" aria-labelledby="process-title">
-    <div class="container">
-      <header class="process__head">
-        <p class="eyebrow">04 · {h.ch4}</p>
-        <h2 id="process-title">{h.ch4Title}</h2>
-        <p class="lead">{h.ch4Text}</p>
-      </header>
-      <ol class="stations">
-        {stages.map((s, i) => (
-          <li class:list={['station', `station--${i + 1}`, { 'station--alt': i % 2 === 1 }]}>
+  <!-- 04 · DE PAPEL A IMPOSIBLE -->
+  <section class="process scene-cobalt" aria-labelledby="process-title">
+    <div class="container process__head">
+      <p class="eyebrow rise">04 · {h.ch4}</p>
+      <h2 id="process-title" class="giant rise" style="--delay:80ms">{h.ch4Title}</h2>
+      <p class="lead rise" style="--delay:160ms">{h.ch4Text}</p>
+    </div>
+    <ol class="stations">
+      {stages.map((s, i) => (
+        <li class:list={['station', { 'station--photo': i >= 3 }]}>
+          <div class="container station__grid">
             <div class="station__text">
-              <span class="station__num" aria-hidden="true">0{i + 1}</span>
-              <h3>{s.heading}</h3>
-              <p>{s.text}</p>
+              <span class="num station__num" aria-hidden="true">0{i + 1}</span>
+              <h3 class="rise">{s.heading}</h3>
+              <p class="rise" style="--delay:80ms">{s.text}</p>
+              {s.note && i < 3 && <p class="small station__pending rise" style="--delay:140ms">{s.note}</p>}
             </div>
             <div class="station__media">
-              {i < 3 && (
-                <div class="sheet--soft"><Paper tone={i === 0 ? 'lime' : i === 1 ? 'light' : 'deep'} cut={i === 0 ? 'a' : i === 1 ? 'c' : 'b'} fold={i === 1 ? 'tr' : 'none'} class="station__card">
-                  {i === 1 && <Marks kind="antler" class="station__mark" />}
-                  {i === 0 && <Marks kind="spots" class="station__mark station__mark--spots" />}
-                  {i === 2 && <Marks kind="wing" class="station__mark" />}
-                  <p class="station__pending small">{s.note}</p>
-                </Paper></div>
-              )}
-              {i === 3 && (
-                <div class="station__photos">
-                  <div class="reveal-mask sheet--soft"><Image src={paintImg2} alt={lang === 'es' ? 'Alebrije en proceso visto desde arriba: alas rojas con nervaduras pintadas y cuerpo moteado.' : 'Alebrije in progress seen from above: red wings with painted veins and spotted body.'} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div>
-                  <div class="reveal-mask sheet--soft" style="--delay:120ms"><Image src={paintImg} alt={lang === 'es' ? 'Esqueleto con alas de mariposa sobre una criatura anaranjada, en proceso de pintura en el taller.' : 'Skeleton with butterfly wings on an orange creature, being painted in the workshop.'} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div>
-                </div>
-              )}
-              {i === 4 && (
-                <div class="reveal-mask reveal-mask--up sheet"><Image src={finishedImg} alt={lang === 'es' ? 'Alebrije terminado con cabeza negra, astas y alas rojas, sobre una repisa.' : 'Finished alebrije with black head, antlers and red wings, on a shelf.'} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div>
-              )}
+              {i === 0 && <div class="sheet"><Paper tone="lime" cut="a" fold="tr" class="station__card"><Image src={mJaguarEscamas} alt={es ? 'Garras verdes escamosas con uñas de marfil, detalle de superficie pintada.' : 'Green scaled claws with ivory nails, painted surface detail.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
+              {i === 1 && <div class="sheet"><Paper tone="light" cut="c" class="station__card"><Image src={mJaguarAlas} alt={es ? 'Astas y alas rojas del alebrije de jaguar: lo que la estructura sostiene.' : 'Antlers and red wings of the jaguar alebrije: what the armature holds up.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
+              {i === 2 && <div class="sheet"><Paper tone="coral" cut="b" fold="bl" class="station__card"><Image src={tallerFrente} alt={es ? 'Alebrije a medio terminar sobre la mesa del taller.' : 'Half-finished alebrije on the workshop table.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
+              {i === 3 && <div class="station__pair"><div class="zoom-in"><Image src={tallerCenital} alt={es ? 'Alas rojas con nervaduras pintadas, vista cenital en el taller.' : 'Red wings with painted veins, overhead view in the workshop.'} widths={[600, 1000]} sizes="(max-width: 900px) 50vw, 24vw" loading="lazy" /></div><div class="zoom-in"><Image src={tallerJinete} alt={es ? 'Esqueleto alado sobre criatura anaranjada, en proceso de pintura.' : 'Winged skeleton on an orange creature, being painted.'} widths={[600, 1000]} sizes="(max-width: 900px) 50vw, 24vw" loading="lazy" /></div></div>}
+              {i === 4 && <div class="zoom-in station__final"><Image src={mTigreRugido} alt={es ? 'Rostro del tigre alado terminado: rayas, colmillos y lengua.' : 'Face of the finished winged tiger: stripes, fangs and tongue.'} widths={[640, 1000, 1400]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" /></div>}
             </div>
-          </li>
-        ))}
-      </ol>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="container process__foot">
       <p class="small process__note">{h.ch4Note}</p>
-      <a class="btn btn--paper" href={route('workshop', lang)}>{ui.cta.process} <span class="arrow" aria-hidden="true">↗</span></a>
+      <a class="btn btn--lime btn--xl" href={route('workshop', lang)}>{ui.cta.process} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
   </section>
 
-  <!-- 05 · UNA HISTORIA QUE CONTINÚA ------------------------------------------- -->
-  <section class="story scene-paper section" aria-labelledby="story-title">
-    <div class="container story__grid">
+  <!-- 05 · UNA HISTORIA QUE CONTINÚA -->
+  <Macro src={mTigreAlas} alt={es ? 'Alas negras y lomo moteado del alebrije de tigre, vistos desde arriba.' : 'Black wings and spotted back of the tiger alebrije, seen from above.'} scrim="top" position="50% 50%" minHeight="auto" class="story" labelledby="story-title">
+    <div class="container story__inner">
       <header class="story__head">
-        <p class="eyebrow eyebrow--accent">05 · {h.ch5}</p>
-        <h2 id="story-title">{h.ch5Title}</h2>
-        <p class="lead">{h.ch5Text}</p>
-        <a class="btn btn--ink mt-m" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">↗</span></a>
+        <p class="eyebrow rise">05 · {h.ch5}</p>
+        <h2 id="story-title" class="giant on-photo rise" style="--delay:80ms">{h.ch5Title}</h2>
+        <p class="lead on-photo rise" style="--delay:160ms">{h.ch5Text}</p>
       </header>
       <ol class="strips">
         {lineage.map((p, i) => (
-          <li class="strip" style={`--i:${i}`}>
-            <div class="sheet--soft"><Paper tone={i === lineage.length - 1 ? 'lime' : i === 0 ? 'deep' : 'light'} cut={i === 0 ? 'a' : i === 1 ? 'c' : 'b'} class="strip__paper">
-              <div class="strip__inner">
-                <span class="strip__dates micro">{p.data.born ? `${p.data.born}${p.data.died ? `–${p.data.died}` : ''}` : (lang === 'es' ? 'Generación actual' : 'Current generation')}</span>
-                <h3 class="strip__name">{p.data.name}</h3>
-                <p class="small strip__role">{p.data.role[lang]}</p>
-                <a class="link-arrow" href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.isFeaturedArtist ? ui.cta.artist : (lang === 'es' ? 'Ver semblanza' : 'View profile')} <span class="arrow" aria-hidden="true">→</span></a>
-              </div>
+          <li class="strip rise" style={`--delay:${i * 90}ms`}>
+            <div class="sheet--near"><Paper tone={i === lineage.length - 1 ? 'lime' : 'light'} cut={(['a', 'c', 'b'] as const)[i]} class="strip__paper">
+              <span class="micro">{p.data.born ? `${p.data.born}${p.data.died ? `–${p.data.died}` : ''}` : (es ? 'Generación actual' : 'Current generation')}</span>
+              <h3 class="strip__name">{p.data.name}</h3>
+              <p class="small">{p.data.role[lang]}</p>
+              <a class="link-arrow" href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.isFeaturedArtist ? ui.cta.artist : (es ? 'Ver semblanza' : 'View profile')} <span class="arrow" aria-hidden="true">→</span></a>
             </Paper></div>
           </li>
         ))}
-        <li class="strip strip--archive" style="--i:3">
-          <div class="sheet--soft"><Paper tone="light" cut="d" class="strip__paper">
-            <div class="strip__inner">
-              <span class="micro">{ui.archive.types.collection} · 2010</span>
-              <h3 class="strip__name">Tzompantli</h3>
-              <p class="small strip__role">{tzompantli.data.collection} · {tzompantli.data.dimensions}</p>
-              <a class="link-arrow" href={workPath(tzompantli.id, lang)}>{ui.cta.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
-            </div>
+        <li class="strip rise" style="--delay:270ms">
+          <div class="sheet--near"><Paper tone="cobalt" cut="d" class="strip__paper">
+            <span class="micro">{ui.archive.types.collection} · 2010</span>
+            <h3 class="strip__name">Tzompantli</h3>
+            <p class="small">{tzompantli.data.collection} · {tzompantli.data.dimensions}</p>
+            <a class="link-arrow" href={workPath(tzompantli.id, lang)}>{ui.cta.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
           </Paper></div>
         </li>
       </ol>
+      <a class="btn btn--paper btn--xl story__cta" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
-  </section>
+  </Macro>
 
-  <!-- 06 · EL PRÓXIMO ENCUENTRO ------------------------------------------------ -->
-  <section class="encounter scene-coral section" aria-labelledby="encounter-title">
-    <div class="container">
-      <div class="encounter__sheet unfold sheet"><Paper tone="light" cut="a" fold="bl" class="encounter__paper">
-        <div class="encounter__inner">
-          <p class="eyebrow">06 · {h.ch6}</p>
-          <h2 id="encounter-title">{h.ch6Title}</h2>
-          <p class="lead">{h.ch6Text}</p>
-          <a class="btn btn--ink mt-m" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
-        </div>
-      </Paper></div>
+  <!-- 06 · EL PRÓXIMO ENCUENTRO -->
+  <section class="encounter-end scene-coral" aria-labelledby="encounter-title">
+    <div class="container encounter-end__inner">
+      <p class="eyebrow rise">06 · {h.ch6}</p>
+      <h2 id="encounter-title" class="giant rise" style="--delay:80ms">{h.ch6Title}</h2>
+      <p class="lead rise" style="--delay:160ms">{h.ch6Text}</p>
+      <a class="btn btn--ink btn--xl rise" style="--delay:240ms" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
+    <div class="encounter-end__macro wipe"><Image src={mCalaveraMontura} alt="" widths={[640, 1024, 1600]} sizes="100vw" loading="lazy" /></div>
   </section>
 </Base>
 
 <style>
-  /* ----- 01 Hero ----- */
-  .hero { position: relative; padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); min-height: min(100svh, 880px); display: grid; align-items: center; overflow: hidden; }
-  .hero__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-l) var(--gutter); align-items: center; }
-  .hero__text { grid-column: 1 / 7; position: relative; z-index: 2; }
+  /* 01 */
+  .hero :global(.macro__content) { display: grid; align-content: end; min-height: 100svh; }
+  .hero__inner { padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); }
   .hero__eyebrow { color: var(--color-lime); }
-  .hero__name { font-size: var(--type-hero); max-width: 11ch; }
-  .hero__intro { margin-top: var(--space-m); color: var(--paper-muted); max-width: 36ch; }
-  .hero__actions { margin-top: var(--space-l); display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); align-items: center; }
+  .hero__name { max-width: 12ch; }
+  .hero__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-m) var(--space-xl); align-items: end; margin-top: var(--space-m); }
+  .hero__intro { max-width: 34ch; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); align-items: center; }
   .hero__secondary { color: var(--color-paper); }
   .hero__secondary:hover { border-bottom-color: var(--color-lime); }
-
-  .hero__stage { grid-column: 7 / 13; position: relative; aspect-ratio: 5 / 6; max-height: 720px; }
-  .hero__stage > * { position: absolute; }
-  .hero__cobalt { inset: 12% -6% -4% 22%; }
-  .hero__cobalt :global(.paper) { width: 100%; height: 100%; }
-  .hero__lime { inset: 0 18% 10% 0; }
-  .hero__lime :global(.paper) { width: 100%; height: 100%; --fold: 72px; }
-  .hero__coral { left: 2%; bottom: 0; width: 26%; height: 20%; }
-  .hero__coral :global(.paper) { width: 100%; height: 100%; }
-  .hero__window { margin: 0; inset: 6% 8% 4% 14%; display: grid; grid-template-rows: 1fr auto; }
-  .hero__photo { background: var(--color-paper); padding: 10px; height: 100%; min-height: 0; }
-  .hero__photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
-  .hero__caption { background: var(--color-paper); color: var(--ink-muted); padding: 0.55rem 0.9rem 0.75rem; text-transform: none; letter-spacing: 0.02em; font-weight: 600; }
-  .hero__next { position: absolute; right: var(--gutter); bottom: var(--space-m); display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--paper-muted); }
-  .hero__next:hover { color: var(--color-lime); }
-  .hero__wing { width: 72px; color: var(--color-lime); }
-
-  /* Entrance (DESPLEGAR + REVELAR), 800 ms total, runs once per page render. */
+  .hero__caption { margin-top: var(--space-m); color: rgba(247, 247, 242, 0.6); text-transform: none; letter-spacing: 0.02em; }
   @media (prefers-reduced-motion: no-preference) {
-    .hero__lime { animation: lime-in 220ms var(--ease-paper) both; }
-    .hero__cobalt { animation: cobalt-in 400ms var(--ease-paper) 180ms both; }
-    .hero__coral { animation: cobalt-in 300ms var(--ease-paper) 420ms both; }
-    .hero__window { animation: window-in 400ms var(--ease-paper) 180ms both, settle 400ms var(--ease-paper) 400ms both; }
+    .hero :global(.macro__img img) { animation: hero-zoom 1400ms var(--ease-paper) both; }
+    .hero__name { animation: hero-rise 700ms var(--ease-paper) 120ms both; }
+    .hero__row, .hero__caption { animation: hero-rise 700ms var(--ease-paper) 320ms both; }
   }
-  @keyframes lime-in { from { transform: translateY(24px) rotate(-0.6deg); } to { transform: none; } }
-  @keyframes cobalt-in { from { opacity: 0; transform: translate(-16px, -10px); } to { opacity: 1; transform: none; } }
-  @keyframes window-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
-  @keyframes settle { from { translate: 0 8px; } to { translate: 0 0; } }
+  @keyframes hero-zoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
 
-  .concept { padding-block: var(--space-m) var(--space-xl); }
-  .concept__line { font-size: var(--type-h2); color: var(--color-lime); max-width: 20ch; }
+  .concept { padding-block: var(--space-s); }
 
-  /* ----- 02 Creatures ----- */
-  .creatures { position: relative; overflow: hidden; }
-  .creatures__sheet { position: absolute; top: 0; right: -8%; width: 46%; height: min(34%, 460px); z-index: -1; pointer-events: none; }
-  .creatures__sheet-paper { width: 100%; height: 100%; }
-  .creatures .container { position: relative; z-index: 1; }
-  .creatures__head { max-width: 60ch; margin-bottom: var(--space-xl); }
-  .creatures__head h2 { margin-bottom: var(--space-s); }
-  .creatures__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-xl) var(--gutter); align-items: start; }
-  .creatures__item--jaguar { grid-column: 1 / 8; }
-  .creatures__item--rana { grid-column: 9 / 13; margin-top: clamp(3rem, 12vw, 12rem); }
-  .creatures__item--calavera { grid-column: 1 / 13; position: relative; margin-block: var(--space-l); }
-  .creatures__field { position: absolute; inset: 8% -2% -6% 6%; z-index: 0; }
-  .creatures__field :global(.paper) { width: 100%; height: 100%; --fold: 64px; }
-  .creatures__field-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 5fr 4fr; gap: var(--gutter); align-items: center; padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 8vw, 7rem) clamp(2rem, 6vw, 5rem) clamp(2rem, 10vw, 9rem); background: transparent; }
-  .creatures__field-line { font-size: var(--type-h3); color: var(--color-lime); margin-top: var(--space-s); }
-  .creatures__item--catrina { grid-column: 2 / 6; }
-  .creatures__item--tigre { grid-column: 7 / 13; margin-top: var(--space-xl); }
-  .creatures__all { margin-top: var(--space-2xl); display: flex; justify-content: center; }
-  @media (max-width: 900px) {
-    .creatures__sheet { right: -30%; width: 70%; height: 200px; }
-    .creatures__item--jaguar { grid-column: 1 / 13; }
-    .creatures__item--rana { grid-column: 3 / 11; margin-top: 0; }
-    .creatures__field { inset: 4% -4% -4% -4%; }
-    .creatures__field-inner { grid-template-columns: 1fr; padding: var(--space-l) var(--space-m); }
-    .creatures__item--catrina { grid-column: 1 / 8; }
-    .creatures__item--tigre { grid-column: 1 / 13; margin-top: 0; }
-  }
-  @media (max-width: 560px) { .creatures__item--rana, .creatures__item--catrina { grid-column: 1 / 13; } }
+  /* 02 */
+  .creatures { padding-top: var(--space-2xl); }
+  .creatures__head { margin-bottom: var(--space-xl); }
+  .creatures__head h2 { color: var(--color-lime); max-width: 10ch; }
+  .creatures__head .lead { margin-top: var(--space-m); }
+  .encounter { position: relative; margin-bottom: 6px; }
+  .encounter__link { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto; text-decoration: none; color: inherit; min-height: 92svh; position: relative; }
+  .encounter--flip .encounter__link { grid-template-columns: 1fr 2fr; }
+  .encounter--flip .encounter__main { order: 2; }
+  .encounter__main { position: relative; overflow: hidden; background: var(--ink-soft); }
+  .encounter__main :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .encounter__macros { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
+  .encounter__macro { overflow: hidden; background: var(--ink-soft); }
+  .encounter__macro :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
+  .encounter--4 .encounter__macros { grid-template-rows: 1fr; }
+  .encounter__text { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--space-xl) var(--gutter) var(--space-l); background: linear-gradient(to top, rgba(25, 27, 36, 0.9), rgba(25, 27, 36, 0.55) 55%, transparent); display: grid; gap: var(--space-s); align-items: end; grid-template-columns: minmax(0, 1fr) auto; pointer-events: none; }
+  .encounter__text .num { position: absolute; right: var(--gutter); top: -0.15em; color: var(--color-lime); opacity: 0.35; }
+  .encounter__title { font-size: var(--type-h2); max-width: 14ch; grid-column: 1; }
+  .encounter__flag { color: var(--color-coral); }
+  .encounter__line { grid-column: 1; max-width: 40ch; font-size: var(--type-lead); font-weight: 500; }
+  .encounter__cta { grid-column: 2; grid-row: 1 / 3; align-self: end; pointer-events: none; }
+  .encounter__link:hover .encounter__main :global(img), .encounter__link:focus-visible .encounter__main :global(img) { transform: scale(1.03); }
+  .encounter__link:hover .encounter__macro :global(img) { transform: scale(1.06); }
+  .encounter__link:hover .encounter__cta { background: var(--lime-deep); }
+  .encounter__link:focus-visible { outline: 4px solid var(--color-lime); outline-offset: -4px; }
+  .creatures__all { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-m); padding-block: var(--space-xl); }
 
-  /* ----- 03 Hands ----- */
-  .hands__grid { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-xl) var(--gutter); align-items: center; }
-  .hands__paper { padding: 14px; }
-  .hands__photo { aspect-ratio: 4 / 5; overflow: hidden; }
-  .hands__photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .hands__figure figcaption { margin-top: var(--space-s); }
-  .hands__text h2 { margin-bottom: var(--space-s); }
-  @media (max-width: 900px) { .hands__grid { grid-template-columns: 1fr; } .hands__figure { order: 2; } }
+  /* 03 */
+  .hands__inner { padding-block: var(--space-2xl); max-width: 60ch; min-height: 90svh; display: grid; align-content: center; gap: var(--space-m); }
+  .hands__inner h2 { font-size: var(--type-h2); }
+  .hands__note { color: rgba(247, 247, 242, 0.75); max-width: 44ch; }
 
-  /* ----- 04 Process ----- */
-  .process__head { max-width: 60ch; margin-bottom: var(--space-xl); }
-  .process__head h2 { margin-bottom: var(--space-s); }
-  .stations { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xl); }
-  .station { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-l) var(--gutter); align-items: center; }
-  .station--alt .station__text { order: 2; }
-  .station__num { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h2); color: var(--color-lime); line-height: 1; display: block; margin-bottom: var(--space-s); }
-  .station__text h3 { margin-bottom: var(--space-s); }
-  .station__card { aspect-ratio: 5 / 4; display: grid; align-content: end; padding: var(--space-m); --fold: 52px; }
-  .station__mark { position: absolute; top: 10%; left: 8%; width: 44%; color: currentColor; opacity: 0.55; }
-  .station__mark--spots { width: 60%; }
-  .station__pending { position: relative; max-width: 30ch; font-weight: 600; }
-  .station__photos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
-  .station__photos > :last-child { margin-top: var(--space-l); }
-  .station__photos :global(img), .station__media :global(.reveal-mask > img) { width: 100%; height: auto; }
-  .process__note { margin: var(--space-xl) 0 var(--space-m); color: var(--fg-muted); max-width: 60ch; }
-  @media (max-width: 900px) { .station { grid-template-columns: 1fr; } .station--alt .station__text { order: 0; } .stations { gap: var(--space-xl); } }
+  /* 04 */
+  .process { padding-block: var(--space-2xl) var(--space-xl); }
+  .process__head { margin-bottom: var(--space-xl); }
+  .process__head h2 { color: var(--color-lime); max-width: 12ch; }
+  .process__head .lead { margin-top: var(--space-m); }
+  .stations { list-style: none; margin: 0; padding: 0; }
+  .station { padding-block: var(--space-xl); border-top: 1.5px solid rgba(247, 247, 242, 0.25); }
+  .station__grid { display: grid; grid-template-columns: 5fr 7fr; gap: var(--space-l) var(--gutter); align-items: center; }
+  .station:nth-child(even) .station__text { order: 2; }
+  .station__num { display: block; color: var(--color-lime); opacity: 0.9; font-size: clamp(4rem, 2rem + 8vw, 9rem); margin-bottom: var(--space-s); }
+  .station__text h3 { font-size: var(--type-h2); margin-bottom: var(--space-s); }
+  .station__pending { margin-top: var(--space-s); color: var(--color-lime); font-weight: 700; }
+  .station__card { padding: 14px; }
+  .station__card :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .station__pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-s); align-items: start; }
+  .station__pair > :last-child { margin-top: var(--space-xl); }
+  .station__pair :global(img), .station__final :global(img) { width: 100%; height: auto; }
+  .station__pair > div, .station__final { overflow: hidden; }
+  .process__foot { display: grid; gap: var(--space-m); justify-items: start; padding-top: var(--space-l); }
+  .process__note { color: rgba(247, 247, 242, 0.75); max-width: 60ch; }
 
-  /* ----- 05 Story ----- */
-  .story__grid { display: grid; grid-template-columns: 5fr 7fr; gap: var(--space-xl) var(--gutter); align-items: start; }
-  .story__head { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
-  .story__head h2 { margin-bottom: var(--space-s); }
-  .strips { list-style: none; margin: 0; padding: 0; display: grid; }
-  .strip { margin-top: calc(var(--i) * -0.5rem); margin-left: calc(var(--i) * 4%); }
-  .strip + .strip { margin-top: -1.25rem; }
-  .strip__paper { padding: var(--space-m) var(--space-l) var(--space-l); }
-  .strip__inner { display: grid; gap: 0.35rem; }
+  /* 05 */
+  .story :global(.macro__content) { padding-block: var(--space-2xl); }
+  .story__head { max-width: 60ch; margin-bottom: var(--space-xl); }
+  .story__head h2 { font-size: var(--type-hero); }
+  .story__head .lead { margin-top: var(--space-m); }
+  .strips { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); align-items: end; }
+  .strip:nth-child(2) { margin-bottom: var(--space-l); }
+  .strip:nth-child(3) { margin-bottom: var(--space-xl); }
+  .strip__paper { padding: var(--space-m) var(--space-m) var(--space-l); display: grid; gap: 0.35rem; min-height: 240px; align-content: start; }
   .strip__name { font-size: var(--type-h3); }
-  .strip--archive { margin-top: var(--space-m); }
-  @media (max-width: 900px) { .story__grid { grid-template-columns: 1fr; } .story__head { position: static; } .strip { margin-left: calc(var(--i) * 2%); } }
+  .story__cta { margin-top: var(--space-xl); }
 
-  /* ----- 06 Encounter ----- */
-  .encounter__paper { padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 7vw, 6rem); --fold: 64px; }
-  .encounter__inner { max-width: 60ch; }
-  .encounter__inner h2 { margin-bottom: var(--space-s); font-size: var(--type-h2); }
+  /* 06 */
+  .encounter-end { position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; min-height: 80svh; }
+  .encounter-end__inner { grid-column: 1; align-self: center; padding-block: var(--space-2xl); display: grid; gap: var(--space-m); justify-items: start; max-width: 60ch; width: auto; margin-left: max(var(--gutter), calc(50vw - var(--max) / 2)); }
+  .encounter-end__inner h2 { font-size: var(--type-hero); }
+  .encounter-end__macro { grid-column: 2; overflow: hidden; }
+  .encounter-end__macro :global(img) { width: 100%; height: 100%; object-fit: cover; }
 
   @media (max-width: 900px) {
-    .hero { padding-top: calc(var(--nav-h) + var(--space-m)); min-height: 0; }
-    .hero__grid { grid-template-columns: 1fr; gap: var(--space-l); }
-    .hero__text, .hero__stage { grid-column: 1; }
-    .hero__name { font-size: clamp(2.75rem, 2rem + 4vw, 3.4rem); }
-    .hero__stage { width: min(100%, 420px); margin-inline: auto; aspect-ratio: 5 / 6; max-height: 60vh; }
-    .hero__next { position: static; margin-top: var(--space-m); justify-content: flex-end; width: 100%; }
-    .hero__wing { width: 56px; }
-    .concept__line { font-size: var(--type-h3); }
+    .hero :global(.macro__scrim--bottom) { background: linear-gradient(to top, rgba(25, 27, 36, 0.92) 0%, rgba(25, 27, 36, 0.7) 38%, rgba(25, 27, 36, 0) 60%); }
+    .hero__row { grid-template-columns: 1fr; }
+    .encounter__link { grid-template-columns: 1fr !important; grid-template-rows: auto auto; min-height: 0; }
+    .encounter__main { aspect-ratio: 4 / 5; }
+    .encounter--flip .encounter__main { order: 0; }
+    .encounter__macros { grid-template-rows: none; grid-template-columns: 1fr 1fr; aspect-ratio: 2 / 1; }
+    .encounter--4 .encounter__macros { grid-template-columns: 1fr; aspect-ratio: 16 / 9; }
+    .encounter__text { position: relative; background: var(--color-ink); padding: var(--space-m) var(--gutter) var(--space-l); grid-template-columns: 1fr; }
+    .encounter__text .num { position: static; font-size: clamp(3rem, 12vw, 5rem); }
+    .encounter__cta { grid-column: 1; grid-row: auto; justify-self: start; }
+    .station__grid { grid-template-columns: 1fr; }
+    .station:nth-child(even) .station__text { order: 0; }
+    .strips { grid-template-columns: 1fr 1fr; }
+    .strip:nth-child(2), .strip:nth-child(3) { margin-bottom: 0; }
+    .encounter-end { grid-template-columns: 1fr; }
+    .encounter-end__inner { grid-column: 1; margin-left: var(--gutter); margin-right: var(--gutter); padding-block: var(--space-xl); }
+    .encounter-end__macro { grid-column: 1; aspect-ratio: 16 / 10; }
   }
+  @media (max-width: 560px) { .strips { grid-template-columns: 1fr; } }
 </style>

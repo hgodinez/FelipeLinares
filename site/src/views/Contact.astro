@@ -2,6 +2,8 @@
 import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import Paper from '@/components/Paper.astro';
+import Macro from '@/components/Macro.astro';
+import heroMacro from '@/assets/macro/calavera-montura.jpg';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { getPage, getWorks } from '@/lib/content';
@@ -17,13 +19,17 @@ const types = ['artwork', 'commission', 'gallery', 'museum', 'press', 'general']
 const hasDirect = Boolean(site.contactEmail || site.whatsappNumber);
 const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}` : '';
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')} topScene="coral">
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')} overlayHeader topScene="ink">
+  <Macro src={heroMacro} alt={lang === 'es' ? 'Cabeza anaranjada de cuernos morados de la criatura que monta la calavera, con riendas de alambre.' : 'Orange, purple-horned head of the creature the skull rides, with wire reins.'} scrim="bottom" position="50% 45%" minHeight="60svh" eager labelledby="contact-title">
+    <div class="container contact-hero">
+      <p class="eyebrow">{page.data.eyebrow}</p>
+      <h1 id="contact-title" class="giant on-photo">{ui.home.ch6Title}</h1>
+    </div>
+  </Macro>
   <section class="contact scene-coral">
     <div class="container contact__grid">
       <div class="contact__intro">
-        <p class="eyebrow">{page.data.eyebrow}</p>
-        <h1>{ui.home.ch6Title}</h1>
-        <p class="lead mt-m">{page.data.lead}</p>
+        <p class="lead">{page.data.lead}</p>
         <div class="prose mt-l"><Content /></div>
         <div class="contact-direct mt-xl">
           <h2 class="eyebrow">{ui.contact.location}</h2>
@@ -128,9 +134,9 @@ const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replac
 </script>
 
 <style>
+  .contact-hero { min-height: 60svh; display: grid; align-content: end; gap: var(--space-s); padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); }
   .contact { padding-block: var(--space-xl) var(--space-2xl); }
   .contact__grid { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; }
-  .contact h1 { font-size: var(--type-h2); }
   .contact__pending { background: rgba(247, 247, 242, 0.55); border-color: var(--color-ink); }
   .contact__paper { padding: clamp(1.5rem, 4vw, 3rem); --fold: 56px; }
   .contact-form__title { font-size: var(--type-h3); margin-bottom: var(--space-m); }

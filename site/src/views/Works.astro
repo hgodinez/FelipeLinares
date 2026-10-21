@@ -1,37 +1,35 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
-import ArtworkCard from '@/components/ArtworkCard.astro';
-import Paper from '@/components/Paper.astro';
+import Macro from '@/components/Macro.astro';
 import { t } from '@/i18n/ui';
-import { alternates, route, type Lang } from '@/i18n/routes';
-import { getWorks } from '@/lib/content';
+import { alternates, route, workPath, type Lang } from '@/i18n/routes';
+import { getWorks, coverOf } from '@/lib/content';
+import heroMacro from '@/assets/macro/jaguar-alas.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
+const es = lang === 'es';
 const works = await getWorks();
 const withImages = works.filter((w) => w.data.images.length > 0);
 const documented = works.filter((w) => w.data.images.length === 0);
 const used = Array.from(new Set(works.flatMap((w) => w.data.categories)));
 const categoryOrder = ['alebrijes', 'calaveras', 'judas', 'mascaras', 'colecciones', 'encargos'] as const;
 const categories = categoryOrder.filter((c) => used.includes(c));
-const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 'small', 'medium'];
 ---
-<Base lang={lang} title={ui.nav.works} description={ui.works.intro} alternates={alternates('works')}>
-  <section class="works-head scene-paper">
-    <div class="container works-head__grid">
-      <div>
-        <p class="eyebrow eyebrow--accent">{ui.works.eyebrow}</p>
-        <h1>{ui.works.title}</h1>
-        <p class="lead mt-m">{ui.works.intro}</p>
-      </div>
-      <div class="works-head__sheet unfold sheet--soft" aria-hidden="true"><Paper tone="lime" cut="b" fold="tr" class="works-head__paper" /></div>
+<Base lang={lang} title={ui.nav.works} description={ui.works.intro} alternates={alternates('works')} overlayHeader topScene="ink">
+  <Macro src={heroMacro} alt={es ? 'Astas de venado y alas rojas de murciélago del alebrije de jaguar, en primer plano.' : 'Deer antlers and red bat wings of the jaguar alebrije, close up.'} scrim="bottom" position="50% 40%" minHeight="72svh" eager labelledby="works-title">
+    <div class="container works-hero">
+      <p class="eyebrow">{ui.works.eyebrow}</p>
+      <h1 id="works-title" class="giant on-photo">{ui.works.title}</h1>
+      <p class="lead on-photo">{ui.works.intro}</p>
     </div>
-  </section>
+  </Macro>
 
-  <section class="scene-paper section--tight" aria-labelledby="gallery-title">
+  <section class="scene-ink catalog" aria-labelledby="gallery-title">
+    <h2 id="gallery-title" class="visually-hidden">{ui.works.gallery}</h2>
     <div class="container">
-      <h2 id="gallery-title" class="visually-hidden">{ui.works.gallery}</h2>
       <form class="filters" data-filters role="search" aria-label={ui.works.filterLabel}>
         <div class="filters__cats" role="group" aria-label={ui.works.filterLabel}>
           <button type="button" class="chip" data-cat="" aria-pressed="true">{ui.works.all}</button>
@@ -43,21 +41,42 @@ const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 
         </div>
         <p class="filters__count small muted" data-count aria-live="polite">{ui.works.count(works.length)}</p>
       </form>
+    </div>
 
-      <div class="works-grid" data-grid>
-        {withImages.map((w, i) => <ArtworkCard work={w} lang={lang} size={sizes[i % sizes.length]} eager={i < 2} class={`works-grid__item works-grid__item--${(i % 5) + 1}`} />)}
-      </div>
+    <div class="rows" data-grid>
+      {withImages.map((w, i) => {
+        const cover = coverOf(w)!;
+        const detail = w.data.images.find((im) => im.kind === 'detail');
+        return (
+          <article class:list={['row', 'work-card', { 'row--flip': i % 2 === 1 }]} data-categories={w.data.categories.join(' ')} data-title={w.data.title[lang].toLowerCase()}>
+            <a class="row__link" href={workPath(w.id, lang)} data-work-link={w.id} aria-label={`${ui.cta.viewWork}: ${w.data.title[lang]}`}>
+              <div class="row__photo zoom-in"><Image src={cover.src} alt="" widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 60vw" loading={i < 2 ? 'eager' : 'lazy'} transition:name={`work-${w.id}`} /></div>
+              <div class="row__side">
+                {detail ? <div class="row__detail wipe"><Image src={detail.src} alt="" widths={[480, 800]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div> : <div class="row__detail row__detail--empty" aria-hidden="true"><span class="num">0{i + 1}</span></div>}
+                <div class="row__text">
+                  <span class="micro row__index">0{i + 1} · {w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}{w.data.year ? ` · ${w.data.year}` : ''}</span>
+                  <h3 class="row__title">{w.data.title[lang]}{w.data.titleStatus === 'provisional' && <span class="row__flag" aria-hidden="true">*</span>}</h3>
+                  <span class="btn btn--lime" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">↗</span></span>
+                </div>
+              </div>
+            </a>
+          </article>
+        );
+      })}
+    </div>
 
+    <div class="container">
       {documented.length > 0 && (
         <div class="documented" data-documented>
-          <div class="section-head"><div><p class="eyebrow">{ui.works.categories.colecciones}</p><h2 class="documented__title">{lang === 'es' ? 'Obras documentadas sin fotografía autorizada' : 'Documented works without an authorized photograph'}</h2></div></div>
+          <p class="eyebrow eyebrow--accent">{ui.works.categories.colecciones}</p>
+          <h2 class="documented__title">{es ? 'Obras documentadas sin fotografía autorizada' : 'Documented works without an authorized photograph'}</h2>
           <ul class="documented__list">
             {documented.map((w) => (
               <li class="work-card documented__item" data-categories={w.data.categories.join(' ')} data-title={w.data.title[lang].toLowerCase()}>
-                <a class="documented__link" href={`${route('works', lang)}${w.id}/`} data-work-link={w.id}>
-                  <span class="documented__year micro">{w.data.year ?? ui.works.yearUnknown}</span>
+                <a class="documented__link" href={workPath(w.id, lang)} data-work-link={w.id}>
+                  <span class="micro">{w.data.year ?? ui.works.yearUnknown}</span>
                   <span class="documented__name">{w.data.title[lang]}</span>
-                  <span class="small muted">{w.data.collection ?? w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}</span>
+                  <span class="small">{w.data.collection ?? w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}</span>
                   <span class="link-arrow" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">→</span></span>
                 </a>
               </li>
@@ -65,16 +84,15 @@ const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 
           </ul>
         </div>
       )}
-
       <p class="notice" data-empty hidden>{ui.works.empty} <button type="button" class="works-empty__reset" data-reset>{ui.works.reset}</button></p>
-      <p class="small muted mt-l"><span style="color:var(--coral-ink)">*</span> {ui.works.provisional}.</p>
+      <p class="small muted catalog__note"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>
     </div>
   </section>
 
-  <section class="scene-ink section">
-    <div class="container--narrow container text-center">
-      <h2>{lang === 'es' ? '¿Te interesa una obra o un encargo?' : 'Interested in a work or a commission?'}</h2>
-      <a class="btn btn--lime mt-l" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
+  <section class="scene-coral section">
+    <div class="container">
+      <h2 class="giant">{es ? '¿Una obra o un encargo?' : 'A work or a commission?'}</h2>
+      <a class="btn btn--ink btn--xl mt-l" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
   </section>
 </Base>
@@ -99,7 +117,6 @@ const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 
     let cat = params.get('categoria') || params.get('category') || '';
     const label = (n: number) => template.replace(String(total), String(n)).replace(/^1 (\w+)s$/, '1 $1');
     const timers = new WeakMap<HTMLElement, number>();
-
     const setShown = (c: HTMLElement, show: boolean) => {
       const prev = timers.get(c); if (prev) window.clearTimeout(prev);
       if (show) { c.hidden = false; requestAnimationFrame(() => c.classList.remove('is-out')); }
@@ -137,41 +154,55 @@ const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 
 </script>
 
 <style>
-  .works-head { padding-block: var(--space-xl) var(--space-l); overflow: hidden; }
-  .works-head__grid { display: grid; grid-template-columns: 7fr 5fr; gap: var(--gutter); align-items: end; }
-  .works-head__sheet { aspect-ratio: 16 / 9; }
-  .works-head__paper { width: 100%; height: 100%; --fold: 56px; }
-  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s) var(--space-m); padding-block: var(--space-s); border-top: 1.5px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: var(--space-xl); }
+  .works-hero { padding-top: calc(var(--nav-h) + var(--space-xl)); padding-bottom: var(--space-l); min-height: 72svh; display: grid; align-content: end; gap: var(--space-s); }
+  .works-hero .lead { max-width: 48ch; }
+  .catalog { padding-block: var(--space-m) var(--space-xl); }
+  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s) var(--space-m); padding-block: var(--space-m); border-bottom: 1px solid var(--line); margin-bottom: var(--space-l); }
   .filters__cats { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .chip { min-height: 44px; padding: 0 1.1em; border: 1.5px solid var(--line-strong); border-radius: 999px; font-size: var(--type-meta); font-weight: 700; transition: background-color var(--d-control), color var(--d-control), border-color var(--d-control); }
-  .chip:hover { border-color: var(--color-ink); }
-  .chip[aria-pressed='true'] { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+  .chip:hover { border-color: var(--color-lime); color: var(--color-lime); }
+  .chip[aria-pressed='true'] { background: var(--color-lime); color: var(--color-ink); border-color: var(--color-lime); }
   .filters__search { margin-left: auto; min-width: min(100%, 260px); }
   .filters__search input { width: 100%; min-height: 44px; font: inherit; font-size: var(--type-meta); background: transparent; border: 0; border-bottom: 1.5px solid var(--line-strong); padding: 0.4em 0; color: inherit; border-radius: 0; }
-  .filters__search input:focus-visible { outline: none; border-bottom-color: var(--focus); box-shadow: 0 2px 0 var(--focus); }
+  .filters__search input::placeholder { color: var(--fg-muted); }
+  .filters__search input:focus-visible { outline: none; border-bottom-color: var(--color-lime); box-shadow: 0 2px 0 var(--color-lime); }
   .filters__count { margin: 0; flex-basis: 100%; }
   @media (min-width: 900px) { .filters__count { flex-basis: auto; } }
 
-  .works-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-xl) var(--gutter); align-items: start; }
-  .works-grid :global(.works-grid__item--1) { grid-column: 1 / 8; }
-  .works-grid :global(.works-grid__item--2) { grid-column: 9 / 13; margin-top: var(--space-2xl); }
-  .works-grid :global(.works-grid__item--3) { grid-column: 2 / 8; margin-top: var(--space-l); }
-  .works-grid :global(.works-grid__item--4) { grid-column: 9 / 13; }
-  .works-grid :global(.works-grid__item--5) { grid-column: 4 / 11; }
-  .works-grid :global(.work-card) { transition: opacity var(--d-filter) var(--ease-paper), transform var(--d-filter) var(--ease-paper); }
-  .works-grid :global(.work-card.is-out) { opacity: 0; transform: translateY(6px); }
-  @media (max-width: 900px) {
-    .works-head__grid { grid-template-columns: 1fr; } .works-head__sheet { display: none; }
-    .works-grid :global(.work-card) { grid-column: span 6 !important; margin-top: 0 !important; }
-    .works-grid :global(.works-grid__item--1), .works-grid :global(.works-grid__item--5) { grid-column: span 12 !important; }
-  }
-  @media (max-width: 540px) { .works-grid :global(.work-card) { grid-column: span 12 !important; } }
-
+  .rows { display: grid; gap: 6px; }
+  .row { transition: opacity var(--d-filter) var(--ease-paper); }
+  .row.is-out { opacity: 0; }
+  .row__link { display: grid; grid-template-columns: 3fr 2fr; gap: 6px; text-decoration: none; color: inherit; min-height: 80svh; }
+  .row--flip .row__link { grid-template-columns: 2fr 3fr; }
+  .row--flip .row__photo { order: 2; }
+  .row__photo { overflow: hidden; background: var(--ink-soft); }
+  .row__photo :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
+  .row__side { display: grid; grid-template-rows: 1fr auto; gap: 6px; }
+  .row__detail { overflow: hidden; background: var(--ink-soft); }
+  .row__detail :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
+  .row__detail--empty { display: grid; place-items: center; color: var(--color-lime); }
+  .row__text { padding: var(--space-m) var(--space-m) var(--space-l); background: var(--ink-soft); display: grid; gap: var(--space-s); justify-items: start; }
+  .row__index { color: var(--color-lime); }
+  .row__title { font-size: var(--type-h2); }
+  .row__flag { color: var(--color-coral); }
+  .row__link:hover .row__photo :global(img), .row__link:focus-visible .row__photo :global(img) { transform: scale(1.03); }
+  .row__link:hover .row__detail :global(img) { transform: scale(1.06); }
+  .row__link:hover .btn { background: var(--lime-deep); }
+  .row__link:focus-visible { outline: 4px solid var(--color-lime); outline-offset: -4px; }
   .documented { margin-top: var(--space-2xl); border-top: 1.5px solid var(--line-strong); padding-top: var(--space-l); }
-  .documented__title { font-size: var(--type-h3); }
+  .documented__title { font-size: var(--type-h3); margin-bottom: var(--space-m); }
   .documented__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--gutter); }
-  .documented__link { display: grid; gap: 0.3rem; padding: var(--space-m); text-decoration: none; background: var(--paper-deep); min-height: 100%; transition: background-color var(--d-control); }
-  .documented__link:hover { background: var(--color-lime); }
+  .documented__link { display: grid; gap: 0.3rem; padding: var(--space-m); text-decoration: none; background: var(--ink-soft); min-height: 100%; transition: background-color var(--d-control), color var(--d-control); }
+  .documented__link:hover { background: var(--color-lime); color: var(--color-ink); }
   .documented__name { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h4); }
+  .catalog__note { margin-top: var(--space-l); }
   .works-empty__reset { text-decoration: underline; margin-left: 0.5em; font-weight: 700; }
+  @media (max-width: 900px) {
+    .row__link { grid-template-columns: 1fr !important; min-height: 0; }
+    .row--flip .row__photo { order: 0; }
+    .row__photo { aspect-ratio: 4 / 5; }
+    .row__side { grid-template-rows: none; }
+    .row__detail { aspect-ratio: 16 / 9; }
+    .row__detail--empty { display: none; }
+  }
 </style>

@@ -19,7 +19,7 @@ function check() {
   const vh = window.innerHeight;
   pending = pending.filter((el) => {
     const r = el.getBoundingClientRect();
-    if (r.top < vh * 0.94 && r.bottom > 0) { el.classList.add('is-in'); return false; }
+    if (r.top < vh * 0.92 && r.bottom > 0) { el.classList.add('is-in'); return false; }
     return true;
   });
   if (!pending.length) unbind();
@@ -30,7 +30,7 @@ function unbind() { if (!bound) return; bound = false; window.removeEventListene
 
 export function initMotion() {
   document.documentElement.classList.add('js');
-  const els = Array.from(document.querySelectorAll<HTMLElement>('.unfold:not(.is-in), .reveal-mask:not(.is-in)'));
+  const els = Array.from(document.querySelectorAll<HTMLElement>('.unfold:not(.is-in), .reveal-mask:not(.is-in), .zoom-in:not(.is-in), .rise:not(.is-in), .wipe:not(.is-in)'));
   if (!els.length) return;
   if (reduce()) { els.forEach((el) => el.classList.add('is-in')); return; }
   pending = els;

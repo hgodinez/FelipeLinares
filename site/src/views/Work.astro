@@ -6,7 +6,6 @@ import Lightbox from '@/components/Lightbox.astro';
 import Placeholder from '@/components/Placeholder.astro';
 import SourceList from '@/components/SourceList.astro';
 import ArtworkCard from '@/components/ArtworkCard.astro';
-import Paper from '@/components/Paper.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { coverOf, type Work } from '@/lib/content';
@@ -36,52 +35,50 @@ const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList'
 const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id)}`;
 const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.kind === 'workshop' ? ui.works.workshopNote : null].filter(Boolean).join(' · ');
 ---
-<Base lang={lang} title={title} description={desc} alternates={alternates('works', work.id)} ogImage={ogImg?.src} jsonLd={[ld, breadcrumb]}>
-  <article class="work scene-paper">
-    <div class="container work__top">
-      <nav class="work__crumbs small" aria-label="Breadcrumb">
-        <a href={route('works', lang)} data-back-link>{ui.nav.works}</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
-      </nav>
+<Base lang={lang} title={title} description={desc} alternates={alternates('works', work.id)} ogImage={ogImg?.src} jsonLd={[ld, breadcrumb]} overlayHeader topScene="ink">
+  <article class="work scene-ink">
+    <div class:list={['work__stage', 'bleed', { 'work__stage--empty': !main }]}>
+      <div class="work__stage-media zoom-in" data-lb-group>
+        {main ? (
+          <button type="button" class="work__zoom" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>
+            <Image src={main.src} alt={main.alt[lang]} widths={[640, 1024, 1600, 2200]} sizes="100vw" loading="eager" fetchpriority="high" transition:name={`work-${work.id}`} />
+          </button>
+        ) : (
+          <div class="work__stage-empty"><Placeholder lang={lang} ratio="auto" /></div>
+        )}
+      </div>
+      <div class="work__stage-scrim" aria-hidden="true"></div>
+      <div class="container work__stage-text">
+        <nav class="work__crumbs small" aria-label="Breadcrumb">
+          <a href={route('works', lang)} data-back-link>{ui.nav.works}</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
+        </nav>
+        <p class="eyebrow">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
+        <h1 class="work__title on-photo">{title}{d.titleStatus === 'provisional' && <span class="work__flag" aria-hidden="true">*</span>}</h1>
+        <p class="work__meta on-photo">{d.year && <span>{d.year}</span>}{d.dimensions && <span>{d.dimensions}</span>}{d.collection && <span>{d.collection}</span>}</p>
+      </div>
       <a class="work__close" href={route('works', lang)} data-back-link aria-label={ui.cta.back}><span aria-hidden="true">×</span><span class="work__close-label micro">{ui.cta.back} · Esc</span></a>
     </div>
 
-    <div class="container work__layout">
-      <div class="work__media" data-lb-group>
-        <div class="work__stage">
-          <div class="work__field sheet--soft" aria-hidden="true"><Paper tone={d.categories.includes('calaveras') ? 'cobalt' : 'lime'} cut="c" fold="bl" class="work__field-paper" /></div>
-          {main ? (
-            <figure class="figure work__main">
-              <button type="button" class="work__zoom sheet--near" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>
-                <Image src={main.src} alt={main.alt[lang]} widths={[640, 1024, 1600, 2000]} sizes="(max-width: 1000px) 100vw, 58vw" loading="eager" fetchpriority="high" transition:name={`work-${work.id}`} />
-              </button>
-              <figcaption><span>{main.caption?.[lang] ?? `${title} — 1 ${ui.works.of} ${gallery.length}`}</span>{main.credit && <span>{ui.misc.photoCredit}: {main.credit}</span>}</figcaption>
-            </figure>
-          ) : (
-            <div class="work__main"><Placeholder lang={lang} ratio="4/5" /></div>
-          )}
-        </div>
-        {rest.length > 0 && (
-          <div class="work__thumbs">
-            {rest.map((img, i) => (
-              <figure class="figure work__thumb">
-                <button type="button" class="work__zoom sheet--soft" data-lb-open data-full={img.full.src} data-alt={img.alt[lang]} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
-                  <Image src={img.src} alt={img.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 1000px) 50vw, 20vw" loading="lazy" />
-                </button>
-                <figcaption><span>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${i + 2} ${ui.works.of} ${gallery.length}`)}</span>{img.kind === 'workshop' && img.caption?.[lang] && <span class="tag">{ui.works.workshopNote}</span>}</figcaption>
-              </figure>
-            ))}
-          </div>
+    <div class="container work__layout" data-lb-group>
+      <div class="work__gallery">
+        {main && (
+          <button type="button" class="work__thumb-main visually-hidden" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>1</button>
         )}
+        {rest.map((img, i) => (
+          <figure class="figure work__thumb">
+            <button type="button" class="work__zoom wipe" style={`--delay:${(i % 3) * 100}ms`} data-lb-open data-full={img.full.src} data-alt={img.alt[lang]} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
+              <Image src={img.src} alt={img.alt[lang]} widths={[480, 800, 1200]} sizes="(max-width: 1000px) 100vw, 40vw" loading="lazy" />
+            </button>
+            <figcaption><span>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${i + 2} ${ui.works.of} ${gallery.length}`)}</span>{img.kind === 'workshop' && img.caption?.[lang] && <span class="tag">{ui.works.workshopNote}</span>}</figcaption>
+          </figure>
+        ))}
+        {d.titleStatus === 'provisional' && <p class="small muted work__prov"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>}
       </div>
 
       <aside class="work__aside">
         <div class="work__sticky">
-          <p class="eyebrow eyebrow--accent">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
-          <h1 class="work__title">{title}</h1>
-          {d.titleStatus === 'provisional' && <p class="small muted"><span style="color:var(--coral-ink)">*</span> {ui.works.provisional}.</p>}
-          <p class="work__meta">{d.year && <span>{d.year}</span>}{d.dimensions && <span>{d.dimensions}</span>}{d.collection && <span>{d.collection}</span>}</p>
-          <div class="prose mt-l"><p>{d.description[lang]}</p></div>
-          {d.context?.[lang] && <div class="prose mt-m"><h2 class="eyebrow">{ui.works.context}</h2><p>{d.context[lang]}</p></div>}
+          <div class="prose work__desc"><p class="lead">{d.description[lang]}</p></div>
+          {d.context?.[lang] && <div class="prose mt-l"><h2 class="eyebrow">{ui.works.context}</h2><p>{d.context[lang]}</p></div>}
           <div class="mt-l">
             <h2 class="eyebrow">{ui.works.detailsHeading}</h2>
             <dl class="spec">
@@ -93,14 +90,14 @@ const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.k
             </dl>
           </div>
           {d.provenance?.[lang] && <div class="prose mt-m"><h2 class="eyebrow">{ui.works.provenance}</h2><p class="small">{d.provenance[lang]}</p></div>}
-          <div class="mt-l"><a class="btn btn--ink" href={contactHref}>{ui.cta.inquire} <span class="arrow" aria-hidden="true">↗</span></a></div>
+          <div class="mt-l"><a class="btn btn--lime btn--xl" href={contactHref}>{ui.cta.inquire} <span class="arrow" aria-hidden="true">↗</span></a></div>
           <div class="mt-l"><SourceList lang={lang} sources={d.sources} heading={ui.works.sources} /></div>
         </div>
       </aside>
     </div>
 
     {related.length > 0 && (
-      <section class="scene-ink section" aria-labelledby="related-title">
+      <section class="scene-paper section" aria-labelledby="related-title">
         <div class="container">
           <div class="section-head"><h2 id="related-title">{ui.works.related}</h2><a class="link-arrow" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a></div>
           <div class="related-grid">{related.map((r) => <ArtworkCard work={r} lang={lang} size="small" />)}</div>
@@ -134,29 +131,42 @@ const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.k
 </script>
 
 <style>
-  .work__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-m); padding-top: var(--space-m); }
-  .work__crumbs { color: var(--fg-muted); }
-  .work__crumbs a { text-decoration: none; font-weight: 600; }
+  .work__stage { position: relative; min-height: 86svh; display: grid; isolation: isolate; background: var(--ink-soft); }
+  .work__stage-media { position: absolute; inset: 0; overflow: hidden; }
+  .work__stage-media .work__zoom { display: block; width: 100%; height: 100%; cursor: zoom-in; }
+  .work__stage-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+  .work__stage--empty { min-height: 0; }
+  .work__stage--empty .work__stage-media { position: relative; padding: calc(var(--nav-h) + var(--space-xl)) var(--gutter) 0; display: grid; justify-items: end; width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+  .work__stage--empty .work__stage-scrim { display: none; }
+  .work__stage--empty .work__stage-text { padding-top: var(--space-l); }
+  .work__stage-empty :global(.placeholder) { aspect-ratio: 4 / 5; width: min(100%, 420px); background: rgba(247,247,242,0.06); color: var(--color-paper); }
+  .work__stage-empty :global(.placeholder strong) { color: var(--color-paper); }
+  .work__stage-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(25, 27, 36, 0.9) 0%, rgba(25, 27, 36, 0.45) 35%, transparent 65%), linear-gradient(to bottom, rgba(25, 27, 36, 0.55), transparent 22%); pointer-events: none; }
+  .work__stage-text { position: relative; align-self: end; padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); pointer-events: none; }
+  .work__stage-text a { pointer-events: auto; }
+  .work__crumbs { color: rgba(247, 247, 242, 0.75); margin-bottom: var(--space-l); }
+  .work__crumbs a { text-decoration: none; font-weight: 700; color: var(--color-paper); }
   .work__crumbs a:hover { text-decoration: underline; }
-  .work__close { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; text-decoration: none; }
-  .work__close > span:first-child { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 1.5px solid var(--line-strong); border-radius: 999px; font-size: 1.4rem; line-height: 1; }
-  .work__close:hover > span:first-child { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
-  .work__close-label { color: var(--fg-muted); }
-  .work__layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; padding-block: var(--space-l) var(--space-2xl); }
-  .work__stage { position: relative; padding: 6% 8% 8% 0; }
-  .work__field { position: absolute; inset: 0 0 0 10%; z-index: 0; }
-  .work__field-paper { width: 100%; height: 100%; --fold: 56px; }
-  .work__main { position: relative; z-index: 1; }
-  .work__zoom { display: block; width: 100%; cursor: zoom-in; background: var(--color-paper); padding: 8px; }
-  .work__zoom :global(img) { width: 100%; height: auto; display: block; }
-  .work__main figcaption { padding-left: 8px; }
-  .work__thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: var(--space-m) var(--gutter); margin-top: var(--space-l); align-items: start; }
-  .work__thumb .work__zoom { padding: 5px; }
+  .work__stage-text .eyebrow { color: var(--color-lime); }
+  .work__title { font-size: var(--type-hero); max-width: 14ch; }
+  .work__flag { color: var(--color-coral); }
+  .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); }
+  .work__close { position: absolute; top: calc(var(--nav-h) + var(--space-s)); right: var(--gutter); z-index: 3; display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; text-decoration: none; color: var(--color-paper); }
+  .work__close > span:first-child { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1.5px solid var(--color-paper); border-radius: 999px; font-size: 1.5rem; line-height: 1; background: rgba(25, 27, 36, 0.4); }
+  .work__close:hover > span:first-child { background: var(--color-lime); color: var(--color-ink); border-color: var(--color-lime); }
+  .work__close-label { color: rgba(247, 247, 242, 0.75); }
+  .work__layout { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-xl) calc(var(--gutter) * 2); align-items: start; padding-block: var(--space-xl) var(--space-2xl); }
+  .work__gallery { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l) var(--space-m); align-items: start; }
+  .work__thumb:nth-child(3n + 2) { margin-top: var(--space-xl); }
+  .work__zoom { display: block; width: 100%; cursor: zoom-in; overflow: hidden; background: var(--ink-soft); }
+  .work__zoom :global(img) { width: 100%; height: auto; display: block; transition: transform 900ms var(--ease-paper); }
+  .work__zoom:hover :global(img) { transform: scale(1.04); }
+  .work__prov { grid-column: 1 / -1; }
   .work__sticky { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
-  .work__title { font-size: var(--type-h2); }
-  .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); color: var(--fg-muted); }
+  .work__desc .lead { font-size: var(--type-h4); }
+  .work__aside :global(.sources a) { color: var(--color-paper); }
   .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
-  @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } .work__close-label { display: none; } }
-  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__stage { padding: 5% 5% 7% 0; } .work__field { inset: 0 -4% 0 8%; } .work__thumbs { grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-s); } }
+  @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } .work__close-label { display: none; } .work__stage { min-height: 70svh; } }
+  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__gallery { grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-s); } .work__thumb:nth-child(3n + 2) { margin-top: 0; } }
   @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
 </style>

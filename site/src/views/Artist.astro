@@ -6,6 +6,8 @@ import SourceList from '@/components/SourceList.astro';
 import Placeholder from '@/components/Placeholder.astro';
 import ArtworkCard from '@/components/ArtworkCard.astro';
 import Paper from '@/components/Paper.astro';
+import Macro from '@/components/Macro.astro';
+import heroMacro from '@/assets/macro/jaguar-rostro.jpg';
 import { t } from '@/i18n/ui';
 import { route, alternates, type Lang } from '@/i18n/routes';
 import { getPage, getWorks, getPeople, getArchive } from '@/lib/content';
@@ -28,22 +30,22 @@ const milestones = [
 ];
 const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: felipe.data.name, description: felipe.data.bio[lang], url: new URL(route('artist', lang), Astro.site).toString(), jobTitle: lang === 'es' ? 'Cartonero' : 'Cartonería artist', address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' } };
 ---
-<Base lang={lang} title={ui.nav.artist} description={page.data.seoDescription} alternates={alternates('artist')} jsonLd={personLd} topScene="lime">
-  <section class="artist-hero scene-lime">
-    <div class="container artist-hero__grid">
+<Base lang={lang} title={ui.nav.artist} description={page.data.seoDescription} alternates={alternates('artist')} jsonLd={personLd} overlayHeader topScene="ink">
+  <Macro src={heroMacro} alt={lang === 'es' ? 'Primer plano del rostro negro del alebrije de jaguar con ojos ámbar y orejas rojas.' : 'Close-up of the jaguar alebrije’s black face with amber eyes and red ears.'} scrim="left" position="62% 40%" minHeight="92svh" eager labelledby="artist-title">
+    <div class="container artist-hero">
       <div class="artist-hero__text">
         <p class="eyebrow">{page.data.eyebrow}</p>
-        <h1>{page.data.title}</h1>
-        <p class="lead mt-m">{page.data.lead}</p>
-        <p class="small mt-m artist-hero__role">{felipe.data.role[lang]}</p>
+        <h1 id="artist-title" class="giant on-photo">{page.data.title}</h1>
+        <p class="lead on-photo">{page.data.lead}</p>
+        <p class="small artist-hero__role">{felipe.data.role[lang]}</p>
       </div>
-      <div class="artist-hero__portrait">
-        <div class="sheet"><Paper tone="light" cut="d" fold="tr" class="artist-hero__paper">
+      <div class="artist-hero__portrait rise" style="--delay:200ms">
+        <div class="sheet--near"><Paper tone="lime" cut="d" fold="tr" class="artist-hero__paper">
           <Placeholder lang={lang} ratio="4/5" title={lang === 'es' ? 'Retrato de Felipe' : 'Portrait of Felipe'} text={lang === 'es' ? 'Fotografía en el taller, con su autorización. Pendiente.' : 'Photograph in the workshop, with his permission. Pending.'} />
         </Paper></div>
       </div>
     </div>
-  </section>
+  </Macro>
 
   <section class="scene-paper section">
     <div class="container grid">
@@ -55,10 +57,10 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
     </div>
   </section>
 
-  <section class="scene-ink section" aria-labelledby="timeline-title">
+  <section class="scene-cobalt section" aria-labelledby="timeline-title">
     <div class="container">
       <div class="section-head">
-        <div><p class="eyebrow">{ui.legacy.timeline}</p><h2 id="timeline-title">{lang === 'es' ? 'Hitos documentados' : 'Documented milestones'}</h2></div>
+        <div><p class="eyebrow">{ui.legacy.timeline}</p><h2 id="timeline-title" class="giant">{lang === 'es' ? 'Hitos documentados' : 'Documented milestones'}</h2></div>
         <p class="small muted" style="max-width:40ch">{lang === 'es' ? 'Solo se incluyen fechas verificadas en fuentes públicas. Los hitos personales se añadirán con la confirmación del artista.' : 'Only dates verified in public sources are included. Personal milestones will be added with the artist’s confirmation.'}</p>
       </div>
       <ol class="milestones">
@@ -83,11 +85,11 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
 </Base>
 
 <style>
-  .artist-hero { padding-block: var(--space-xl); }
-  .artist-hero__grid { display: grid; grid-template-columns: 7fr 5fr; gap: var(--space-l) var(--gutter); align-items: end; }
-  .artist-hero h1 { font-size: var(--type-hero); }
-  .artist-hero__role { font-weight: 700; }
-  .artist-hero__paper { padding: 12px; }
+  .artist-hero { display: grid; grid-template-columns: 7fr 4fr; gap: var(--space-l) var(--gutter); align-items: end; min-height: 92svh; padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); }
+  .artist-hero__text { display: grid; gap: var(--space-s); }
+  .artist-hero__role { font-weight: 700; color: var(--color-lime); }
+  .artist-hero__paper { padding: 12px; --fold: 56px; }
+  .artist-hero__paper :global(.placeholder) { background: rgba(247,247,242,0.6); border-color: rgba(25,27,36,0.45); }
   .artist-aside { display: grid; align-content: start; }
   .artist-aside :global(img) { width: 100%; height: auto; }
   .milestones { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
@@ -96,7 +98,7 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
   .milestone__label { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
   .milestone--pending .milestone__label { color: var(--fg-muted); }
   .works-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
-  @media (max-width: 900px) { .artist-hero__grid { grid-template-columns: 1fr; } .artist-hero__portrait { max-width: 360px; } }
+  @media (max-width: 900px) { .artist-hero { grid-template-columns: 1fr; } .artist-hero__portrait { max-width: 320px; } }
   @media (max-width: 760px) { .works-row { grid-template-columns: 1fr 1fr; } .milestone { grid-template-columns: 1fr; gap: 0.2rem; } }
   @media (max-width: 480px) { .works-row { grid-template-columns: 1fr; } }
 </style>

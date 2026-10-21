@@ -44,9 +44,10 @@
   --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
   --font-text: 'Manrope Variable', 'Helvetica Neue', Arial, system-ui, sans-serif;
 
-  --type-hero: clamp(2.75rem, 1.6rem + 5.2vw, 7rem);          /* 44 → 112 */
-  --type-h2: clamp(2.25rem, 1.4rem + 3.1vw, 4.5rem);          /* 36 → 72 */
-  --type-h3: clamp(1.625rem, 1.2rem + 1.5vw, 2.75rem);        /* 26 → 44 */
+  --type-hero: clamp(3.2rem, 1.4rem + 8.5vw, 10.5rem);        /* 51 → 168 */
+  --type-giant: clamp(4rem, 1rem + 13vw, 15rem);                /* 64 → 240 */
+  --type-h2: clamp(2.5rem, 1.3rem + 4.6vw, 6.25rem);          /* 40 → 100 */
+  --type-h3: clamp(1.75rem, 1.2rem + 2vw, 3.25rem);           /* 28 → 52 */
   --type-h4: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
   --type-lead: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
   --type-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);       /* 16 → 18 */
@@ -283,3 +284,47 @@ p:last-child { margin-bottom: 0; }
 .skip { position: absolute; left: var(--gutter); top: -4rem; z-index: 100; background: var(--color-lime); color: var(--color-ink); padding: 0.75rem 1rem; text-decoration: none; font-weight: 700; transition: top 150ms; }
 .skip:focus { top: var(--space-s); }
 main:focus { outline: none; }
+
+/* Full-scale additions ---------------------------------------------------- */
+.bleed { width: 100vw; margin-left: calc(50% - 50vw); }
+.giant { font-size: var(--type-giant); line-height: 0.9; letter-spacing: -0.035em; }
+.overlap { position: relative; z-index: 2; }
+.on-photo { color: var(--color-paper); text-shadow: 0 2px 24px rgba(25, 27, 36, 0.55), 0 0 2px rgba(25, 27, 36, 0.6); }
+.on-photo .eyebrow { color: var(--color-lime); }
+.on-photo .lead { color: rgba(247, 247, 242, 0.92); }
+
+/* Macro: a photograph used as an environment. Text zones get a scrim that follows the text, never the whole image. */
+.macro { position: relative; overflow: hidden; isolation: isolate; background: var(--color-ink); color: var(--color-paper); }
+.macro__img { position: absolute; inset: 0; z-index: 0; }
+.macro__img img { width: 100%; height: 100%; object-fit: cover; }
+.macro__scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.macro__scrim--bottom { background: linear-gradient(to top, rgba(25, 27, 36, 0.86) 0%, rgba(25, 27, 36, 0.5) 32%, rgba(25, 27, 36, 0) 62%); }
+.macro__scrim--left { background: linear-gradient(to right, rgba(25, 27, 36, 0.85) 0%, rgba(25, 27, 36, 0.45) 40%, rgba(25, 27, 36, 0) 72%); }
+.macro__scrim--top { background: linear-gradient(to bottom, rgba(25, 27, 36, 0.7) 0%, rgba(25, 27, 36, 0) 45%); }
+.macro__content { position: relative; z-index: 2; }
+.macro :focus-visible { outline-color: var(--color-lime); }
+.macro .eyebrow { color: var(--color-lime); }
+
+/* Scroll-driven presence: photographs settle from 1.08 to 1 as they enter; text slides up. */
+.js .zoom-in img, .js .zoom-in > picture > img { transform: scale(1.08); transition: transform 1100ms var(--ease-paper); }
+.js .zoom-in.is-in img, .js .zoom-in.is-in > picture > img { transform: scale(1); }
+.js .rise { opacity: 0; transform: translateY(28px); transition: opacity 700ms var(--ease-paper), transform 700ms var(--ease-paper); transition-delay: var(--delay, 0ms); }
+.js .rise.is-in { opacity: 1; transform: none; }
+.js .wipe { clip-path: inset(0 0 100% 0); transition: clip-path 900ms var(--ease-paper); transition-delay: var(--delay, 0ms); }
+.js .wipe.is-in { clip-path: inset(0); }
+@media (prefers-reduced-motion: reduce) {
+  .js .zoom-in img, .js .zoom-in > picture > img, .js .rise, .js .wipe { transform: none; opacity: 1; clip-path: none; transition: none; }
+}
+
+/* Marquee strip (DESPLEGAR as a line of type). Pauses on hover/focus and under reduced motion. */
+.marquee { overflow: hidden; white-space: nowrap; border-top: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; padding-block: 0.6em; }
+.marquee__track { display: inline-flex; gap: 3rem; padding-right: 3rem; animation: marquee 28s linear infinite; will-change: transform; }
+.marquee:hover .marquee__track, .marquee:focus-within .marquee__track { animation-play-state: paused; }
+.marquee__item { font-family: var(--font-display); font-weight: 600; font-style: italic; font-size: var(--type-h3); letter-spacing: -0.01em; }
+.marquee__dot { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 999px; background: currentColor; align-self: center; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+/* Big-number labels */
+.num { font-family: var(--font-display); font-weight: 700; font-size: var(--type-giant); line-height: 0.8; letter-spacing: -0.05em; opacity: 0.18; }
+.btn--xl { min-height: 64px; padding: 1em 2.2em; font-size: var(--type-body); }

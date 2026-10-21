@@ -5,10 +5,11 @@ import Base from '@/layouts/Base.astro';
 import Placeholder from '@/components/Placeholder.astro';
 import Paper from '@/components/Paper.astro';
 import Marks from '@/components/Marks.astro';
+import Macro from '@/components/Macro.astro';
+import heroMacro from '@/assets/macro/rana-lomo.jpg';
 import { t } from '@/i18n/ui';
 import { alternates, route, type Lang } from '@/i18n/routes';
 import { getPage } from '@/lib/content';
-import img1 from '@/assets/works/alebrije-astado-frente-taller.jpg';
 import img2 from '@/assets/works/alebrije-astado-cenital-taller.jpg';
 import img3 from '@/assets/works/jinete-calavera-taller.jpg';
 import img4 from '@/assets/works/alebrije-astado-perfil-taller.jpg';
@@ -22,7 +23,6 @@ const page = await getPage('taller', lang);
 const { Content } = await render(page);
 const stages = page.data.sections ?? [];
 const alt = {
-  img1: { es: 'Alebrije de cabeza negra y astas en la mesa del taller, con frascos de pintura y pinceles al fondo.', en: 'Black-headed, antlered alebrije on the workshop table, with paint jars and brushes behind.' },
   img2: { es: 'Vista cenital del alebrije en el taller: alas rojas extendidas, cuerpo moteado y periódicos bajo la mesa.', en: 'Overhead view of the alebrije in the workshop: red wings spread, spotted body and newspapers under the table.' },
   img3: { es: 'Esqueleto con alas de mariposa montado en una criatura anaranjada, en proceso entre vasos y pinceles.', en: 'Skeleton with butterfly wings riding an orange creature, in progress among cups and brushes.' },
   img4: { es: 'Vista lateral del alebrije de jaguar con astas: cola enroscada, ala y patas verdes.', en: 'Side view of the antlered jaguar alebrije: coiled tail, wing and green legs.' },
@@ -30,21 +30,14 @@ const alt = {
   done: { es: 'Esqueleto alado sobre alebrije, terminado y con riendas, sobre una mesa.', en: 'Winged skeleton on an alebrije, finished and with reins, on a table.' },
 };
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('workshop')} topScene="cobalt">
-  <section class="ws-hero scene-cobalt">
-    <div class="container ws-hero__grid">
-      <div>
-        <p class="eyebrow">{page.data.eyebrow}</p>
-        <h1>{page.data.title}</h1>
-        <p class="lead mt-m">{page.data.lead}</p>
-      </div>
-      <figure class="figure ws-hero__fig">
-        <div class="sheet"><Paper tone="lime" cut="b" fold="tr" class="ws-hero__paper">
-          <div class="reveal-mask ws-hero__photo"><Image src={img1} alt={alt.img1[lang]} widths={[640, 1024, 1400]} sizes="(max-width: 900px) 100vw, 44vw" loading="eager" /></div>
-        </Paper></div>
-      </figure>
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('workshop')} overlayHeader topScene="ink">
+  <Macro src={heroMacro} alt={lang === 'es' ? 'Lomo verde punteado y orejas rosadas del alebrije de rana, en primer plano: pintura a pincel sobre papel.' : 'Dotted green back and pink ears of the frog alebrije, close up: brush painting on paper.'} scrim="bottom" position="50% 45%" minHeight="88svh" eager labelledby="ws-title">
+    <div class="container ws-hero">
+      <p class="eyebrow">{page.data.eyebrow}</p>
+      <h1 id="ws-title" class="giant on-photo">{page.data.title}</h1>
+      <p class="lead on-photo">{page.data.lead}</p>
     </div>
-  </section>
+  </Macro>
 
   <section class="scene-paper section--tight"><div class="container prose"><Content /></div></section>
 
@@ -97,17 +90,13 @@ const alt = {
 </Base>
 
 <style>
-  .ws-hero { padding-block: calc(var(--space-xl)) var(--space-xl); }
-  .ws-hero__grid { display: grid; grid-template-columns: 6fr 6fr; gap: var(--space-l) var(--gutter); align-items: center; }
-  .ws-hero h1 { font-size: var(--type-hero); }
-  .ws-hero__paper { padding: 14px; --fold: 64px; }
-  .ws-hero__photo { aspect-ratio: 4 / 5; overflow: hidden; }
-  .ws-hero__photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .ws-hero { min-height: 88svh; display: grid; align-content: end; gap: var(--space-s); padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); }
+  .ws-hero .lead { max-width: 46ch; }
   .stations { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xl); }
   .station { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-l) var(--gutter); align-items: center; }
   .station--alt .station__text { order: 2; }
-  .station__num { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h2); color: var(--color-lime); line-height: 1; display: block; margin-bottom: var(--space-s); }
-  .station__text h3 { margin-bottom: var(--space-s); }
+  .station__num { font-family: var(--font-display); font-weight: 700; font-size: clamp(4rem, 2rem + 8vw, 9rem); color: var(--color-lime); line-height: 0.85; letter-spacing: -0.05em; display: block; margin-bottom: var(--space-s); }
+  .station__text h3 { margin-bottom: var(--space-s); font-size: var(--type-h2); }
   .station__note { margin-top: var(--space-s); color: var(--fg-muted); border-left: 2px solid var(--color-lime); padding-left: var(--space-s); }
   .station__card { aspect-ratio: 5 / 4; display: grid; align-content: end; padding: var(--space-m); --fold: 52px; }
   .station__mark { position: absolute; top: 10%; left: 8%; width: 44%; opacity: 0.55; pointer-events: none; }
@@ -119,5 +108,5 @@ const alt = {
   .ws-note { margin-top: var(--space-xl); color: var(--fg-muted); max-width: 60ch; }
   .doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); align-items: start; }
   .doc-grid :global(img) { width: 100%; height: auto; }
-  @media (max-width: 900px) { .ws-hero__grid { grid-template-columns: 1fr; } .station { grid-template-columns: 1fr; } .station--alt .station__text { order: 0; } .doc-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .station { grid-template-columns: 1fr; } .station--alt .station__text { order: 0; } .doc-grid { grid-template-columns: 1fr; } }
 </style>

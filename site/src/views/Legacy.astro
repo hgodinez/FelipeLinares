@@ -5,6 +5,8 @@ import Base from '@/layouts/Base.astro';
 import SourceList from '@/components/SourceList.astro';
 import Paper from '@/components/Paper.astro';
 import Marks from '@/components/Marks.astro';
+import Macro from '@/components/Macro.astro';
+import heroMacro from '@/assets/macro/tigre-alas.jpg';
 import { t } from '@/i18n/ui';
 import { alternates, route, archivePath, type Lang } from '@/i18n/routes';
 import { getPage, getPeople, getArchive } from '@/lib/content';
@@ -34,17 +36,14 @@ const genLabel = (g: number) => {
 };
 const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('legacy')}>
-  <section class="legacy-hero scene-paper">
-    <div class="container legacy-hero__grid">
-      <div>
-        <p class="eyebrow eyebrow--accent">{page.data.eyebrow}</p>
-        <h1>{page.data.title}</h1>
-        <p class="lead mt-m">{page.data.lead}</p>
-      </div>
-      <Marks kind="antler" class="legacy-hero__mark" />
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('legacy')} overlayHeader topScene="ink">
+  <Macro src={heroMacro} alt={lang === 'es' ? 'Alas negras y lomo moteado del alebrije de tigre, vistos desde arriba.' : 'Black wings and spotted back of the tiger alebrije, seen from above.'} scrim="bottom" position="50% 50%" minHeight="88svh" eager labelledby="legacy-title">
+    <div class="container legacy-hero">
+      <p class="eyebrow">{page.data.eyebrow}</p>
+      <h1 id="legacy-title" class="giant on-photo">{page.data.title}</h1>
+      <p class="lead on-photo">{page.data.lead}</p>
     </div>
-  </section>
+  </Macro>
 
   <!-- Chapters as archival sheets -->
   <section class="scene-paper section--tight chapters">
@@ -70,7 +69,7 @@ const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
   <section class="scene-ink section tree-section" aria-labelledby="tree-title">
     <div class="container">
       <div class="section-head">
-        <div><p class="eyebrow">{ui.legacy.tree}</p><h2 id="tree-title">{lang === 'es' ? 'Cinco generaciones' : 'Five generations'}</h2></div>
+        <div><p class="eyebrow">{ui.legacy.tree}</p><h2 id="tree-title" class="giant">{lang === 'es' ? 'Cinco generaciones' : 'Five generations'}</h2></div>
         <p class="small muted" style="max-width:40ch">{ui.legacy.treeHint}</p>
       </div>
       <div class="tree" data-tree>
@@ -113,7 +112,7 @@ const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
   <!-- Timeline -->
   <section class="scene-paper section" aria-labelledby="tl-title">
     <div class="container">
-      <div class="section-head"><div><p class="eyebrow eyebrow--accent">{ui.legacy.timeline}</p><h2 id="tl-title">{lang === 'es' ? 'De 1906 a hoy' : 'From 1906 to today'}</h2></div><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
+      <div class="section-head"><div><p class="eyebrow eyebrow--accent">{ui.legacy.timeline}</p><h2 id="tl-title" class="giant">{lang === 'es' ? 'De 1906 a hoy' : 'From 1906 to today'}</h2></div><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
       <ol class="timeline">
         {timeline.map((e) => (
           <li class="timeline__item">
@@ -172,10 +171,8 @@ const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
 </script>
 
 <style>
-  .legacy-hero { padding-block: var(--space-xl) var(--space-l); }
-  .legacy-hero__grid { display: grid; grid-template-columns: 8fr 4fr; gap: var(--gutter); align-items: end; }
-  .legacy-hero h1 { font-size: var(--type-hero); }
-  .legacy-hero__mark { width: min(100%, 220px); justify-self: end; color: var(--coral-ink); }
+  .legacy-hero { min-height: 88svh; display: grid; align-content: end; gap: var(--space-s); padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); }
+  .legacy-hero .lead { max-width: 46ch; }
   .chapters__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-l); }
   .chapter { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--space-l) var(--gutter); align-items: start; }
   .chapter--alt { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
@@ -220,5 +217,4 @@ const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
   .define { padding: var(--space-m) var(--space-l) var(--space-l); }
   .define__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--type-meta); font-weight: 600; }
   .define__list li { padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
-  @media (max-width: 900px) { .legacy-hero__grid { grid-template-columns: 1fr; } .legacy-hero__mark { display: none; } }
 </style>

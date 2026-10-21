@@ -1,6 +1,10 @@
-# Informe de implementación — Rediseño «Papel vivo»
+# Informe de implementación — Rediseño «Papel vivo», versión a escala completa
 
 Fecha: octubre de 2026. Rama: `ccr-70139cd9-eg4z8h` (y `main` tras autorización).
+
+## Revisión: «Criaturas a escala completa»
+
+Tras la revisión del cliente (demasiado contenido, demasiado plano), la dirección «Papel vivo» se llevó a escala completa: las esculturas llenan la pantalla de borde a borde, los primeros planos de ojos, escamas y colmillos funcionan como fondos (`Macro.astro`), la tipografía crece hasta 240 px y se superpone a las fotografías, cada capítulo de la portada ocupa casi una pantalla, y los campos de color sangran a todo el ancho. Las hojas de papel pasan a ser acentos (fichas de linaje, estaciones del proceso). Para móvil, la portada usa una fotografía vertical distinta mediante `<picture>` con `media`.
 
 ## Qué se construyó
 

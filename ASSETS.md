@@ -22,9 +22,13 @@ Ruta base: `site/src/assets/works/`. El build genera variantes responsivas en We
 
 Resolución baja (899 × 1599): las cinco fotografías de taller. Se usan a tamaños moderados y nunca se amplían artificialmente.
 
+## Recortes macro (`site/src/assets/macro/`)
+
+Catorce recortes de las fotografías anteriores, sin ampliación artificial, usados como entornos de página completa y como segundas vistas en la galería: `tigre-rugido`, `tigre-alas`, `tigre-serpiente`, `tigre-serpiente-ala`, `tigre-rostro`, `jaguar-rostro`, `jaguar-colmillos`, `jaguar-alas`, `jaguar-escamas`, `rana-ojo`, `rana-lomo`, `calavera-rostro`, `calavera-montura`, `catrina-rostro`. Cada uno procede de un archivo listado en la tabla y conserva su autoría.
+
 ## Nota sobre el aislamiento de la obra de portada
 
-Se intentó aislar fielmente al tigre alado de su fondo con segmentación local (OpenCV GrabCut, cuatro pasadas). El cuerpo, las alas y la cola se separan bien, pero la zona entre la cabeza y el ala derecha conserva vetas de madera cuyo color coincide con el naranja del tigre; eliminarlas automáticamente recorta la oreja y la frente. Como ningún recorte resultó fiel al objeto, la portada utiliza la **fotografía completa dentro de una ventana editorial**, como prevé la dirección creativa. Un recorte manual sobre el archivo maestro, revisado por el artista, puede sustituirla más adelante sin cambiar la composición.
+Se intentó aislar fielmente al tigre alado de su fondo con segmentación local (OpenCV GrabCut, cuatro pasadas). El cuerpo, las alas y la cola se separan bien, pero la zona entre la cabeza y el ala derecha conserva vetas de madera cuyo color coincide con el naranja del tigre; eliminarlas automáticamente recorta la oreja y la frente. Como ningún recorte resultó fiel al objeto, la portada utiliza la **fotografía completa a pantalla completa** (vista frontal en escritorio, vista cenital en móvil mediante `<picture>`). Un recorte manual sobre el archivo maestro, revisado por el artista, puede sustituirla más adelante sin cambiar la composición.
 
 ## Material que falta (ver CONTENT_CHECKLIST.md)
 
