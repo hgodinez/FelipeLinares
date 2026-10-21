@@ -275,7 +275,7 @@ const personLd = {
 
   /* ----- 02 Creatures ----- */
   .creatures { position: relative; overflow: hidden; }
-  .creatures__sheet { position: absolute; top: 0; right: -8%; width: 46%; height: 34%; z-index: 0; pointer-events: none; }
+  .creatures__sheet { position: absolute; top: 0; right: -8%; width: 46%; height: min(34%, 460px); z-index: -1; pointer-events: none; }
   .creatures__sheet-paper { width: 100%; height: 100%; }
   .creatures .container { position: relative; z-index: 1; }
   .creatures__head { max-width: 60ch; margin-bottom: var(--space-xl); }
@@ -292,6 +292,7 @@ const personLd = {
   .creatures__item--tigre { grid-column: 7 / 13; margin-top: var(--space-xl); }
   .creatures__all { margin-top: var(--space-2xl); display: flex; justify-content: center; }
   @media (max-width: 900px) {
+    .creatures__sheet { right: -30%; width: 70%; height: 200px; }
     .creatures__item--jaguar { grid-column: 1 / 13; }
     .creatures__item--rana { grid-column: 3 / 11; margin-top: 0; }
     .creatures__field { inset: 4% -4% -4% -4%; }

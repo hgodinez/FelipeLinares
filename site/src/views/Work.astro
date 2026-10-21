@@ -157,6 +157,6 @@ const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.k
   .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); color: var(--fg-muted); }
   .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
   @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } .work__close-label { display: none; } }
-  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__stage { padding: 4% 0 6% 0; } .work__field { inset: 0 -4% 0 6%; } }
+  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__stage { padding: 5% 5% 7% 0; } .work__field { inset: 0 -4% 0 8%; } .work__thumbs { grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-s); } }
   @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
 </style>
