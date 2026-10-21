@@ -54,6 +54,87 @@
   }
  },
  {
+  "id": "rosa-electrico",
+  "nombre": {
+   "es": "Rosa eléctrico",
+   "en": "Electric pink"
+  },
+  "desc": {
+   "es": "Rosa intenso, cian, morado y amarillo",
+   "en": "Hot pink, cyan, purple and yellow"
+  },
+  "t": {
+   "papel": "#ff66b3",
+   "papel-2": "#22d3ee",
+   "tinta": "#1a0030",
+   "tinta-suave": "#3d0d66",
+   "bermellon": "#5b00b5",
+   "bermellon-oscuro": "#43008a",
+   "cempasuchil": "#ffe600",
+   "turquesa": "#0097b2",
+   "verde": "#1a9e4e",
+   "morado": "#e05a00",
+   "blanco": "#fff3fa",
+   "oscuro": "#1f0038",
+   "crema-texto": "#ffe0f0",
+   "crema-suave": "#ffb8dc"
+  }
+ },
+ {
+  "id": "naranja",
+  "nombre": {
+   "es": "Naranja",
+   "en": "Orange"
+  },
+  "desc": {
+   "es": "Naranja vivo, amarillo, morado y turquesa",
+   "en": "Vivid orange, yellow, purple and turquoise"
+  },
+  "t": {
+   "papel": "#ff7a00",
+   "papel-2": "#ffe600",
+   "tinta": "#042a2b",
+   "tinta-suave": "#133a3b",
+   "bermellon": "#4a0e8f",
+   "bermellon-oscuro": "#35086b",
+   "cempasuchil": "#ff2fb0",
+   "turquesa": "#0094a0",
+   "verde": "#2e8b2e",
+   "morado": "#8b1fe0",
+   "blanco": "#fff5e0",
+   "oscuro": "#03201f",
+   "crema-texto": "#dffaf5",
+   "crema-suave": "#a9e8e0"
+  }
+ },
+ {
+  "id": "limon",
+  "nombre": {
+   "es": "Limón",
+   "en": "Lime"
+  },
+  "desc": {
+   "es": "Verde limón, turquesa, magenta y naranja",
+   "en": "Lime green, turquoise, magenta and orange"
+  },
+  "t": {
+   "papel": "#c6f000",
+   "papel-2": "#2ee6d6",
+   "tinta": "#1d0033",
+   "tinta-suave": "#45175f",
+   "bermellon": "#c4007a",
+   "bermellon-oscuro": "#95005d",
+   "cempasuchil": "#ff8a00",
+   "turquesa": "#0070e0",
+   "verde": "#008f3c",
+   "morado": "#7a00c8",
+   "blanco": "#f8ffd6",
+   "oscuro": "#17002b",
+   "crema-texto": "#eeffb3",
+   "crema-suave": "#c8f29a"
+  }
+ },
+ {
   "id": "terracota",
   "nombre": {
    "es": "Terracota",

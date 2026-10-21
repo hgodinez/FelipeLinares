@@ -15,6 +15,54 @@
   --crema-texto: #fff1b8;
   --crema-suave: #ffd9a8;
 }
+:root[data-paleta="rosa-electrico"] {
+  --papel: #ff66b3;
+  --papel-2: #22d3ee;
+  --tinta: #1a0030;
+  --tinta-suave: #3d0d66;
+  --bermellon: #5b00b5;
+  --bermellon-oscuro: #43008a;
+  --cempasuchil: #ffe600;
+  --turquesa: #0097b2;
+  --verde: #1a9e4e;
+  --morado: #e05a00;
+  --blanco: #fff3fa;
+  --oscuro: #1f0038;
+  --crema-texto: #ffe0f0;
+  --crema-suave: #ffb8dc;
+}
+:root[data-paleta="naranja"] {
+  --papel: #ff7a00;
+  --papel-2: #ffe600;
+  --tinta: #042a2b;
+  --tinta-suave: #133a3b;
+  --bermellon: #4a0e8f;
+  --bermellon-oscuro: #35086b;
+  --cempasuchil: #ff2fb0;
+  --turquesa: #0094a0;
+  --verde: #2e8b2e;
+  --morado: #8b1fe0;
+  --blanco: #fff5e0;
+  --oscuro: #03201f;
+  --crema-texto: #dffaf5;
+  --crema-suave: #a9e8e0;
+}
+:root[data-paleta="limon"] {
+  --papel: #c6f000;
+  --papel-2: #2ee6d6;
+  --tinta: #1d0033;
+  --tinta-suave: #45175f;
+  --bermellon: #c4007a;
+  --bermellon-oscuro: #95005d;
+  --cempasuchil: #ff8a00;
+  --turquesa: #0070e0;
+  --verde: #008f3c;
+  --morado: #7a00c8;
+  --blanco: #f8ffd6;
+  --oscuro: #17002b;
+  --crema-texto: #eeffb3;
+  --crema-suave: #c8f29a;
+}
 :root[data-paleta="terracota"] {
   --papel: #f5e8d6;
   --papel-2: #ecd9bf;
