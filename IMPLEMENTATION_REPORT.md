@@ -1,8 +1,12 @@
-# Informe de implementación — Rediseño «Papel vivo», versión a escala completa
+# Informe de implementación
 
 Fecha: octubre de 2026. Rama: `ccr-70139cd9-eg4z8h` (y `main` tras autorización).
 
-## Revisión: «Criaturas a escala completa»
+## Revisión 3: rediseño a partir de referencias del cliente
+
+El cliente rechazó las dos versiones anteriores y entregó como referencia el sitio de Gorgonio Candelario (humbertogodinez.com/GorgonioCandelario). El sitio se reconstruyó siguiendo esa referencia: papel cálido (`#f6eedd`) y tinta (`#1c1612`), acentos bermellón, cempasúchil, turquesa y verde; Fraunces para títulos y Source Sans 3 para texto; portada de dos columnas con marco de franjas de colores; secciones alternas crema y oscuras; tarjetas con esquinas redondeadas; pasos numerados con círculos de color; acercamientos cuadrados; galería como salas de museo en fondo oscuro con muro en columnas y visor con todas las vistas; cronología, árbol y archivo con el mismo lenguaje. Sin animaciones de desplazamiento; el movimiento se limita a hover y al visor.
+
+## Revisión 2 (descartada): «Criaturas a escala completa»
 
 Tras la revisión del cliente (demasiado contenido, demasiado plano), la dirección «Papel vivo» se llevó a escala completa: las esculturas llenan la pantalla de borde a borde, los primeros planos de ojos, escamas y colmillos funcionan como fondos (`Macro.astro`), la tipografía crece hasta 240 px y se superpone a las fotografías, cada capítulo de la portada ocupa casi una pantalla, y los campos de color sangran a todo el ancho. Las hojas de papel pasan a ser acentos (fichas de linaje, estaciones del proceso). Para móvil, la portada usa una fotografía vertical distinta mediante `<picture>` con `media`.
 

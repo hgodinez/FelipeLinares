@@ -2,111 +2,95 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import Placeholder from '@/components/Placeholder.astro';
-import Paper from '@/components/Paper.astro';
-import Marks from '@/components/Marks.astro';
-import Macro from '@/components/Macro.astro';
-import heroMacro from '@/assets/macro/rana-lomo.jpg';
+import Lightbox from '@/components/Lightbox.astro';
+import { getImage } from 'astro:assets';
 import { t } from '@/i18n/ui';
 import { alternates, route, type Lang } from '@/i18n/routes';
 import { getPage } from '@/lib/content';
+import img1 from '@/assets/works/alebrije-astado-frente-taller.jpg';
 import img2 from '@/assets/works/alebrije-astado-cenital-taller.jpg';
 import img3 from '@/assets/works/jinete-calavera-taller.jpg';
 import img4 from '@/assets/works/alebrije-astado-perfil-taller.jpg';
 import img5 from '@/assets/works/catrina-emplumada-taller.jpg';
 import done from '@/assets/works/jinete-calavera-mesa.jpg';
+import mEscamas from '@/assets/macro/jaguar-escamas.jpg';
+import mAlas from '@/assets/macro/jaguar-alas.jpg';
+import mColmillos from '@/assets/macro/jaguar-colmillos.jpg';
+import mRanaLomo from '@/assets/macro/rana-lomo.jpg';
+import mRanaOjo from '@/assets/macro/rana-ojo.jpg';
+import mTigreAlas from '@/assets/macro/tigre-alas.jpg';
+import mSerpiente from '@/assets/macro/tigre-serpiente.jpg';
+import mCalavera from '@/assets/macro/calavera-rostro.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
+const es = lang === 'es';
 const page = await getPage('taller', lang);
 const { Content } = await render(page);
-const stages = page.data.sections ?? [];
-const alt = {
-  img2: { es: 'Vista cenital del alebrije en el taller: alas rojas extendidas, cuerpo moteado y periódicos bajo la mesa.', en: 'Overhead view of the alebrije in the workshop: red wings spread, spotted body and newspapers under the table.' },
-  img3: { es: 'Esqueleto con alas de mariposa montado en una criatura anaranjada, en proceso entre vasos y pinceles.', en: 'Skeleton with butterfly wings riding an orange creature, in progress among cups and brushes.' },
-  img4: { es: 'Vista lateral del alebrije de jaguar con astas: cola enroscada, ala y patas verdes.', en: 'Side view of the antlered jaguar alebrije: coiled tail, wing and green legs.' },
-  img5: { es: 'Catrina con tocado de plumas sobre base roja, rodeada de piezas terminadas y en proceso.', en: 'Catrina with feathered headdress on a red base, surrounded by finished and in-progress pieces.' },
-  done: { es: 'Esqueleto alado sobre alebrije, terminado y con riendas, sobre una mesa.', en: 'Winged skeleton on an alebrije, finished and with reins, on a table.' },
-};
+const pasos = page.data.sections ?? [];
+const fotos = [
+  { src: img1, alt: { es: 'Alebrije de cabeza negra y astas en la mesa del taller, con frascos de pintura y pinceles al fondo.', en: 'Black-headed, antlered alebrije on the workshop table, with paint jars and brushes behind.' } },
+  { src: img2, alt: { es: 'Vista cenital del alebrije en el taller: alas rojas extendidas y cuerpo moteado.', en: 'Overhead view of the alebrije in the workshop: red wings spread and spotted body.' } },
+  { src: img3, alt: { es: 'Esqueleto con alas de mariposa montado en una criatura anaranjada, en proceso entre vasos y pinceles.', en: 'Skeleton with butterfly wings riding an orange creature, in progress among cups and brushes.' } },
+  { src: img4, alt: { es: 'Vista lateral del alebrije de jaguar con astas: cola enroscada, ala y patas verdes.', en: 'Side view of the antlered jaguar alebrije: coiled tail, wing and green legs.' } },
+  { src: img5, alt: { es: 'Catrina con tocado de plumas sobre base roja, rodeada de piezas terminadas y en proceso.', en: 'Catrina with feathered headdress on a red base, surrounded by finished and in-progress pieces.' } },
+  { src: done, alt: { es: 'Esqueleto alado sobre alebrije, terminado y con riendas, sobre una mesa.', en: 'Winged skeleton on an alebrije, finished and with reins, on a table.' } },
+];
+const fotosFull = await Promise.all(fotos.map(async (f) => ({ ...f, full: (await getImage({ src: f.src, width: Math.min(1600, f.src.width), format: 'webp', quality: 82 })).src })));
+const detalles = [
+  { img: mEscamas, t: es ? 'Escamas y uñas' : 'Scales and nails', d: es ? 'Garras verdes cubiertas de escamas pintadas una por una; las uñas, de marfil.' : 'Green claws covered in scales painted one by one; ivory nails.' },
+  { img: mAlas, t: es ? 'Nervaduras' : 'Wing veins', d: es ? 'Alas de murciélago en rojo con las nervaduras trazadas en blanco sobre la pintura seca.' : 'Red bat wings with veins traced in white over the dry paint.' },
+  { img: mColmillos, t: es ? 'Colmillos y lengua' : 'Tusks and tongue', d: es ? 'Colmillos curvos modelados en papel y una lengua larga en bermellón.' : 'Curved tusks modeled in paper and a long vermilion tongue.' },
+  { img: mRanaLomo, t: es ? 'Puntos sobre verde' : 'Dots on green', d: es ? 'Puntos de dos tamaños que dan textura a un volumen liso.' : 'Dots of two sizes giving texture to a smooth volume.' },
+  { img: mRanaOjo, t: es ? 'Ojo y pico' : 'Eye and beak', d: es ? 'Cabeza de ave sobre cuerpo de rana; el cuello escamado en azul y oro.' : 'A bird’s head on a frog’s body; the neck scaled in blue and gold.' },
+  { img: mTigreAlas, t: es ? 'Manchas de jaguar' : 'Jaguar spots', d: es ? 'Rosetas negras sobre naranja a lo largo de todo el cuerpo.' : 'Black rosettes on orange along the whole body.' },
+  { img: mSerpiente, t: es ? 'Cola de serpiente' : 'Serpent tail', d: es ? 'La cola del tigre termina en una cabeza de serpiente de ojos amarillos.' : 'The tiger’s tail ends in a yellow-eyed serpent head.' },
+  { img: mCalavera, t: es ? 'Alas de monarca' : 'Monarch wings', d: es ? 'Una calavera con alas de mariposa monarca en naranja, negro y violeta.' : 'A skull with monarch-butterfly wings in orange, black and violet.' },
+];
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('workshop')} overlayHeader topScene="ink">
-  <Macro src={heroMacro} alt={lang === 'es' ? 'Lomo verde punteado y orejas rosadas del alebrije de rana, en primer plano: pintura a pincel sobre papel.' : 'Dotted green back and pink ears of the frog alebrije, close up: brush painting on paper.'} scrim="bottom" position="50% 45%" minHeight="88svh" eager labelledby="ws-title">
-    <div class="container ws-hero">
-      <p class="eyebrow">{page.data.eyebrow}</p>
-      <h1 id="ws-title" class="giant on-photo">{page.data.title}</h1>
-      <p class="lead on-photo">{page.data.lead}</p>
-    </div>
-  </Macro>
-
-  <section class="scene-paper section--tight"><div class="container prose"><Content /></div></section>
-
-  <section class="scene-cobalt section" aria-labelledby="stages-title">
-    <div class="container">
-      <h2 id="stages-title" class="visually-hidden">{page.data.eyebrow}</h2>
-      <ol class="stations">
-        {stages.map((s, i) => (
-          <li class:list={['station', { 'station--alt': i % 2 === 1 }]}>
-            <div class="station__text">
-              <span class="station__num" aria-hidden="true">0{i + 1}</span>
-              <h3>{s.heading}</h3>
-              <p>{s.text}</p>
-              {s.note && <p class="small station__note">{s.note}</p>}
-            </div>
-            <div class="station__media">
-              {i < 3 && (
-                <div class="sheet--soft"><Paper tone={i === 0 ? 'lime' : i === 1 ? 'light' : 'deep'} cut={i === 0 ? 'a' : i === 1 ? 'c' : 'b'} fold={i === 1 ? 'tr' : 'none'} class="station__card">
-                  <Marks kind={i === 0 ? 'spots' : i === 1 ? 'antler' : 'wing'} class:list={['station__mark', { 'station__mark--spots': i === 0 }]} />
-                  <p class="station__pending small">{s.note}</p>
-                </Paper></div>
-              )}
-              {i === 3 && <div class="station__photos"><div class="reveal-mask sheet--soft"><Image src={img2} alt={alt.img2[lang]} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div><div class="reveal-mask sheet--soft" style="--delay:120ms"><Image src={img3} alt={alt.img3[lang]} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div></div>}
-              {i === 4 && <div class="reveal-mask reveal-mask--up sheet"><Image src={done} alt={alt.done[lang]} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div>}
-            </div>
-          </li>
-        ))}
-      </ol>
-      <p class="small ws-note">{ui.home.ch4Note}</p>
-    </div>
-  </section>
-
-  <section class="scene-paper section" aria-labelledby="doc-title">
-    <div class="container">
-      <div class="section-head"><div><p class="eyebrow eyebrow--accent">{lang === 'es' ? 'Fotografías de taller' : 'Workshop photographs'}</p><h2 id="doc-title">{lang === 'es' ? 'Entre frascos, pinceles y piezas a medio secar' : 'Among jars, brushes and half-dried pieces'}</h2></div></div>
-      <div class="doc-grid">
-        <figure class="figure"><div class="reveal-mask sheet--soft"><Image src={img4} alt={alt.img4[lang]} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 33vw" loading="lazy" /></div></figure>
-        <figure class="figure"><div class="reveal-mask sheet--soft" style="--delay:100ms"><Image src={img5} alt={alt.img5[lang]} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 33vw" loading="lazy" /></div></figure>
-        <Placeholder lang={lang} ratio="3/4" title={lang === 'es' ? 'Video del proceso' : 'Process video'} text={lang === 'es' ? 'Video corto por incorporar con autorización del artista.' : 'Short video to be added with the artist’s permission.'} />
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('workshop')}>
+  <section class="portada" aria-labelledby="titulo-taller">
+    <div class="contenedor">
+      <div>
+        <p class="antetitulo">{page.data.eyebrow}</p>
+        <h1 id="titulo-taller">{page.data.title}</h1>
+        <p class="lema">{es ? 'Papel, engrudo, volumen y pintura.' : 'Paper, paste, volume and paint.'}</p>
+        <p class="entrada">{page.data.lead}</p>
+        <div class="botones"><a class="boton boton-principal" href="#pasos">{es ? 'Ver los pasos' : 'See the steps'}</a><a class="boton boton-secundario" href={route('works', lang)}>{ui.cta.works}</a></div>
       </div>
+      <figure class="portada-imagen">
+        <div class="portada-marco"><Image src={img1} alt={fotos[0].alt[lang]} widths={[480, 960]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" /></div>
+        <figcaption>{es ? 'Una pieza a medio terminar en el taller familiar.' : 'A half-finished piece in the family workshop.'}</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section class="scene-ink section">
-    <div class="container--narrow container text-center">
-      <h2>{lang === 'es' ? 'Ver las criaturas terminadas' : 'See the finished creatures'}</h2>
-      <a class="btn btn--lime mt-l" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">↗</span></a>
+  <section class="seccion seccion-crema" id="pasos" aria-labelledby="titulo-pasos">
+    <div class="contenedor">
+      <div class="encabezado-seccion prosa"><p class="antetitulo">{es ? 'Del papel a la criatura' : 'From paper to creature'}</p><h2 id="titulo-pasos">{es ? 'Así se construye una pieza' : 'How a piece is built'}</h2><Content /></div>
+      <ol class="pasos">{pasos.map((p) => <li><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}</ol>
+      <div class="nota"><p><strong>{es ? '¿Cuánto tarda una pieza?' : 'How long does a piece take?'}</strong> {es ? 'Cada capa de papel se seca antes de la siguiente, a veces durante días. Las piezas grandes requieren semanas de secado y pintura.' : 'Each layer of paper dries before the next, sometimes for days. Large pieces need weeks of drying and painting.'}</p></div>
     </div>
   </section>
+
+  <section class="seccion" aria-labelledby="titulo-detalle">
+    <div class="contenedor">
+      <div class="encabezado-seccion"><p class="antetitulo">{es ? 'En detalle' : 'In detail'}</p><h2 id="titulo-detalle">{es ? 'Acercamientos a la pintura' : 'Close-ups of the painting'}</h2><p class="texto-suave">{es ? 'Recortes de las fotografías de las obras, sin ampliación artificial.' : 'Crops from the photographs of the works, without artificial enlargement.'}</p></div>
+      <ul class="detalles">{detalles.map((d) => <li><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}</ul>
+    </div>
+  </section>
+
+  <section class="seccion seccion-oscura" aria-labelledby="titulo-fotos">
+    <div class="contenedor">
+      <div class="encabezado-seccion"><p class="antetitulo">{es ? 'Fotografías de taller' : 'Workshop photographs'}</p><h2 id="titulo-fotos">{es ? 'Entre frascos, pinceles y piezas a medio secar' : 'Among jars, brushes and half-dried pieces'}</h2><p class="texto-suave">{ui.home.ch4Note}</p></div>
+      <ul class="piezas" data-lb-group>
+        {fotosFull.map((f) => <li class="pieza"><a class="pieza-imagen" href={f.full} data-lb-open data-full={f.full} data-alt={f.alt[lang]} data-title={es ? 'Taller' : 'Workshop'} data-caption={f.alt[lang]}><Image src={f.src} alt={f.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 22rem" loading="lazy" /></a></li>)}
+        <li class="pieza"><div class="marcador" style="aspect-ratio:3/4;border-radius:10px"><strong>{es ? 'Video del proceso' : 'Process video'}</strong><span>{es ? 'Por incorporar con autorización del artista.' : 'To be added with the artist’s permission.'}</span></div></li>
+      </ul>
+      <div class="nota-oscura"><p class="nota-titulo">{es ? 'Lo que falta por documentar' : 'What remains to be documented'}</p><p>{es ? 'Materiales sobre la mesa, la armadura de una pieza y las capas de papel antes de la pintura. Se fotografiarán en el taller de Felipe con su autorización.' : 'Materials on the table, the armature of a piece and the paper layers before painting. They will be photographed in Felipe’s workshop with his permission.'}</p></div>
+    </div>
+  </section>
+  <Lightbox lang={lang} />
 </Base>
-
-<style>
-  .ws-hero { min-height: 88svh; display: grid; align-content: end; gap: var(--space-s); padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); }
-  .ws-hero .lead { max-width: 46ch; }
-  .stations { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xl); }
-  .station { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-l) var(--gutter); align-items: center; }
-  .station--alt .station__text { order: 2; }
-  .station__num { font-family: var(--font-display); font-weight: 700; font-size: clamp(4rem, 2rem + 8vw, 9rem); color: var(--color-lime); line-height: 0.85; letter-spacing: -0.05em; display: block; margin-bottom: var(--space-s); }
-  .station__text h3 { margin-bottom: var(--space-s); font-size: var(--type-h2); }
-  .station__note { margin-top: var(--space-s); color: var(--fg-muted); border-left: 2px solid var(--color-lime); padding-left: var(--space-s); }
-  .station__card { aspect-ratio: 5 / 4; display: grid; align-content: end; padding: var(--space-m); --fold: 52px; }
-  .station__mark { position: absolute; top: 10%; left: 8%; width: 44%; opacity: 0.55; pointer-events: none; }
-  .station__mark--spots { width: 60%; }
-  .station__pending { position: relative; max-width: 30ch; font-weight: 600; }
-  .station__photos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
-  .station__photos > :last-child { margin-top: var(--space-l); }
-  .station__media :global(img) { width: 100%; height: auto; }
-  .ws-note { margin-top: var(--space-xl); color: var(--fg-muted); max-width: 60ch; }
-  .doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); align-items: start; }
-  .doc-grid :global(img) { width: 100%; height: auto; }
-  @media (max-width: 900px) { .station { grid-template-columns: 1fr; } .station--alt .station__text { order: 0; } .doc-grid { grid-template-columns: 1fr; } }
-</style>
+<style>.prosa :global(p) { max-width: 46rem; }</style>

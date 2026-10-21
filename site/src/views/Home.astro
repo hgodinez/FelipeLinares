@@ -2,322 +2,229 @@
 import { Image, getImage } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import Macro from '@/components/Macro.astro';
-import Marquee from '@/components/Marquee.astro';
-import Paper from '@/components/Paper.astro';
+import Lightbox from '@/components/Lightbox.astro';
 import { t } from '@/i18n/ui';
-import { route, alternates, workPath, type Lang } from '@/i18n/routes';
-import { getPage, getPeople } from '@/lib/content';
+import { route, alternates, workPath, archivePath, type Lang } from '@/i18n/routes';
+import { getPage, getPeople, getWorks, getArchive, coverOf } from '@/lib/content';
 import site from '@/data/site.json';
-import heroImg from '@/assets/works/alebrije-tigre-frente.jpg';
-import tigreCenital from '@/assets/works/alebrije-tigre-cenital.jpg';
-import heroMobile from '@/assets/works/alebrije-tigre-cenital.jpg';
-import jaguarRepisa from '@/assets/works/alebrije-astado-repisa.jpg';
-import ranaFrente from '@/assets/works/alebrije-rana-frente.jpg';
-import calaveraMesa from '@/assets/works/jinete-calavera-mesa.jpg';
-import catrina from '@/assets/works/catrina-emplumada-taller.jpg';
-import mTigreRugido from '@/assets/macro/tigre-rugido.jpg';
-import mJaguarColmillos from '@/assets/macro/jaguar-colmillos.jpg';
-import mJaguarRostro from '@/assets/macro/jaguar-rostro.jpg';
-import mJaguarEscamas from '@/assets/macro/jaguar-escamas.jpg';
-import mJaguarAlas from '@/assets/macro/jaguar-alas.jpg';
-import mRanaOjo from '@/assets/macro/rana-ojo.jpg';
-import mRanaLomo from '@/assets/macro/rana-lomo.jpg';
-import mTigreAlas from '@/assets/macro/tigre-alas.jpg';
-import mSerpiente from '@/assets/macro/tigre-serpiente-ala.jpg';
-import mCalaveraRostro from '@/assets/macro/calavera-rostro.jpg';
-import mCalaveraMontura from '@/assets/macro/calavera-montura.jpg';
-import mCatrina from '@/assets/macro/catrina-rostro.jpg';
-import tallerFrente from '@/assets/works/alebrije-astado-frente-taller.jpg';
+import heroImg from '@/assets/works/alebrije-astado-repisa.jpg';
+import manoImg from '@/assets/works/alebrije-astado-mano.jpg';
+import tallerImg from '@/assets/works/alebrije-astado-frente-taller.jpg';
 import tallerCenital from '@/assets/works/alebrije-astado-cenital-taller.jpg';
-import tallerJinete from '@/assets/works/jinete-calavera-taller.jpg';
+import tigreCenital from '@/assets/works/alebrije-tigre-cenital.jpg';
+import mEscamas from '@/assets/macro/jaguar-escamas.jpg';
+import mAlas from '@/assets/macro/jaguar-alas.jpg';
+import mColmillos from '@/assets/macro/jaguar-colmillos.jpg';
+import mRanaLomo from '@/assets/macro/rana-lomo.jpg';
+import mRanaOjo from '@/assets/macro/rana-ojo.jpg';
+import mTigreAlas from '@/assets/macro/tigre-alas.jpg';
+import mSerpiente from '@/assets/macro/tigre-serpiente.jpg';
+import mCalavera from '@/assets/macro/calavera-rostro.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
-const h = ui.home;
+const es = lang === 'es';
 const page = await getPage('inicio', lang);
+const S = page.data.sections ?? [];
 const taller = await getPage('taller', lang);
-const stages = taller.data.sections ?? [];
+const pasos = taller.data.sections ?? [];
 const people = await getPeople();
 const byId = Object.fromEntries(people.map((p) => [p.id, p]));
-const lineage = ['pedro-linares-lopez', 'felipe-linares-mendoza', 'felipe-linares-vargas'].map((id) => byId[id]).filter(Boolean);
-const w = async (id: string) => (await getEntry('artworks', id))!;
-const jaguar = await w('alebrije-jaguar-astado');
-const rana = await w('alebrije-rana-picuda');
-const calavera = await w('calavera-alada-sobre-alebrije');
-const catrinaW = await w('catrina-con-tocado-de-plumas');
-const tigre = await w('alebrije-tigre-alado');
-const tzompantli = await w('tzompantli-2010');
+const works = (await getWorks()).filter((w) => w.data.images.length > 0);
+const archive = await getArchive();
+const tz = await getEntry('artworks', 'tzompantli-2010');
 const og = await getImage({ src: heroImg, width: 1200, format: 'jpg' });
-const es = lang === 'es';
-
-const encounters = [
-  { work: jaguar, img: jaguarRepisa, macro: mJaguarColmillos, macro2: mJaguarAlas, pos: '55% 45%', line: es ? 'Astas de venado. Alas de murciélago. Garras verdes. Lengua de fuego.' : 'Deer antlers. Bat wings. Green claws. A tongue of fire.' },
-  { work: rana, img: ranaFrente, macro: mRanaOjo, macro2: mRanaLomo, pos: '50% 55%', line: es ? 'Cuerpo de rana. Pico de ave. Orejas que se abren como pétalos.' : 'A frog’s body. A bird’s beak. Ears that open like petals.' },
-  { work: calavera, img: calaveraMesa, macro: mCalaveraRostro, macro2: mCalaveraMontura, pos: '50% 40%', line: es ? 'Una calavera con alas de monarca cabalga sobre una criatura de cuernos morados.' : 'A monarch-winged skull rides a creature with purple horns.' },
-  { work: catrinaW, img: catrina, macro: mCatrina, macro2: null, pos: '50% 30%', line: es ? 'Sombrero de rosas, chal de plumas y dos grandes alas azules.' : 'A hat of roses, a feather shawl and two great blue wings.' },
-  { work: tigre, img: tigreCenital, macro: mTigreAlas, macro2: mSerpiente, pos: '50% 35%', line: es ? 'Rugido de tigre, manchas de jaguar, alas de ave y una cola que vigila.' : 'A tiger’s roar, a jaguar’s spots, a bird’s wings and a tail that keeps watch.' },
+const fullOf = async (src: any) => (await getImage({ src, width: Math.min(1600, src.width), format: 'webp', quality: 82 })).src;
+const piezas = await Promise.all(works.map(async (w) => { const c = coverOf(w)!; return { w, cover: c, full: await fullOf(c.src) }; }));
+const detalles = [
+  { img: mEscamas, t: es ? 'Escamas y uñas' : 'Scales and nails', d: es ? 'Garras verdes cubiertas de escamas pintadas una por una; las uñas, de marfil.' : 'Green claws covered in scales painted one by one; ivory nails.' },
+  { img: mAlas, t: es ? 'Nervaduras' : 'Wing veins', d: es ? 'Alas de murciélago en rojo con las nervaduras trazadas en blanco sobre la pintura seca.' : 'Red bat wings with veins traced in white over the dry paint.' },
+  { img: mColmillos, t: es ? 'Colmillos y lengua' : 'Tusks and tongue', d: es ? 'Colmillos curvos modelados en papel y una lengua larga en bermellón.' : 'Curved tusks modeled in paper and a long vermilion tongue.' },
+  { img: mRanaLomo, t: es ? 'Puntos sobre verde' : 'Dots on green', d: es ? 'El lomo de la rana: puntos de dos tamaños que dan textura a un volumen liso.' : 'The frog’s back: dots of two sizes giving texture to a smooth volume.' },
+  { img: mRanaOjo, t: es ? 'Ojo y pico' : 'Eye and beak', d: es ? 'Cabeza de ave sobre cuerpo de rana; el cuello escamado en azul y oro.' : 'A bird’s head on a frog’s body; the neck scaled in blue and gold.' },
+  { img: mTigreAlas, t: es ? 'Manchas de jaguar' : 'Jaguar spots', d: es ? 'Rosetas negras sobre naranja, pintadas a pincel a lo largo de todo el cuerpo.' : 'Black rosettes on orange, brush-painted along the whole body.' },
+  { img: mSerpiente, t: es ? 'Cola de serpiente' : 'Serpent tail', d: es ? 'La cola del tigre termina en una cabeza de serpiente de ojos amarillos.' : 'The tiger’s tail ends in a yellow-eyed serpent head.' },
+  { img: mCalavera, t: es ? 'Alas de monarca' : 'Monarch wings', d: es ? 'Una calavera con alas de mariposa monarca, pintadas en naranja, negro y violeta.' : 'A skull with monarch-butterfly wings, painted orange, black and violet.' },
 ];
+const reconocimientos = [
+  { etiqueta: 'Museo Nacional de Culturas Populares', titulo: es ? '«Tzompantli» (2010), en la colección' : '“Tzompantli” (2010), in the collection', texto: es ? 'Obra de Felipe Linares Vargas en cartón moldeado, modelado y policromado, 122 × 104 × 20 cm, con ficha pública en Google Arts & Culture.' : 'Work by Felipe Linares Vargas in molded, modeled and polychromed cardboard, 122 × 104 × 20 cm, with a public record on Google Arts & Culture.', links: [[es ? 'Ver la ficha de la obra' : 'View the object record', workPath('tzompantli-2010', lang)], [es ? 'Ver en Google Arts & Culture' : 'See on Google Arts & Culture', 'https://artsandculture.google.com/asset/tzompantli-felipe-linares-vargas/6QF5pI323yT3ww']] },
+  { etiqueta: 'Museum of International Folk Art · Nuevo México', titulo: es ? '«Alebrijes: A Linares Family Tradition»' : '“Alebrijes: A Linares Family Tradition”', texto: es ? 'Exposición itinerante con obras de tres generaciones de la familia, inaugurada en 2026 en el Consulado de México en Albuquerque. Incluye un alebrije de gallo de Felipe.' : 'Traveling exhibition with works by three generations of the family, opened in 2026 at the Consulate of Mexico in Albuquerque. It includes a rooster alebrije by Felipe.', links: [[es ? 'Ver el registro' : 'View the record', archivePath('2026-moifa-alebrijes-linares-family-tradition', lang)]] },
+  { etiqueta: es ? 'La herencia' : 'The heritage', titulo: 'Pedro Linares López', texto: es ? 'Su abuelo creó los alebrijes en 1936 y recibió el Premio Nacional de Ciencias y Artes en 1990. Su obra está en museos de México y del extranjero.' : 'His grandfather created the alebrijes in 1936 and received the National Prize for Arts and Sciences in 1990. His work is held by museums in Mexico and abroad.', links: [[es ? 'Conocer el legado familiar' : 'Discover the family legacy', route('legacy', lang)]] },
+];
+const prensa = archive.filter((a) => a.data.type === 'press' || a.data.type === 'publication');
 const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'Felipe Linares Vargas', jobTitle: es ? 'Cartonero' : 'Cartonería artist', description: site.defaultDescription[lang], url: new URL(route('home', lang), Astro.site).toString(), address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' }, knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'] };
 ---
-<Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd} overlayHeader topScene="ink">
+<Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd}>
 
-  <!-- 01 · EL ENCUENTRO: the creature fills the screen -->
-  <Macro src={heroImg} alt={es ? 'Alebrije con cabeza de tigre rugiendo, cuerpo moteado de jaguar, alas negras y patas escamosas rosadas, de frente.' : 'Alebrije with a roaring tiger head, jaguar-spotted body, black wings and pink scaled legs, facing the viewer.'} srcMobile={heroMobile} scrim="bottom" position="62% 38%" positionMobile="50% 18%" minHeight="100svh" eager class="hero" labelledby="hero-title">
-    <div class="container hero__inner">
-      <p class="eyebrow hero__eyebrow">{ui.tagline}</p>
-      <h1 id="hero-title" class="giant hero__name on-photo">Felipe<br />Linares<br />Vargas</h1>
-      <div class="hero__row">
-        <p class="lead on-photo hero__intro">{h.heroIntro}</p>
-        <div class="hero__actions">
-          <a class="btn btn--lime btn--xl" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">↗</span></a>
-          <a class="link-arrow hero__secondary" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
+  <!-- PORTADA -->
+  <section class="portada" id="inicio" aria-labelledby="titulo-portada">
+    <div class="contenedor">
+      <div>
+        <p class="antetitulo">{page.data.eyebrow}</p>
+        <h1 id="titulo-portada">Felipe Linares <em>Vargas</em></h1>
+        <p class="lema">{site.heroStatement[lang]}</p>
+        <p class="entrada">{page.data.lead}</p>
+        <div class="botones">
+          <a class="boton boton-principal" href="#maestro">{es ? 'Conoce su historia' : 'Discover his story'}</a>
+          <a class="boton boton-secundario" href="#obras">{ui.cta.works}</a>
         </div>
       </div>
-      <p class="micro hero__caption">{h.stageCaption.replace(es ? 'Alebrije de tigre alado con cola de serpiente' : 'Winged tiger alebrije with serpent tail', tigre.data.title[lang])}</p>
-    </div>
-  </Macro>
-
-  <div class="scene-lime concept bleed">
-    <Marquee items={[h.heroStatement, h.ch2Title, h.ch3Title, h.ch4Title, h.ch5Title]} />
-  </div>
-
-  <!-- 02 · LAS CRIATURAS: five full-width encounters -->
-  <section id="criaturas" class="creatures scene-ink" aria-labelledby="creatures-title">
-    <div class="container creatures__head">
-      <p class="eyebrow eyebrow--accent rise">02 · {h.ch2}</p>
-      <h2 id="creatures-title" class="giant rise" style="--delay:80ms">{h.ch2Title}</h2>
-      <p class="lead rise" style="--delay:160ms">{h.ch2Text}</p>
-    </div>
-
-    {encounters.map((e, i) => (
-      <article class:list={['encounter', `encounter--${i + 1}`, { 'encounter--flip': i % 2 === 1 }]}>
-        <a class="encounter__link" href={workPath(e.work.id, lang)} data-work-link={e.work.id} aria-label={`${ui.cta.viewWork}: ${e.work.data.title[lang]}`}>
-          <div class="encounter__main zoom-in">
-            <Image src={e.img} alt="" widths={[640, 1024, 1600, 2200]} sizes="(max-width: 900px) 100vw, 66vw" loading={i === 0 ? 'eager' : 'lazy'} style={`object-position:${e.pos}`} transition:name={`work-${e.work.id}`} />
-          </div>
-          <div class="encounter__macros">
-            <div class="encounter__macro wipe"><Image src={e.macro} alt="" widths={[480, 800, 1200]} sizes="(max-width: 900px) 50vw, 34vw" loading="lazy" /></div>
-            {e.macro2 && <div class="encounter__macro wipe" style="--delay:160ms"><Image src={e.macro2} alt="" widths={[480, 800, 1200]} sizes="(max-width: 900px) 50vw, 34vw" loading="lazy" /></div>}
-          </div>
-          <div class="encounter__text">
-            <span class="num" aria-hidden="true">0{i + 1}</span>
-            <h3 class="encounter__title on-photo">{e.work.data.title[lang]}{e.work.data.titleStatus === 'provisional' && <span class="encounter__flag" aria-hidden="true">*</span>}</h3>
-            <p class="encounter__line on-photo">{e.line}</p>
-            <span class="btn btn--lime encounter__cta" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">↗</span></span>
-          </div>
-        </a>
-      </article>
-    ))}
-
-    <div class="container creatures__all">
-      <p class="small muted"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>
-      <a class="btn btn--paper btn--xl" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">↗</span></a>
+      <figure class="portada-imagen">
+        <div class="portada-marco"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de felino negro, astas de venado, alas rojas de murciélago y garras verdes, sobre una repisa.' : 'Cartonería alebrije with a black feline head, deer antlers, red bat wings and green claws, on a shelf.'} widths={[480, 960, 1200]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 30rem" loading="eager" fetchpriority="high" style="object-position: 55% 45%" /></div>
+        <figcaption>{es ? 'Alebrije de jaguar con astas de venado · título descriptivo, por confirmar' : 'Jaguar alebrije with deer antlers · descriptive title, pending confirmation'}</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- 03 · LAS MANOS QUE LAS CREAN -->
-  <Macro src={mJaguarRostro} alt={es ? 'Primer plano del rostro negro del alebrije de jaguar, con ojos ámbar, orejas rojas y pelaje pintado a pincel.' : 'Close-up of the jaguar alebrije’s black face, with amber eyes, red ears and brush-painted fur.'} scrim="left" position="60% 40%" minHeight="90svh" labelledby="hands-title">
-    <div class="container hands__inner">
-      <p class="eyebrow rise">03 · {h.ch3}</p>
-      <h2 id="hands-title" class="rise on-photo" style="--delay:80ms">{h.ch3Title}</h2>
-      <p class="lead on-photo rise" style="--delay:160ms">{h.ch3Text}</p>
-      <p class="small rise hands__note" style="--delay:220ms">{h.ch3Note}</p>
-      <a class="btn btn--lime btn--xl rise" style="--delay:280ms" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">↗</span></a>
-    </div>
-  </Macro>
-
-  <!-- 04 · DE PAPEL A IMPOSIBLE -->
-  <section class="process scene-cobalt" aria-labelledby="process-title">
-    <div class="container process__head">
-      <p class="eyebrow rise">04 · {h.ch4}</p>
-      <h2 id="process-title" class="giant rise" style="--delay:80ms">{h.ch4Title}</h2>
-      <p class="lead rise" style="--delay:160ms">{h.ch4Text}</p>
-    </div>
-    <ol class="stations">
-      {stages.map((s, i) => (
-        <li class:list={['station', { 'station--photo': i >= 3 }]}>
-          <div class="container station__grid">
-            <div class="station__text">
-              <span class="num station__num" aria-hidden="true">0{i + 1}</span>
-              <h3 class="rise">{s.heading}</h3>
-              <p class="rise" style="--delay:80ms">{s.text}</p>
-              {s.note && i < 3 && <p class="small station__pending rise" style="--delay:140ms">{s.note}</p>}
-            </div>
-            <div class="station__media">
-              {i === 0 && <div class="sheet"><Paper tone="lime" cut="a" fold="tr" class="station__card"><Image src={mJaguarEscamas} alt={es ? 'Garras verdes escamosas con uñas de marfil, detalle de superficie pintada.' : 'Green scaled claws with ivory nails, painted surface detail.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
-              {i === 1 && <div class="sheet"><Paper tone="light" cut="c" class="station__card"><Image src={mJaguarAlas} alt={es ? 'Astas y alas rojas del alebrije de jaguar: lo que la estructura sostiene.' : 'Antlers and red wings of the jaguar alebrije: what the armature holds up.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
-              {i === 2 && <div class="sheet"><Paper tone="coral" cut="b" fold="bl" class="station__card"><Image src={tallerFrente} alt={es ? 'Alebrije a medio terminar sobre la mesa del taller.' : 'Half-finished alebrije on the workshop table.'} widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 44vw" loading="lazy" /></Paper></div>}
-              {i === 3 && <div class="station__pair"><div class="zoom-in"><Image src={tallerCenital} alt={es ? 'Alas rojas con nervaduras pintadas, vista cenital en el taller.' : 'Red wings with painted veins, overhead view in the workshop.'} widths={[600, 1000]} sizes="(max-width: 900px) 50vw, 24vw" loading="lazy" /></div><div class="zoom-in"><Image src={tallerJinete} alt={es ? 'Esqueleto alado sobre criatura anaranjada, en proceso de pintura.' : 'Winged skeleton on an orange creature, being painted.'} widths={[600, 1000]} sizes="(max-width: 900px) 50vw, 24vw" loading="lazy" /></div></div>}
-              {i === 4 && <div class="zoom-in station__final"><Image src={mTigreRugido} alt={es ? 'Rostro del tigre alado terminado: rayas, colmillos y lengua.' : 'Face of the finished winged tiger: stripes, fangs and tongue.'} widths={[640, 1000, 1400]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" /></div>}
-            </div>
-          </div>
-        </li>
-      ))}
-    </ol>
-    <div class="container process__foot">
-      <p class="small process__note">{h.ch4Note}</p>
-      <a class="btn btn--lime btn--xl" href={route('workshop', lang)}>{ui.cta.process} <span class="arrow" aria-hidden="true">↗</span></a>
+  <!-- EL MAESTRO -->
+  <section class="seccion seccion-crema" id="maestro" aria-labelledby="titulo-maestro">
+    <div class="contenedor dos-columnas">
+      <div>
+        <p class="antetitulo">{ui.nav.artist}</p>
+        <h2 id="titulo-maestro">{S[0].heading}</h2>
+        <p>{S[0].text}</p>
+        <h3 class="subtitulo-seccion" style="margin-top:1.5rem">{S[1].heading}</h3>
+        <p>{S[1].text}</p>
+        <ul class="linaje">
+          <li><span>{es ? 'Abuelo' : 'Grandfather'}</span><strong><a href={`${route('legacy', lang)}#arbol`}>Pedro Linares López</a></strong></li>
+          <li><span>{es ? 'Padre' : 'Father'}</span><strong><a href={`${route('legacy', lang)}#arbol`}>Felipe Linares Mendoza</a></strong></li>
+          <li class="actual"><span>{es ? 'Cartonero' : 'Cartonero'}</span><strong>Felipe Linares Vargas</strong></li>
+        </ul>
+        <div class="botones"><a class="boton boton-secundario" href={route('artist', lang)}>{ui.cta.artist}</a></div>
+      </div>
+      <div class="foto-lado">
+        <figure class="foto"><Image src={manoImg} alt={es ? 'Una mano sostiene el alebrije de jaguar con astas: cabeza negra, ojos ámbar y lengua roja.' : 'A hand holds the antlered jaguar alebrije: black head, amber eyes and red tongue.'} widths={[480, 800, 1100]} sizes="(max-width: 820px) 100vw, 40rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;object-position:50% 40%" /><figcaption>{es ? 'La escala de una pieza en la mano.' : 'The scale of a piece in the hand.'}</figcaption></figure>
+        <ul class="datos">
+          <li><strong>{es ? 'Ciudad' : 'City'}</strong>{es ? 'Merced Balbuena, Ciudad de México' : 'Merced Balbuena, Mexico City'}</li>
+          <li><strong>{es ? 'Técnica' : 'Technique'}</strong>{es ? 'Cartonería: papel y cartón modelados y pintados a mano' : 'Cartonería: paper and cardboard modeled and painted by hand'}</li>
+          <li><strong>{es ? 'Piezas' : 'Pieces'}</strong>{es ? 'Alebrijes, calaveras, judas y figuras de temporada' : 'Alebrijes, skeletons, Judas figures and seasonal pieces'}</li>
+          <li><strong>{es ? 'Familia' : 'Family'}</strong>{es ? 'Nieto de Pedro Linares López, creador de los alebrijes' : 'Grandson of Pedro Linares López, creator of the alebrijes'}</li>
+        </ul>
+      </div>
     </div>
   </section>
 
-  <!-- 05 · UNA HISTORIA QUE CONTINÚA -->
-  <Macro src={mTigreAlas} alt={es ? 'Alas negras y lomo moteado del alebrije de tigre, vistos desde arriba.' : 'Black wings and spotted back of the tiger alebrije, seen from above.'} scrim="top" position="50% 50%" minHeight="auto" class="story" labelledby="story-title">
-    <div class="container story__inner">
-      <header class="story__head">
-        <p class="eyebrow rise">05 · {h.ch5}</p>
-        <h2 id="story-title" class="giant on-photo rise" style="--delay:80ms">{h.ch5Title}</h2>
-        <p class="lead on-photo rise" style="--delay:160ms">{h.ch5Text}</p>
-      </header>
-      <ol class="strips">
-        {lineage.map((p, i) => (
-          <li class="strip rise" style={`--delay:${i * 90}ms`}>
-            <div class="sheet--near"><Paper tone={i === lineage.length - 1 ? 'lime' : 'light'} cut={(['a', 'c', 'b'] as const)[i]} class="strip__paper">
-              <span class="micro">{p.data.born ? `${p.data.born}${p.data.died ? `–${p.data.died}` : ''}` : (es ? 'Generación actual' : 'Current generation')}</span>
-              <h3 class="strip__name">{p.data.name}</h3>
-              <p class="small">{p.data.role[lang]}</p>
-              <a class="link-arrow" href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.isFeaturedArtist ? ui.cta.artist : (es ? 'Ver semblanza' : 'View profile')} <span class="arrow" aria-hidden="true">→</span></a>
-            </Paper></div>
+  <!-- LOS ALEBRIJES -->
+  <section class="seccion seccion-oscura" id="alebrijes" aria-labelledby="titulo-alebrijes">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <p class="antetitulo">{es ? 'Tradición de la Ciudad de México' : 'A Mexico City tradition'}</p>
+          <h2 id="titulo-alebrijes">{S[2].heading}</h2>
+          <p class="texto-suave" style="font-size:1.15rem">{S[2].text}</p>
+          <h3 class="subtitulo-seccion">{S[3].heading}</h3>
+          <p class="texto-suave">{S[3].text}</p>
+        </div>
+        <figure class="foto"><Image src={tigreCenital} alt={es ? 'Alebrije de tigre alado visto desde arriba: alas negras abiertas, cuerpo moteado y cola de serpiente.' : 'Winged tiger alebrije seen from above: open black wings, spotted body and serpent tail.'} widths={[480, 800, 1100]} sizes="(max-width: 820px) 100vw, 36rem" loading="lazy" style="aspect-ratio:4/5;object-fit:cover" /><figcaption>{es ? 'Alebrije de tigre alado con cola de serpiente, vista cenital.' : 'Winged tiger alebrije with serpent tail, overhead view.'}</figcaption></figure>
+      </div>
+      <div class="nota-oscura">
+        <p class="nota-titulo">{es ? 'Los alebrijes son de cartonería' : 'Alebrijes are cartonería'}</p>
+        <p>{es ? 'El nombre, el concepto y la técnica —el sueño, el papel y el cartón— pertenecen a la Ciudad de México y a la familia Linares. Desde 2019 son patrimonio cultural de la ciudad.' : 'The name, the concept and the technique (the dream, the paper and the cardboard) belong to Mexico City and to the Linares family. Since 2019 they are cultural heritage of the city.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LA TÉCNICA -->
+  <section class="seccion" id="tecnica" aria-labelledby="titulo-tecnica">
+    <div class="contenedor">
+      <div class="encabezado-seccion">
+        <p class="antetitulo">{es ? 'La técnica' : 'The technique'}</p>
+        <h2 id="titulo-tecnica">{S[4].heading}</h2>
+        <p class="texto-suave">{S[4].text}</p>
+      </div>
+      <h3 class="subtitulo-seccion" style="margin-top:0">{es ? 'Del papel a la criatura' : 'From paper to creature'}</h3>
+      <p>{es ? 'Así se construye una pieza de cartonería, según las fuentes consultadas y las fotografías de taller de este sitio. Los detalles propios del método de Felipe se incorporarán con su confirmación.' : 'This is how a cartonería piece is built, according to the sources consulted and the workshop photographs on this site. The specifics of Felipe’s own method will be added with his confirmation.'}</p>
+      <ol class="pasos">
+        {pasos.map((p) => <li><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}
+      </ol>
+      <div class="nota"><p><strong>{es ? '¿Cuánto tarda una pieza?' : 'How long does a piece take?'}</strong> {es ? 'Cada capa de papel se seca antes de la siguiente, a veces durante días. Las piezas grandes requieren semanas de secado y pintura.' : 'Each layer of paper dries before the next, sometimes for days. Large pieces need weeks of drying and painting.'}</p></div>
+      <h3 class="subtitulo-seccion">{es ? 'En detalle' : 'In detail'}</h3>
+      <p>{es ? 'Acercamientos a la pintura y el modelado de las piezas.' : 'Close-ups of the painting and modeling of the pieces.'}</p>
+      <ul class="detalles">
+        {detalles.map((d) => <li><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}
+      </ul>
+      <div class="botones"><a class="boton boton-secundario" href={route('workshop', lang)}>{ui.cta.process}</a></div>
+    </div>
+  </section>
+
+  <!-- LAS OBRAS -->
+  <section class="seccion seccion-oscura" id="obras" aria-labelledby="titulo-obras">
+    <div class="contenedor">
+      <div class="encabezado-seccion">
+        <p class="antetitulo">{es ? 'Su obra' : 'His work'}</p>
+        <h2 id="titulo-obras">{S[5].heading}</h2>
+        <p class="texto-suave">{S[5].text}</p>
+      </div>
+      <ul class="piezas" data-lb-group>
+        {piezas.map(({ w, cover, full }, i) => (
+          <li class="pieza">
+            <a class="pieza-imagen" href={workPath(w.id, lang)} data-lb-open data-full={full} data-alt={cover.alt[lang]} data-title={w.data.title[lang]} data-caption={w.data.description[lang].slice(0, 180) + '…'}>
+              <Image src={cover.src} alt={cover.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 560px) 45vw, (max-width: 1160px) 30vw, 22rem" loading="lazy" />
+            </a>
+            <p><span class="pieza-numero" aria-hidden="true">{i + 1}</span><span><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.titleStatus === 'provisional' && '*'}</a></strong><span class="pieza-nota">{w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}</span></span></p>
           </li>
         ))}
-        <li class="strip rise" style="--delay:270ms">
-          <div class="sheet--near"><Paper tone="cobalt" cut="d" class="strip__paper">
-            <span class="micro">{ui.archive.types.collection} · 2010</span>
-            <h3 class="strip__name">Tzompantli</h3>
-            <p class="small">{tzompantli.data.collection} · {tzompantli.data.dimensions}</p>
-            <a class="link-arrow" href={workPath(tzompantli.id, lang)}>{ui.cta.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
-          </Paper></div>
-        </li>
-      </ol>
-      <a class="btn btn--paper btn--xl story__cta" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">↗</span></a>
+      </ul>
+      <p class="texto-suave" style="margin-top:1.25rem;font-size:0.92rem">* {ui.works.provisional}.</p>
+      <div class="botones"><a class="boton boton-principal" href={route('works', lang)}>{ui.cta.allWorks}</a></div>
     </div>
-  </Macro>
-
-  <!-- 06 · EL PRÓXIMO ENCUENTRO -->
-  <section class="encounter-end scene-coral" aria-labelledby="encounter-title">
-    <div class="container encounter-end__inner">
-      <p class="eyebrow rise">06 · {h.ch6}</p>
-      <h2 id="encounter-title" class="giant rise" style="--delay:80ms">{h.ch6Title}</h2>
-      <p class="lead rise" style="--delay:160ms">{h.ch6Text}</p>
-      <a class="btn btn--ink btn--xl rise" style="--delay:240ms" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
-    </div>
-    <div class="encounter-end__macro wipe"><Image src={mCalaveraMontura} alt="" widths={[640, 1024, 1600]} sizes="100vw" loading="lazy" /></div>
   </section>
+
+  <!-- RECONOCIMIENTOS -->
+  <section class="seccion seccion-crema" id="reconocimientos" aria-labelledby="titulo-reconocimientos">
+    <div class="contenedor">
+      <div class="encabezado-seccion">
+        <p class="antetitulo">{es ? 'Reconocimientos' : 'Recognition'}</p>
+        <h2 id="titulo-reconocimientos">{S[6].heading}</h2>
+        <p class="texto-suave">{S[6].text}</p>
+      </div>
+      <div class="tarjetas">
+        {reconocimientos.map((r) => <article class="tarjeta"><p class="etiqueta">{r.etiqueta}</p><h3>{r.titulo}</h3><p>{r.texto}</p>{r.links.map(([t, h]) => <a href={h} target={h.startsWith('http') ? '_blank' : undefined} rel={h.startsWith('http') ? 'noopener noreferrer' : undefined}>{t}</a>)}</article>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGADO -->
+  <section class="seccion seccion-oscura" id="legado" aria-labelledby="titulo-legado">
+    <div class="contenedor" style="max-width:46rem">
+      <p class="antetitulo">{ui.nav.legacy}</p>
+      <h2 id="titulo-legado">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
+      <p class="texto-suave">{es ? 'El trabajo de la familia Linares ha llegado a museos de México, Estados Unidos y Europa, pero cada pieza nace en la Ciudad de México, en talleres que son al mismo tiempo casas. De don Pedro a sus hijos Enrique, Felipe y Miguel; de ellos a Felipe, Leonardo, David y Ricardo; y ya a una generación más.' : 'The Linares family’s work has reached museums in Mexico, the United States and Europe, but every piece is born in Mexico City, in workshops that are also homes. From don Pedro to his sons Enrique, Felipe and Miguel; from them to Felipe, Leonardo, David and Ricardo; and now to one more generation.'}</p>
+      <figure class="cita-grande" style="margin-top:2rem"><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? 'Un sueño de 1936 que cinco generaciones han seguido modelando con las manos.' : 'A dream from 1936 that five generations have kept shaping with their hands.'}</p></blockquote><figcaption>{es ? 'Línea editorial, no una cita del artista' : 'Editorial line, not a quotation from the artist'}</figcaption></figure>
+      <div class="botones"><a class="boton boton-principal" href={route('legacy', lang)}>{ui.cta.legacy}</a><a class="boton boton-secundario" style="color:var(--blanco);border-color:var(--blanco)" href={route('archive', lang)}>{ui.nav.archive}</a></div>
+    </div>
+  </section>
+
+  <!-- TALLER / CONTACTO -->
+  <section class="seccion seccion-crema" id="taller" aria-labelledby="titulo-taller">
+    <div class="contenedor dos-columnas" style="align-items:center">
+      <div>
+        <p class="antetitulo">{es ? 'El taller' : 'The workshop'}</p>
+        <h2 id="titulo-taller">{S[7].heading}</h2>
+        <p class="texto-suave">{S[7].text}</p>
+        <ul class="contacto-lista">
+          <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><div><strong>{es ? 'Taller' : 'Workshop'}</strong>{site.workshopArea[lang]}</div></li>
+          <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><div><strong>{es ? 'Contacto directo' : 'Direct contact'}</strong>{site.contactEmail || site.whatsappNumber ? [site.contactEmail, site.whatsappNumber].filter(Boolean).join(' · ') : ui.contact.pendingContact}</div></li>
+        </ul>
+        <div class="botones"><a class="boton boton-principal" href={route('contact', lang)}>{ui.cta.contact}</a></div>
+      </div>
+      <figure class="foto"><Image src={tallerImg} alt={es ? 'Alebrije de cabeza negra y astas sobre la mesa del taller familiar, entre frascos de pintura y pinceles.' : 'Black-headed, antlered alebrije on the family workshop table, among paint jars and brushes.'} widths={[480, 800]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" style="aspect-ratio:4/5;object-fit:cover" /><figcaption>{es ? 'Fotografía del taller familiar.' : 'Photograph of the family workshop.'}</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- PARA LEER MÁS -->
+  <section class="seccion" id="prensa" aria-labelledby="titulo-prensa">
+    <div class="contenedor">
+      <div class="encabezado-seccion">
+        <p class="antetitulo">{es ? 'Prensa y publicaciones' : 'Press and publications'}</p>
+        <h2 id="titulo-prensa">{es ? 'Para leer más' : 'Further reading'}</h2>
+      </div>
+      <ul class="prensa">
+        {prensa.map((a) => <li><a href={archivePath(a.id, lang)}>{a.data.title[lang]}</a><span>{[a.data.institution, a.data.year].filter(Boolean).join(' · ')}</span></li>)}
+      </ul>
+      <div class="botones"><a class="boton boton-secundario" href={route('archive', lang)}>{es ? 'Ver el archivo completo' : 'See the full archive'}</a></div>
+    </div>
+  </section>
+  <Lightbox lang={lang} />
 </Base>
-
-<style>
-  /* 01 */
-  .hero :global(.macro__content) { display: grid; align-content: end; min-height: 100svh; }
-  .hero__inner { padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); }
-  .hero__eyebrow { color: var(--color-lime); }
-  .hero__name { max-width: 12ch; }
-  .hero__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-m) var(--space-xl); align-items: end; margin-top: var(--space-m); }
-  .hero__intro { max-width: 34ch; }
-  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); align-items: center; }
-  .hero__secondary { color: var(--color-paper); }
-  .hero__secondary:hover { border-bottom-color: var(--color-lime); }
-  .hero__caption { margin-top: var(--space-m); color: rgba(247, 247, 242, 0.6); text-transform: none; letter-spacing: 0.02em; }
-  @media (prefers-reduced-motion: no-preference) {
-    .hero :global(.macro__img img) { animation: hero-zoom 1400ms var(--ease-paper) both; }
-    .hero__name { animation: hero-rise 700ms var(--ease-paper) 120ms both; }
-    .hero__row, .hero__caption { animation: hero-rise 700ms var(--ease-paper) 320ms both; }
-  }
-  @keyframes hero-zoom { from { transform: scale(1.12); } to { transform: scale(1); } }
-  @keyframes hero-rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
-
-  .concept { padding-block: var(--space-s); }
-
-  /* 02 */
-  .creatures { padding-top: var(--space-2xl); }
-  .creatures__head { margin-bottom: var(--space-xl); }
-  .creatures__head h2 { color: var(--color-lime); max-width: 10ch; }
-  .creatures__head .lead { margin-top: var(--space-m); }
-  .encounter { position: relative; margin-bottom: 6px; }
-  .encounter__link { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto; text-decoration: none; color: inherit; min-height: 92svh; position: relative; }
-  .encounter--flip .encounter__link { grid-template-columns: 1fr 2fr; }
-  .encounter--flip .encounter__main { order: 2; }
-  .encounter__main { position: relative; overflow: hidden; background: var(--ink-soft); }
-  .encounter__main :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .encounter__macros { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
-  .encounter__macro { overflow: hidden; background: var(--ink-soft); }
-  .encounter__macro :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
-  .encounter--4 .encounter__macros { grid-template-rows: 1fr; }
-  .encounter__text { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--space-xl) var(--gutter) var(--space-l); background: linear-gradient(to top, rgba(25, 27, 36, 0.9), rgba(25, 27, 36, 0.55) 55%, transparent); display: grid; gap: var(--space-s); align-items: end; grid-template-columns: minmax(0, 1fr) auto; pointer-events: none; }
-  .encounter__text .num { position: absolute; right: var(--gutter); top: -0.15em; color: var(--color-lime); opacity: 0.35; }
-  .encounter__title { font-size: var(--type-h2); max-width: 14ch; grid-column: 1; }
-  .encounter__flag { color: var(--color-coral); }
-  .encounter__line { grid-column: 1; max-width: 40ch; font-size: var(--type-lead); font-weight: 500; }
-  .encounter__cta { grid-column: 2; grid-row: 1 / 3; align-self: end; pointer-events: none; }
-  .encounter__link:hover .encounter__main :global(img), .encounter__link:focus-visible .encounter__main :global(img) { transform: scale(1.03); }
-  .encounter__link:hover .encounter__macro :global(img) { transform: scale(1.06); }
-  .encounter__link:hover .encounter__cta { background: var(--lime-deep); }
-  .encounter__link:focus-visible { outline: 4px solid var(--color-lime); outline-offset: -4px; }
-  .creatures__all { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-m); padding-block: var(--space-xl); }
-
-  /* 03 */
-  .hands__inner { padding-block: var(--space-2xl); max-width: 60ch; min-height: 90svh; display: grid; align-content: center; gap: var(--space-m); }
-  .hands__inner h2 { font-size: var(--type-h2); }
-  .hands__note { color: rgba(247, 247, 242, 0.75); max-width: 44ch; }
-
-  /* 04 */
-  .process { padding-block: var(--space-2xl) var(--space-xl); }
-  .process__head { margin-bottom: var(--space-xl); }
-  .process__head h2 { color: var(--color-lime); max-width: 12ch; }
-  .process__head .lead { margin-top: var(--space-m); }
-  .stations { list-style: none; margin: 0; padding: 0; }
-  .station { padding-block: var(--space-xl); border-top: 1.5px solid rgba(247, 247, 242, 0.25); }
-  .station__grid { display: grid; grid-template-columns: 5fr 7fr; gap: var(--space-l) var(--gutter); align-items: center; }
-  .station:nth-child(even) .station__text { order: 2; }
-  .station__num { display: block; color: var(--color-lime); opacity: 0.9; font-size: clamp(4rem, 2rem + 8vw, 9rem); margin-bottom: var(--space-s); }
-  .station__text h3 { font-size: var(--type-h2); margin-bottom: var(--space-s); }
-  .station__pending { margin-top: var(--space-s); color: var(--color-lime); font-weight: 700; }
-  .station__card { padding: 14px; }
-  .station__card :global(img) { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
-  .station__pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-s); align-items: start; }
-  .station__pair > :last-child { margin-top: var(--space-xl); }
-  .station__pair :global(img), .station__final :global(img) { width: 100%; height: auto; }
-  .station__pair > div, .station__final { overflow: hidden; }
-  .process__foot { display: grid; gap: var(--space-m); justify-items: start; padding-top: var(--space-l); }
-  .process__note { color: rgba(247, 247, 242, 0.75); max-width: 60ch; }
-
-  /* 05 */
-  .story :global(.macro__content) { padding-block: var(--space-2xl); }
-  .story__head { max-width: 60ch; margin-bottom: var(--space-xl); }
-  .story__head h2 { font-size: var(--type-hero); }
-  .story__head .lead { margin-top: var(--space-m); }
-  .strips { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-m); align-items: end; }
-  .strip:nth-child(2) { margin-bottom: var(--space-l); }
-  .strip:nth-child(3) { margin-bottom: var(--space-xl); }
-  .strip__paper { padding: var(--space-m) var(--space-m) var(--space-l); display: grid; gap: 0.35rem; min-height: 240px; align-content: start; }
-  .strip__name { font-size: var(--type-h3); }
-  .story__cta { margin-top: var(--space-xl); }
-
-  /* 06 */
-  .encounter-end { position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; min-height: 80svh; }
-  .encounter-end__inner { grid-column: 1; align-self: center; padding-block: var(--space-2xl); display: grid; gap: var(--space-m); justify-items: start; max-width: 60ch; width: auto; margin-left: max(var(--gutter), calc(50vw - var(--max) / 2)); }
-  .encounter-end__inner h2 { font-size: var(--type-hero); }
-  .encounter-end__macro { grid-column: 2; overflow: hidden; }
-  .encounter-end__macro :global(img) { width: 100%; height: 100%; object-fit: cover; }
-
-  @media (max-width: 900px) {
-    .hero :global(.macro__scrim--bottom) { background: linear-gradient(to top, rgba(25, 27, 36, 0.92) 0%, rgba(25, 27, 36, 0.7) 38%, rgba(25, 27, 36, 0) 60%); }
-    .hero__row { grid-template-columns: 1fr; }
-    .encounter__link { grid-template-columns: 1fr !important; grid-template-rows: auto auto; min-height: 0; }
-    .encounter__main { aspect-ratio: 4 / 5; }
-    .encounter--flip .encounter__main { order: 0; }
-    .encounter__macros { grid-template-rows: none; grid-template-columns: 1fr 1fr; aspect-ratio: 2 / 1; }
-    .encounter--4 .encounter__macros { grid-template-columns: 1fr; aspect-ratio: 16 / 9; }
-    .encounter__text { position: relative; background: var(--color-ink); padding: var(--space-m) var(--gutter) var(--space-l); grid-template-columns: 1fr; }
-    .encounter__text .num { position: static; font-size: clamp(3rem, 12vw, 5rem); }
-    .encounter__cta { grid-column: 1; grid-row: auto; justify-self: start; }
-    .station__grid { grid-template-columns: 1fr; }
-    .station:nth-child(even) .station__text { order: 0; }
-    .strips { grid-template-columns: 1fr 1fr; }
-    .strip:nth-child(2), .strip:nth-child(3) { margin-bottom: 0; }
-    .encounter-end { grid-template-columns: 1fr; }
-    .encounter-end__inner { grid-column: 1; margin-left: var(--gutter); margin-right: var(--gutter); padding-block: var(--space-xl); }
-    .encounter-end__macro { grid-column: 1; aspect-ratio: 16 / 10; }
-  }
-  @media (max-width: 560px) { .strips { grid-template-columns: 1fr; } }
-</style>

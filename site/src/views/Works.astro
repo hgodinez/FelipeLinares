@@ -1,208 +1,132 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
-import Macro from '@/components/Macro.astro';
+import Lightbox from '@/components/Lightbox.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
-import { getWorks, coverOf } from '@/lib/content';
-import heroMacro from '@/assets/macro/jaguar-alas.jpg';
+import { getWorks } from '@/lib/content';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 const es = lang === 'es';
 const works = await getWorks();
-const withImages = works.filter((w) => w.data.images.length > 0);
-const documented = works.filter((w) => w.data.images.length === 0);
-const used = Array.from(new Set(works.flatMap((w) => w.data.categories)));
 const categoryOrder = ['alebrijes', 'calaveras', 'judas', 'mascaras', 'colecciones', 'encargos'] as const;
-const categories = categoryOrder.filter((c) => used.includes(c));
+const salas = categoryOrder.map((c) => ({ id: c, works: works.filter((w) => w.data.categories.includes(c)) })).filter((s) => s.works.length);
+const totalFotos = works.reduce((n, w) => n + w.data.images.length, 0);
+const full = async (src: any) => (await getImage({ src, width: Math.min(1800, src.width), format: 'webp', quality: 82 })).src;
+const salaTexto: Record<string, { es: string; en: string }> = {
+  alebrijes: { es: 'Criaturas que reúnen varios animales en un solo cuerpo: felinos con alas, ranas con pico, colas que terminan en serpiente.', en: 'Creatures that gather several animals in one body: winged felines, frogs with beaks, tails that end in a serpent.' },
+  calaveras: { es: 'Calaveras vestidas y animadas, una de las especialidades históricas de la familia Linares.', en: 'Dressed and animated skeletons, one of the Linares family’s historic specialties.' },
+  colecciones: { es: 'Obras en colecciones y exposiciones institucionales, documentadas con fuentes públicas.', en: 'Works in institutional collections and exhibitions, documented with public sources.' },
+  judas: { es: 'Figuras de temporada de la tradición cartonera.', en: 'Seasonal figures of the cartonería tradition.' },
+  mascaras: { es: 'Máscaras de cartonería.', en: 'Cartonería masks.' },
+  encargos: { es: 'Piezas realizadas por encargo y en colaboración.', en: 'Commissioned and collaborative pieces.' },
+};
+const enriched = await Promise.all(salas.map(async (s) => ({ ...s, items: await Promise.all(s.works.map(async (w) => ({ w, imgs: await Promise.all(w.data.images.map(async (im) => ({ ...im, full: await full(im.src) }))) }))) })));
 ---
-<Base lang={lang} title={ui.nav.works} description={ui.works.intro} alternates={alternates('works')} overlayHeader topScene="ink">
-  <Macro src={heroMacro} alt={es ? 'Astas de venado y alas rojas de murciélago del alebrije de jaguar, en primer plano.' : 'Deer antlers and red bat wings of the jaguar alebrije, close up.'} scrim="bottom" position="50% 40%" minHeight="72svh" eager labelledby="works-title">
-    <div class="container works-hero">
-      <p class="eyebrow">{ui.works.eyebrow}</p>
-      <h1 id="works-title" class="giant on-photo">{ui.works.title}</h1>
-      <p class="lead on-photo">{ui.works.intro}</p>
+<Base lang={lang} title={ui.nav.works} description={ui.works.intro} alternates={alternates('works')} bodyClass="pagina-oscura">
+  <section class="galeria-entrada" aria-labelledby="titulo-galeria">
+    <div class="contenedor">
+      <p class="antetitulo">{ui.works.eyebrow}</p>
+      <h1 id="titulo-galeria">{es ? 'Las obras de Felipe Linares Vargas' : 'The works of Felipe Linares Vargas'}</h1>
+      <p>{es ? 'Alebrijes y calaveras modelados en papel y cartón, ordenados en salas como en un museo. Toca cualquier pieza para verla en grande y recorrer todas sus vistas; cada obra tiene además su propia página.' : 'Alebrijes and skeletons modeled in paper and cardboard, arranged in rooms like a museum. Tap any piece to see it large and browse all its views; each work also has its own page.'}</p>
+      <ul class="galeria-cifras">
+        <li><strong>{works.length}</strong>{es ? 'obras' : 'works'}</li>
+        <li><strong>{totalFotos}</strong>{es ? 'fotografías' : 'photographs'}</li>
+        <li><strong>{salas.length}</strong>{es ? 'salas' : 'rooms'}</li>
+      </ul>
     </div>
-  </Macro>
+  </section>
 
-  <section class="scene-ink catalog" aria-labelledby="gallery-title">
-    <h2 id="gallery-title" class="visually-hidden">{ui.works.gallery}</h2>
-    <div class="container">
-      <form class="filters" data-filters role="search" aria-label={ui.works.filterLabel}>
-        <div class="filters__cats" role="group" aria-label={ui.works.filterLabel}>
-          <button type="button" class="chip" data-cat="" aria-pressed="true">{ui.works.all}</button>
-          {categories.map((c) => <button type="button" class="chip" data-cat={c} aria-pressed="false">{ui.works.categories[c]}</button>)}
+  <nav class="salas-nav" aria-label={es ? 'Salas' : 'Rooms'}>
+    <div class="contenedor"><ul>
+      {salas.map((s) => <li><a href={`#sala-${s.id}`}>{ui.works.categories[s.id]}</a></li>)}
+    </ul></div>
+  </nav>
+
+  <div class="contenedor" style="padding-top:1.5rem">
+    <form class="filtro-busqueda" role="search" data-filters>
+      <label for="work-search" class="visually-hidden">{ui.works.search}</label>
+      <input id="work-search" type="search" placeholder={ui.works.searchPlaceholder} autocomplete="off" data-search />
+      <span class="texto-suave" data-count aria-live="polite">{ui.works.count(works.length)}</span>
+    </form>
+    <p class="estado estado-aviso" data-empty hidden>{ui.works.empty}</p>
+  </div>
+
+  {enriched.map((s, si) => (
+    <section class="sala" id={`sala-${s.id}`} aria-labelledby={`titulo-sala-${s.id}`} data-sala>
+      <div class="contenedor">
+        <div class="sala-encabezado">
+          <div><span class="sala-numero">{es ? 'Sala' : 'Room'} {si + 1}</span><h2 id={`titulo-sala-${s.id}`}>{ui.works.categories[s.id]}</h2></div>
+          <p class="sala-texto">{salaTexto[s.id]?.[lang]}</p>
         </div>
-        <div class="filters__search">
-          <label for="work-search" class="visually-hidden">{ui.works.search}</label>
-          <input id="work-search" type="search" name="q" placeholder={ui.works.searchPlaceholder} autocomplete="off" data-search />
-        </div>
-        <p class="filters__count small muted" data-count aria-live="polite">{ui.works.count(works.length)}</p>
-      </form>
-    </div>
-
-    <div class="rows" data-grid>
-      {withImages.map((w, i) => {
-        const cover = coverOf(w)!;
-        const detail = w.data.images.find((im) => im.kind === 'detail');
-        return (
-          <article class:list={['row', 'work-card', { 'row--flip': i % 2 === 1 }]} data-categories={w.data.categories.join(' ')} data-title={w.data.title[lang].toLowerCase()}>
-            <a class="row__link" href={workPath(w.id, lang)} data-work-link={w.id} aria-label={`${ui.cta.viewWork}: ${w.data.title[lang]}`}>
-              <div class="row__photo zoom-in"><Image src={cover.src} alt="" widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 60vw" loading={i < 2 ? 'eager' : 'lazy'} transition:name={`work-${w.id}`} /></div>
-              <div class="row__side">
-                {detail ? <div class="row__detail wipe"><Image src={detail.src} alt="" widths={[480, 800]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div> : <div class="row__detail row__detail--empty" aria-hidden="true"><span class="num">0{i + 1}</span></div>}
-                <div class="row__text">
-                  <span class="micro row__index">0{i + 1} · {w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}{w.data.year ? ` · ${w.data.year}` : ''}</span>
-                  <h3 class="row__title">{w.data.title[lang]}{w.data.titleStatus === 'provisional' && <span class="row__flag" aria-hidden="true">*</span>}</h3>
-                  <span class="btn btn--lime" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">↗</span></span>
-                </div>
-              </div>
-            </a>
-          </article>
-        );
-      })}
-    </div>
-
-    <div class="container">
-      {documented.length > 0 && (
-        <div class="documented" data-documented>
-          <p class="eyebrow eyebrow--accent">{ui.works.categories.colecciones}</p>
-          <h2 class="documented__title">{es ? 'Obras documentadas sin fotografía autorizada' : 'Documented works without an authorized photograph'}</h2>
-          <ul class="documented__list">
-            {documented.map((w) => (
-              <li class="work-card documented__item" data-categories={w.data.categories.join(' ')} data-title={w.data.title[lang].toLowerCase()}>
-                <a class="documented__link" href={workPath(w.id, lang)} data-work-link={w.id}>
-                  <span class="micro">{w.data.year ?? ui.works.yearUnknown}</span>
-                  <span class="documented__name">{w.data.title[lang]}</span>
-                  <span class="small">{w.data.collection ?? w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}</span>
-                  <span class="link-arrow" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">→</span></span>
-                </a>
+        <ul class="muro" data-lb-group>
+          {s.items.map(({ w, imgs }) => {
+            const main = imgs.find((i) => i.kind !== 'workshop') ?? imgs[0];
+            return (
+              <li class="muro-pieza work-card" data-title={w.data.title[lang].toLowerCase()}>
+                <figure>
+                  {main ? (
+                    <>
+                      <a href={workPath(w.id, lang)} data-lb-open data-full={main.full} data-alt={main.alt[lang]} data-title={w.data.title[lang]} data-caption={w.data.description[lang]}>
+                        <Image src={main.src} alt={main.alt[lang]} widths={[360, 560, 800]} sizes="(max-width: 560px) 45vw, 15rem" loading="lazy" />
+                        {imgs.length > 1 && <span class="muro-vistas">{imgs.length} {es ? 'vistas' : 'views'}</span>}
+                      </a>
+                      {imgs.slice(1).map((im) => <a class="visually-hidden" href={workPath(w.id, lang)} data-lb-open data-full={im.full} data-alt={im.alt[lang]} data-title={w.data.title[lang]} data-caption={[im.caption?.[lang], im.kind === 'workshop' ? ui.works.workshopNote : null].filter(Boolean).join(' · ')} tabindex="-1" aria-hidden="true">·</a>)}
+                    </>
+                  ) : (
+                    <a href={workPath(w.id, lang)} class="marcador" style="aspect-ratio:4/5;border-radius:8px"><strong>{ui.works.placeholderTitle}</strong><span>{ui.works.placeholderText}</span></a>
+                  )}
+                  <figcaption><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.titleStatus === 'provisional' && '*'}</a></strong><span>{[w.data.year, w.data.collection].filter(Boolean).join(' · ') || ui.works.categories[s.id]}</span></figcaption>
+                </figure>
               </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <p class="notice" data-empty hidden>{ui.works.empty} <button type="button" class="works-empty__reset" data-reset>{ui.works.reset}</button></p>
-      <p class="small muted catalog__note"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>
-    </div>
-  </section>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  ))}
 
-  <section class="scene-coral section">
-    <div class="container">
-      <h2 class="giant">{es ? '¿Una obra o un encargo?' : 'A work or a commission?'}</h2>
-      <a class="btn btn--ink btn--xl mt-l" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
+  <section class="galeria-cierre">
+    <div class="contenedor">
+      <p>* {ui.works.provisional}. {es ? 'Las fichas, dimensiones y años se completarán con la confirmación del artista.' : 'Records, dimensions and years will be completed with the artist’s confirmation.'}</p>
+      <div class="botones" style="justify-content:center"><a class="boton boton-principal" href={route('contact', lang)}>{ui.cta.contact}</a><a class="boton boton-secundario" href={route('home', lang)}>{ui.nav.home}</a></div>
     </div>
   </section>
+  <Lightbox lang={lang} />
 </Base>
 
 <script>
-  import { restoreOrigin, rememberOrigin } from '@/lib/motion';
-  function initFilters() {
+  import { rememberOrigin, restoreOrigin } from '@/lib/motion';
+  function initSearch() {
     const form = document.querySelector<HTMLFormElement>('[data-filters]');
     if (!form || form.dataset.ready) return;
     form.dataset.ready = '1';
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('.work-card'));
-    const chips = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-cat]'));
-    const search = form.querySelector<HTMLInputElement>('[data-search]')!;
+    const input = form.querySelector<HTMLInputElement>('[data-search]')!;
     const count = form.querySelector<HTMLElement>('[data-count]')!;
     const empty = document.querySelector<HTMLElement>('[data-empty]')!;
-    const reset = document.querySelector<HTMLButtonElement>('[data-reset]')!;
-    const documented = document.querySelector<HTMLElement>('[data-documented]');
-    const template = count.textContent || '';
-    const total = cards.length;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const params = new URLSearchParams(location.search);
-    let cat = params.get('categoria') || params.get('category') || '';
-    const label = (n: number) => template.replace(String(total), String(n)).replace(/^1 (\w+)s$/, '1 $1');
-    const timers = new WeakMap<HTMLElement, number>();
-    const setShown = (c: HTMLElement, show: boolean) => {
-      const prev = timers.get(c); if (prev) window.clearTimeout(prev);
-      if (show) { c.hidden = false; requestAnimationFrame(() => c.classList.remove('is-out')); }
-      else if (reduce) { c.hidden = true; }
-      else { c.classList.add('is-out'); timers.set(c, window.setTimeout(() => { c.hidden = true; }, 200)); }
-    };
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.work-card'));
+    const salas = Array.from(document.querySelectorAll<HTMLElement>('[data-sala]'));
+    const template = count.textContent || ''; const total = cards.length;
     const apply = () => {
-      const q = search.value.trim().toLowerCase();
-      let shown = 0, docShown = 0;
-      for (const c of cards) {
-        const ok = (!cat || (c.dataset.categories || '').split(' ').includes(cat)) && (!q || (c.dataset.title || '').includes(q));
-        setShown(c, ok);
-        if (ok) { shown++; if (c.classList.contains('documented__item')) docShown++; }
-      }
-      if (documented) documented.hidden = docShown === 0;
-      count.textContent = label(shown);
+      const q = input.value.trim().toLowerCase(); let shown = 0;
+      cards.forEach((c) => { const ok = !q || (c.dataset.title || '').includes(q); c.hidden = !ok; if (ok) shown++; });
+      salas.forEach((s) => { s.hidden = !s.querySelector('.work-card:not([hidden])'); });
+      count.textContent = template.replace(String(total), String(shown)).replace(/^1 (\w+)s$/, '1 $1');
       empty.hidden = shown > 0;
-      chips.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.cat || '') === cat)));
-      const url = new URL(location.href);
-      const key = document.documentElement.lang.startsWith('es') ? 'categoria' : 'category';
-      url.searchParams.delete('categoria'); url.searchParams.delete('category');
-      if (cat) url.searchParams.set(key, cat);
-      history.replaceState(history.state, '', url);
     };
-    chips.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat || ''; apply(); }));
-    search.addEventListener('input', apply);
+    input.addEventListener('input', apply);
     form.addEventListener('submit', (e) => e.preventDefault());
-    reset.addEventListener('click', () => { cat = ''; search.value = ''; apply(); search.focus(); });
-    document.querySelectorAll<HTMLAnchorElement>('[data-work-link]').forEach((a) => a.addEventListener('click', () => rememberOrigin(a.dataset.workLink!)));
-    apply();
+    document.querySelectorAll<HTMLAnchorElement>('a[href*="/obras/"], a[href*="/works/"]').forEach((a) => a.addEventListener('click', () => { const m = a.getAttribute('href')!.match(/\/(?:obras|works)\/([^/]+)\//); if (m) rememberOrigin(m[1]); }));
     restoreOrigin();
   }
-  initFilters();
-  document.addEventListener('astro:page-load', initFilters);
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
 </script>
 
 <style>
-  .works-hero { padding-top: calc(var(--nav-h) + var(--space-xl)); padding-bottom: var(--space-l); min-height: 72svh; display: grid; align-content: end; gap: var(--space-s); }
-  .works-hero .lead { max-width: 48ch; }
-  .catalog { padding-block: var(--space-m) var(--space-xl); }
-  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s) var(--space-m); padding-block: var(--space-m); border-bottom: 1px solid var(--line); margin-bottom: var(--space-l); }
-  .filters__cats { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .chip { min-height: 44px; padding: 0 1.1em; border: 1.5px solid var(--line-strong); border-radius: 999px; font-size: var(--type-meta); font-weight: 700; transition: background-color var(--d-control), color var(--d-control), border-color var(--d-control); }
-  .chip:hover { border-color: var(--color-lime); color: var(--color-lime); }
-  .chip[aria-pressed='true'] { background: var(--color-lime); color: var(--color-ink); border-color: var(--color-lime); }
-  .filters__search { margin-left: auto; min-width: min(100%, 260px); }
-  .filters__search input { width: 100%; min-height: 44px; font: inherit; font-size: var(--type-meta); background: transparent; border: 0; border-bottom: 1.5px solid var(--line-strong); padding: 0.4em 0; color: inherit; border-radius: 0; }
-  .filters__search input::placeholder { color: var(--fg-muted); }
-  .filters__search input:focus-visible { outline: none; border-bottom-color: var(--color-lime); box-shadow: 0 2px 0 var(--color-lime); }
-  .filters__count { margin: 0; flex-basis: 100%; }
-  @media (min-width: 900px) { .filters__count { flex-basis: auto; } }
-
-  .rows { display: grid; gap: 6px; }
-  .row { transition: opacity var(--d-filter) var(--ease-paper); }
-  .row.is-out { opacity: 0; }
-  .row__link { display: grid; grid-template-columns: 3fr 2fr; gap: 6px; text-decoration: none; color: inherit; min-height: 80svh; }
-  .row--flip .row__link { grid-template-columns: 2fr 3fr; }
-  .row--flip .row__photo { order: 2; }
-  .row__photo { overflow: hidden; background: var(--ink-soft); }
-  .row__photo :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
-  .row__side { display: grid; grid-template-rows: 1fr auto; gap: 6px; }
-  .row__detail { overflow: hidden; background: var(--ink-soft); }
-  .row__detail :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-paper); }
-  .row__detail--empty { display: grid; place-items: center; color: var(--color-lime); }
-  .row__text { padding: var(--space-m) var(--space-m) var(--space-l); background: var(--ink-soft); display: grid; gap: var(--space-s); justify-items: start; }
-  .row__index { color: var(--color-lime); }
-  .row__title { font-size: var(--type-h2); }
-  .row__flag { color: var(--color-coral); }
-  .row__link:hover .row__photo :global(img), .row__link:focus-visible .row__photo :global(img) { transform: scale(1.03); }
-  .row__link:hover .row__detail :global(img) { transform: scale(1.06); }
-  .row__link:hover .btn { background: var(--lime-deep); }
-  .row__link:focus-visible { outline: 4px solid var(--color-lime); outline-offset: -4px; }
-  .documented { margin-top: var(--space-2xl); border-top: 1.5px solid var(--line-strong); padding-top: var(--space-l); }
-  .documented__title { font-size: var(--type-h3); margin-bottom: var(--space-m); }
-  .documented__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--gutter); }
-  .documented__link { display: grid; gap: 0.3rem; padding: var(--space-m); text-decoration: none; background: var(--ink-soft); min-height: 100%; transition: background-color var(--d-control), color var(--d-control); }
-  .documented__link:hover { background: var(--color-lime); color: var(--color-ink); }
-  .documented__name { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h4); }
-  .catalog__note { margin-top: var(--space-l); }
-  .works-empty__reset { text-decoration: underline; margin-left: 0.5em; font-weight: 700; }
-  @media (max-width: 900px) {
-    .row__link { grid-template-columns: 1fr !important; min-height: 0; }
-    .row--flip .row__photo { order: 0; }
-    .row__photo { aspect-ratio: 4 / 5; }
-    .row__side { grid-template-rows: none; }
-    .row__detail { aspect-ratio: 16 / 9; }
-    .row__detail--empty { display: none; }
-  }
+  .filtro-busqueda { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
+  .filtro-busqueda input { font: inherit; color: var(--blanco); background: rgba(255, 250, 240, 0.06); border: 1.5px solid rgba(255, 250, 240, 0.25); border-radius: 999px; padding: 0.55rem 1rem; min-width: min(100%, 22rem); min-height: 44px; }
+  .filtro-busqueda input::placeholder { color: var(--crema-suave); }
 </style>

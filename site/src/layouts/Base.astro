@@ -51,7 +51,7 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, siteUrl).toString()} />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
-    <meta name="theme-color" content="#191b24" />
+    <meta name="theme-color" content="#1c1612" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.artistName} />
     <meta property="og:title" content={fullTitle} />
@@ -64,18 +64,14 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <script is:inline>document.documentElement.classList.remove('no-js');</script>
     <ClientRouter fallback="none" />
   </head>
-  <body class={bodyClass} data-overlay-header={overlayHeader ? 'true' : undefined} data-top-scene={topScene}>
-    <a class="skip" href="#main">{ui.skip}</a>
-    <Header lang={lang} alternates={alternates} overlay={overlayHeader} scene={topScene} />
+  <body class={bodyClass}>
+    <a class="salto" href="#main">{ui.skip}</a>
+    <Header lang={lang} alternates={alternates} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer lang={lang} />
-    <script>
-      import { initMotion } from '@/lib/motion';
-      initMotion();
-      document.addEventListener('astro:page-load', initMotion);
-    </script>
+
   </body>
 </html>
 

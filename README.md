@@ -2,21 +2,13 @@
 
 Sitio bilingüe (español / inglés) de **Felipe Linares Vargas**, cartonero de la Ciudad de México, hijo de Felipe Linares Mendoza y nieto de Pedro Linares López, creador de los alebrijes.
 
-El sitio es una exposición digital de varias páginas bajo la dirección de arte **«Papel vivo»**: el entorno gráfico se comporta como papel (hojas que se despliegan, capas con sombra, bordes ligeramente irregulares) y las esculturas permanecen como fotografías auténticas. Portada narrativa en seis capítulos, obras con fichas individuales, biografía, proceso en cinco estaciones, legado familiar con árbol genealógico y cronología, archivo documental con filtros, y contacto. Todo el contenido histórico está enlazado a fuentes verificables; lo que no está documentado se marca como «por confirmar».
+El sitio sigue el lenguaje visual del sitio de Gorgonio Candelario: papel cálido y tinta, acentos bermellón, cempasúchil, turquesa y verde, Fraunces + Source Sans 3, secciones alternas claras y oscuras, galería como salas de museo. Portada narrativa, obras con fichas individuales, biografía, proceso, legado familiar con árbol y cronología, archivo documental con filtros, y contacto. Todo el contenido histórico está enlazado a fuentes verificables; lo que no está documentado se marca como «por confirmar».
 
 Documentos de apoyo: **[CONTENT_CHECKLIST.md](./CONTENT_CHECKLIST.md)** (pendientes de la familia), **[ASSETS.md](./ASSETS.md)** (inventario fotográfico) e **[IMPLEMENTATION_REPORT.md](./IMPLEMENTATION_REPORT.md)** (qué se construyó y cómo se verificó).
 
 ## Sistema de diseño
 
-| Token | Color | Uso |
-|---|---|---|
-| `--color-paper` | `#F7F7F2` | superficies de lectura y galería |
-| `--color-ink` | `#191B24` | tipografía y escena de portada |
-| `--color-cobalt` | `#2946C7` | campos teatrales y proceso |
-| `--color-lime` | `#D9ED69` | contraste tras las criaturas y acción principal |
-| `--color-coral` | `#E9694C` | cierre y contacto |
-
-Tipografía: Fraunces Variable (titulares) y Manrope Variable (texto y controles), servidas desde el sitio. Escenas (`.scene-paper`, `.scene-ink`, `.scene-cobalt`, `.scene-lime`, `.scene-coral`) fijan fondo, tinta y color de foco. Primitivas: `Paper.astro` (hoja con borde orgánico y esquina doblada), `.sheet` (sombra que sigue el recorte), `Marks.astro` (ala, cornamenta, manchas). Movimiento: tres gestos (`.unfold`, `.reveal-mask`, `.float`) y transiciones de imagen compartida entre galería y ficha (`transition:name`). Todo respeta `prefers-reduced-motion` y funciona sin JavaScript.
+Tokens en `site/src/styles/global.css`: `--papel #f6eedd`, `--papel-2 #efe3c9`, `--tinta #1c1612`, `--bermellon #b9321c`, `--cempasuchil #e8a01a`, `--turquesa #17807f`, `--verde #3b7a36`, `--morado #6b3fa0`. Tipografía Fraunces Variable (títulos) y Source Sans 3 Variable (texto), servidas desde el sitio. Clases principales: `.portada`, `.seccion` / `.seccion-crema` / `.seccion-oscura`, `.tarjetas`, `.datos`, `.pasos`, `.detalles`, `.piezas`, `.muro`, `.visor`, `.cronologia`, `.arbol`; `body.pagina-oscura` para galería y fichas.
 
 ## Estructura
 

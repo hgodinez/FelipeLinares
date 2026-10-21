@@ -6,17 +6,6 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 ---
-<Base lang={lang} title={ui.misc.notFound} alternates={alternates('home')} topScene="ink">
-  <section class="section nf scene-ink">
-    <div class="container--narrow container text-center">
-      <p class="eyebrow eyebrow--accent">404</p>
-      <h1>{ui.misc.notFound}</h1>
-      <p class="lead mt-m" style="margin-inline:auto">{ui.misc.notFoundText}</p>
-      <div class="cluster mt-xl" style="justify-content:center">
-        <a class="btn btn--lime" href={route('home', lang)}>{ui.nav.home}</a>
-        <a class="btn" style="color:var(--color-paper)" href={route('works', lang)}>{ui.cta.works}</a>
-      </div>
-    </div>
-  </section>
+<Base lang={lang} title={ui.misc.notFound} alternates={alternates('home')}>
+  <section class="seccion" style="min-height:60vh;display:grid;align-items:center"><div class="contenedor" style="max-width:40rem;text-align:center"><p class="antetitulo">404</p><h1>{ui.misc.notFound}</h1><p class="texto-suave" style="font-size:1.15rem">{ui.misc.notFoundText}</p><div class="botones" style="justify-content:center"><a class="boton boton-principal" href={route('home', lang)}>{ui.nav.home}</a><a class="boton boton-secundario" href={route('works', lang)}>{ui.cta.works}</a></div></div></section>
 </Base>
-<style>.nf { min-height: 60vh; display: grid; align-items: center; }</style>

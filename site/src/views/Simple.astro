@@ -3,18 +3,12 @@ import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { alternates, type Lang, type RouteKey } from '@/i18n/routes';
 import { getPage } from '@/lib/content';
-
 interface Props { lang: Lang; slug: string; routeKey: RouteKey }
 const { lang, slug, routeKey } = Astro.props;
 const page = await getPage(slug, lang);
 const { Content } = await render(page);
 ---
 <Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates(routeKey)}>
-  <section class="section scene-paper">
-    <div class="container--narrow container">
-      <p class="eyebrow eyebrow--accent">{page.data.eyebrow}</p>
-      <h1>{page.data.title}</h1>
-      <div class="prose mt-xl"><Content /></div>
-    </div>
-  </section>
+  <section class="seccion"><div class="contenedor" style="max-width:46rem"><p class="antetitulo">{page.data.eyebrow}</p><h1 style="font-size:clamp(2rem,4.5vw,3rem)">{page.data.title}</h1><div class="prosa"><Content /></div></div></section>
 </Base>
+<style>.prosa :global(h2) { font-size: 1.5rem; margin-top: 1.75rem; } .prosa :global(ul) { padding-left: 1.2em; }</style>

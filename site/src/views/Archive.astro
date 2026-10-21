@@ -7,98 +7,72 @@ import { getArchive } from '@/lib/content';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
+const es = lang === 'es';
 const items = await getArchive();
 const years = Array.from(new Set(items.map((i) => i.data.year))).sort((a, b) => b - a);
 const types = Array.from(new Set(items.map((i) => i.data.type)));
 const institutions = Array.from(new Set(items.map((i) => i.data.institution).filter(Boolean) as string[])).sort();
 const subjects = ['artist', 'family', 'tradition'] as const;
-const title = lang === 'es' ? 'Exposiciones y archivo' : 'Exhibitions and archive';
-const intro = lang === 'es'
-  ? 'Registro documental de la presencia pública de Felipe Linares Vargas y de la familia Linares: exposiciones, colecciones, prensa, publicaciones y reconocimientos. Cada entrada enlaza a sus fuentes y distingue si se refiere al artista, a la familia o a la tradición.'
-  : 'Documentary record of the public presence of Felipe Linares Vargas and the Linares family: exhibitions, collections, press, publications and recognitions. Each entry links to its sources and states whether it refers to the artist, the family or the tradition.';
+const title = es ? 'Exposiciones y archivo' : 'Exhibitions and archive';
+const intro = es ? 'Registro documental de la presencia pública de Felipe Linares Vargas y de la familia Linares: exposiciones, colecciones, prensa, publicaciones y reconocimientos. Cada entrada enlaza a sus fuentes y distingue si se refiere al artista, a la familia o a la tradición.' : 'Documentary record of the public presence of Felipe Linares Vargas and the Linares family: exhibitions, collections, press, publications and recognitions. Each entry links to its sources and states whether it refers to the artist, the family or the tradition.';
 ---
 <Base lang={lang} title={title} description={intro} alternates={alternates('archive')}>
-  <section class="section archive-head scene-paper">
-    <div class="container">
-      <p class="eyebrow eyebrow--accent">{ui.nav.archive}</p>
-      <h1 class="giant">{title}</h1>
-      <p class="lead mt-m">{intro}</p>
-    </div>
+  <section class="seccion" style="padding-bottom:1rem">
+    <div class="contenedor encabezado-seccion"><p class="antetitulo">{ui.nav.archive}</p><h1 style="font-size:clamp(2.2rem,5vw,3.6rem)">{title}</h1><p class="texto-suave">{intro}</p></div>
   </section>
-
-  <section class="section--tight scene-paper">
-    <div class="container archive-layout">
-      <form class="archive-filters" data-archive-filters aria-label={ui.archive.filters}>
-        <p class="eyebrow">{ui.archive.filters}</p>
-        <div class="field">
-          <label for="f-subject">{ui.archive.subject}</label>
-          <select id="f-subject" name="subject" data-f="subject"><option value="">{ui.archive.all}</option>{subjects.map((s) => <option value={s}>{ui.archive.subjects[s]}</option>)}</select>
-        </div>
-        <div class="field">
-          <label for="f-year">{ui.archive.year}</label>
-          <select id="f-year" name="year" data-f="year"><option value="">{ui.archive.all}</option>{years.map((y) => <option value={String(y)}>{y}</option>)}</select>
-        </div>
-        <div class="field">
-          <label for="f-type">{ui.archive.type}</label>
-          <select id="f-type" name="type" data-f="type"><option value="">{ui.archive.all}</option>{types.map((ty) => <option value={ty}>{ui.archive.types[ty]}</option>)}</select>
-        </div>
-        <div class="field">
-          <label for="f-inst">{ui.archive.institution}</label>
-          <select id="f-inst" name="institution" data-f="institution"><option value="">{ui.archive.all}</option>{institutions.map((i) => <option value={i}>{i}</option>)}</select>
-        </div>
-        <button type="button" class="link-arrow" data-archive-reset>{ui.archive.reset}</button>
-        <p class="small muted" data-archive-count aria-live="polite">{ui.archive.count(items.length)}</p>
+  <section class="seccion" style="padding-top:0">
+    <div class="contenedor archivo">
+      <form class="archivo-filtros" data-archive-filters aria-label={ui.archive.filters}>
+        <p class="antetitulo">{ui.archive.filters}</p>
+        <div class="campo"><label for="f-subject">{ui.archive.subject}</label><select id="f-subject" data-f="subject"><option value="">{ui.archive.all}</option>{subjects.map((s) => <option value={s}>{ui.archive.subjects[s]}</option>)}</select></div>
+        <div class="campo"><label for="f-year">{ui.archive.year}</label><select id="f-year" data-f="year"><option value="">{ui.archive.all}</option>{years.map((y) => <option value={String(y)}>{y}</option>)}</select></div>
+        <div class="campo"><label for="f-type">{ui.archive.type}</label><select id="f-type" data-f="type"><option value="">{ui.archive.all}</option>{types.map((ty) => <option value={ty}>{ui.archive.types[ty]}</option>)}</select></div>
+        <div class="campo"><label for="f-inst">{ui.archive.institution}</label><select id="f-inst" data-f="institution"><option value="">{ui.archive.all}</option>{institutions.map((i) => <option value={i}>{i}</option>)}</select></div>
+        <button type="button" class="boton boton-secundario" data-archive-reset>{ui.archive.reset}</button>
+        <p class="texto-suave" style="margin-top:1rem" data-archive-count aria-live="polite">{ui.archive.count(items.length)}</p>
       </form>
-
-      <ol class="archive-list" data-archive-list>
-        {items.map((it, i) => (
-          <li class="archive-item" data-subject={it.data.subject} data-year={it.data.year} data-type={it.data.type} data-institution={it.data.institution ?? ''}>
-            <a class="archive-item__link" href={archivePath(it.id, lang)}>
-              <span class="archive-item__year">{it.data.year}{it.data.endYear && <span class="archive-item__end">–{it.data.endYear}</span>}</span>
-              <span class="archive-item__body">
-                <span class="archive-item__tags">
-                  <span class:list={['tag', { 'tag--accent': it.data.subject === 'artist', 'tag--cobalt': it.data.subject === 'tradition' }]}>{ui.archive.subjects[it.data.subject]}</span>
-                  <span class="tag">{ui.archive.types[it.data.type]}</span>
+      <div>
+        <ol class="archivo-lista">
+          {items.map((it) => (
+            <li class="archivo-item" data-subject={it.data.subject} data-year={it.data.year} data-type={it.data.type} data-institution={it.data.institution ?? ''}>
+              <a href={archivePath(it.id, lang)}>
+                <span class="archivo-anio">{it.data.year}{it.data.endYear && <small>–{it.data.endYear}</small>}</span>
+                <span>
+                  <span class:list={['etiqueta-tema', { artista: it.data.subject === 'artist', tradicion: it.data.subject === 'tradition' }]}>{ui.archive.subjects[it.data.subject]}</span><span class="etiqueta-tema">{ui.archive.types[it.data.type]}</span>
+                  <strong>{it.data.title[lang]}</strong>
+                  <small>{[it.data.institution, it.data.city].filter(Boolean).join(' · ')}</small>
+                  <span class="archivo-resumen">{it.data.summary[lang]}</span>
                 </span>
-                <span class="archive-item__title">{it.data.title[lang]}</span>
-                <span class="archive-item__meta small muted">{[it.data.institution, it.data.city].filter(Boolean).join(' · ')}</span>
-                <span class="archive-item__summary small">{it.data.summary[lang]}</span>
-              </span>
-              <span class="archive-item__arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-      <p class="notice" data-archive-empty hidden>{ui.archive.empty}</p>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <p class="estado estado-aviso" data-archive-empty hidden>{ui.archive.empty}</p>
+      </div>
     </div>
   </section>
 </Base>
-
 <script>
   function initArchive() {
     const form = document.querySelector<HTMLFormElement>('[data-archive-filters]');
     if (!form || form.dataset.ready) return;
     form.dataset.ready = '1';
     const selects = Array.from(form.querySelectorAll<HTMLSelectElement>('[data-f]'));
-    const items = Array.from(document.querySelectorAll<HTMLElement>('.archive-item'));
+    const items = Array.from(document.querySelectorAll<HTMLElement>('.archivo-item'));
     const count = form.querySelector<HTMLElement>('[data-archive-count]')!;
     const empty = document.querySelector<HTMLElement>('[data-archive-empty]')!;
-    const template = count.textContent || '';
-    const total = items.length;
+    const template = count.textContent || ''; const total = items.length;
     const params = new URLSearchParams(location.search);
     selects.forEach((s) => { const v = params.get(s.dataset.f!); if (v) s.value = v; });
     const apply = () => {
       const active = selects.map((s) => [s.dataset.f!, s.value] as const).filter(([, v]) => v);
       let shown = 0;
-      for (const it of items) {
-        const ok = active.every(([k, v]) => (it.dataset[k] || '') === v);
-        it.hidden = !ok; if (ok) shown++;
-      }
+      for (const it of items) { const ok = active.every(([k, v]) => (it.dataset[k] || '') === v); it.hidden = !ok; if (ok) shown++; }
       count.textContent = template.replace(String(total), String(shown)).replace(/^1 (\w+)s$/, '1 $1');
       empty.hidden = shown > 0;
       const url = new URL(location.href);
       selects.forEach((s) => { if (s.value) url.searchParams.set(s.dataset.f!, s.value); else url.searchParams.delete(s.dataset.f!); });
-      history.replaceState(null, '', url);
+      history.replaceState(history.state, '', url);
     };
     selects.forEach((s) => s.addEventListener('change', apply));
     form.querySelector('[data-archive-reset]')!.addEventListener('click', () => { selects.forEach((s) => (s.value = '')); apply(); });
@@ -107,23 +81,20 @@ const intro = lang === 'es'
   initArchive();
   document.addEventListener('astro:page-load', initArchive);
 </script>
-
 <style>
-  .archive-head h1 { font-size: var(--type-hero); }
-  .archive-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--space-xl); align-items: start; }
-  .archive-filters { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
-  .archive-filters .field { margin-bottom: var(--space-s); }
-  .archive-list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--line-strong); }
-  .archive-item { border-bottom: 1px solid var(--line); }
-  .archive-item__link { display: grid; grid-template-columns: 8ch minmax(0, 1fr) auto; gap: var(--space-m); padding: var(--space-m) 0; text-decoration: none; align-items: start; transition: background-color 200ms; }
-  .archive-item__link:hover { background: var(--paper-deep); }
-  .archive-item__year { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h3); line-height: 1; }
-  .archive-item__end { display: block; font-family: var(--font-text); font-size: var(--type-micro); font-weight: 700; color: var(--fg-muted); margin-top: 0.3rem; }
-  .archive-item__body { display: grid; gap: 0.4rem; }
-  .archive-item__tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .archive-item__title { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h4); line-height: 1.25; }
-  .archive-item__arrow { font-size: var(--type-lead); transition: transform var(--d-control) var(--ease-paper); align-self: center; }
-  .archive-item__link:hover .archive-item__arrow { transform: translateX(4px); }
-  @media (max-width: 900px) { .archive-layout { grid-template-columns: 1fr; } .archive-filters { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-m); } .archive-filters .eyebrow, .archive-filters button, .archive-filters p { grid-column: 1 / -1; } }
-  @media (max-width: 560px) { .archive-item__link { grid-template-columns: 1fr; gap: 0.5rem; } .archive-item__arrow { display: none; } }
+  .archivo { display: grid; grid-template-columns: 16rem minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+  .archivo-filtros { position: sticky; top: 5rem; background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 1.25rem; }
+  .archivo-filtros .campo { margin-bottom: 0.8rem; }
+  .archivo-lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--borde); }
+  .archivo-item { border-bottom: 1px solid var(--borde); }
+  .archivo-item a { display: grid; grid-template-columns: 6ch minmax(0, 1fr); gap: 1.25rem; padding: 1.1rem 0; text-decoration: none; color: var(--tinta); border-radius: 8px; }
+  .archivo-item a:hover { background: var(--papel-2); }
+  .archivo-item a > span:last-child { display: grid; gap: 0.3rem; }
+  .archivo-anio { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.5rem; line-height: 1; }
+  .archivo-anio small { display: block; font-family: var(--fuente-texto); font-size: 0.75rem; color: var(--tinta-suave); margin-top: 0.2rem; }
+  .archivo-item strong { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.15rem; line-height: 1.25; }
+  .archivo-item small { color: var(--tinta-suave); }
+  .archivo-resumen { font-size: 0.95rem; color: var(--tinta-suave); }
+  @media (max-width: 900px) { .archivo { grid-template-columns: 1fr; } .archivo-filtros { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; } .archivo-filtros .antetitulo, .archivo-filtros button, .archivo-filtros p { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .archivo-item a { grid-template-columns: 1fr; gap: 0.4rem; } }
 </style>

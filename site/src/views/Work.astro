@@ -3,9 +3,7 @@ import { Image, getImage } from 'astro:assets';
 import { getEntries } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import Lightbox from '@/components/Lightbox.astro';
-import Placeholder from '@/components/Placeholder.astro';
 import SourceList from '@/components/SourceList.astro';
-import ArtworkCard from '@/components/ArtworkCard.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { coverOf, type Work } from '@/lib/content';
@@ -13,94 +11,83 @@ import { coverOf, type Work } from '@/lib/content';
 interface Props { lang: Lang; work: Work }
 const { lang, work } = Astro.props;
 const ui = t(lang);
+const es = lang === 'es';
 const d = work.data;
 const title = d.title[lang];
 const cover = coverOf(work);
 const related = (await getEntries(d.related)).filter(Boolean);
-const gallery = await Promise.all(d.images.map(async (img) => ({ ...img, full: await getImage({ src: img.src, width: Math.min(2000, img.src.width), format: 'webp', quality: 82 }) })));
+const gallery = await Promise.all(d.images.map(async (img) => ({ ...img, full: (await getImage({ src: img.src, width: Math.min(2000, img.src.width), format: 'webp', quality: 82 })).src })));
 const main = gallery.find((g) => g.kind !== 'workshop') ?? gallery[0];
 const rest = gallery.filter((g) => g !== main);
 const ogImg = cover ? await getImage({ src: cover.src, width: 1200, format: 'jpg' }) : undefined;
 const desc = d.description[lang].slice(0, 160).replace(/\s+\S*$/, '…');
-const ld = {
-  '@context': 'https://schema.org', '@type': 'VisualArtwork', name: title,
-  creator: { '@type': 'Person', name: 'Felipe Linares Vargas' }, artform: 'Cartonería', artMedium: d.materials[lang], description: d.description[lang],
-  ...(d.year ? { dateCreated: String(d.year) } : {}), ...(d.dimensions ? { size: d.dimensions } : {}),
-  ...(ogImg ? { image: new URL(ogImg.src, Astro.site).toString() } : {}), url: new URL(workPath(work.id, lang), Astro.site).toString(),
-};
-const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-  { '@type': 'ListItem', position: 1, name: ui.nav.home, item: new URL(route('home', lang), Astro.site).toString() },
-  { '@type': 'ListItem', position: 2, name: ui.nav.works, item: new URL(route('works', lang), Astro.site).toString() },
-  { '@type': 'ListItem', position: 3, name: title } ] };
-const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id)}`;
 const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.kind === 'workshop' ? ui.works.workshopNote : null].filter(Boolean).join(' · ');
+const ld = { '@context': 'https://schema.org', '@type': 'VisualArtwork', name: title, creator: { '@type': 'Person', name: 'Felipe Linares Vargas' }, artform: 'Cartonería', artMedium: d.materials[lang], description: d.description[lang], ...(d.year ? { dateCreated: String(d.year) } : {}), ...(d.dimensions ? { size: d.dimensions } : {}), ...(ogImg ? { image: new URL(ogImg.src, Astro.site).toString() } : {}), url: new URL(workPath(work.id, lang), Astro.site).toString() };
+const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: ui.nav.home, item: new URL(route('home', lang), Astro.site).toString() }, { '@type': 'ListItem', position: 2, name: ui.nav.works, item: new URL(route('works', lang), Astro.site).toString() }, { '@type': 'ListItem', position: 3, name: title } ] };
+const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id)}`;
 ---
-<Base lang={lang} title={title} description={desc} alternates={alternates('works', work.id)} ogImage={ogImg?.src} jsonLd={[ld, breadcrumb]} overlayHeader topScene="ink">
-  <article class="work scene-ink">
-    <div class:list={['work__stage', 'bleed', { 'work__stage--empty': !main }]}>
-      <div class="work__stage-media zoom-in" data-lb-group>
-        {main ? (
-          <button type="button" class="work__zoom" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>
-            <Image src={main.src} alt={main.alt[lang]} widths={[640, 1024, 1600, 2200]} sizes="100vw" loading="eager" fetchpriority="high" transition:name={`work-${work.id}`} />
-          </button>
-        ) : (
-          <div class="work__stage-empty"><Placeholder lang={lang} ratio="auto" /></div>
-        )}
-      </div>
-      <div class="work__stage-scrim" aria-hidden="true"></div>
-      <div class="container work__stage-text">
-        <nav class="work__crumbs small" aria-label="Breadcrumb">
-          <a href={route('works', lang)} data-back-link>{ui.nav.works}</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
-        </nav>
-        <p class="eyebrow">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
-        <h1 class="work__title on-photo">{title}{d.titleStatus === 'provisional' && <span class="work__flag" aria-hidden="true">*</span>}</h1>
-        <p class="work__meta on-photo">{d.year && <span>{d.year}</span>}{d.dimensions && <span>{d.dimensions}</span>}{d.collection && <span>{d.collection}</span>}</p>
-      </div>
-      <a class="work__close" href={route('works', lang)} data-back-link aria-label={ui.cta.back}><span aria-hidden="true">×</span><span class="work__close-label micro">{ui.cta.back} · Esc</span></a>
-    </div>
-
-    <div class="container work__layout" data-lb-group>
-      <div class="work__gallery">
-        {main && (
-          <button type="button" class="work__thumb-main visually-hidden" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>1</button>
-        )}
-        {rest.map((img, i) => (
-          <figure class="figure work__thumb">
-            <button type="button" class="work__zoom wipe" style={`--delay:${(i % 3) * 100}ms`} data-lb-open data-full={img.full.src} data-alt={img.alt[lang]} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
-              <Image src={img.src} alt={img.alt[lang]} widths={[480, 800, 1200]} sizes="(max-width: 1000px) 100vw, 40vw" loading="lazy" />
-            </button>
-            <figcaption><span>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${i + 2} ${ui.works.of} ${gallery.length}`)}</span>{img.kind === 'workshop' && img.caption?.[lang] && <span class="tag">{ui.works.workshopNote}</span>}</figcaption>
+<Base lang={lang} title={title} description={desc} alternates={alternates('works', work.id)} ogImage={ogImg?.src} jsonLd={[ld, breadcrumb]} bodyClass="pagina-oscura">
+  <article class="obra">
+    <div class="contenedor">
+      <nav class="miga" aria-label="Breadcrumb"><a href={route('works', lang)} data-back-link>← {ui.nav.works}</a></nav>
+      <div class="obra-grid" data-lb-group>
+        <div class="obra-fotos">
+          <figure class="foto obra-principal">
+            {main ? (
+              <button type="button" class="obra-zoom" data-lb-open data-full={main.full} data-alt={main.alt[lang]} data-title={title} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>
+                <Image src={main.src} alt={main.alt[lang]} widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 44rem" loading="eager" fetchpriority="high" transition:name={`work-${work.id}`} />
+              </button>
+            ) : (
+              <div class="marcador" style="aspect-ratio:4/5"><strong>{ui.works.placeholderTitle}</strong><span>{ui.works.placeholderText}</span></div>
+            )}
+            {main && <figcaption>{main.caption?.[lang] ?? `${title} · 1 ${ui.works.of} ${gallery.length}`}</figcaption>}
           </figure>
-        ))}
-        {d.titleStatus === 'provisional' && <p class="small muted work__prov"><span style="color:var(--color-coral)">*</span> {ui.works.provisional}.</p>}
-      </div>
-
-      <aside class="work__aside">
-        <div class="work__sticky">
-          <div class="prose work__desc"><p class="lead">{d.description[lang]}</p></div>
-          {d.context?.[lang] && <div class="prose mt-l"><h2 class="eyebrow">{ui.works.context}</h2><p>{d.context[lang]}</p></div>}
-          <div class="mt-l">
-            <h2 class="eyebrow">{ui.works.detailsHeading}</h2>
-            <dl class="spec">
-              <dt>{ui.works.year}</dt><dd>{d.year ?? ui.works.yearUnknown}{d.yearNote?.[lang] && <span class="muted"> · {d.yearNote[lang]}</span>}</dd>
-              <dt>{ui.works.materials}</dt><dd>{d.materials[lang]}</dd>
-              <dt>{ui.works.dimensions}</dt><dd>{d.dimensions ?? ui.works.dimensionsUnknown}</dd>
-              {d.collection && <><dt>{ui.works.collection}</dt><dd>{d.collection}</dd></>}
-              <dt>{ui.works.availability}</dt><dd>{ui.works.availabilityLabels[d.availability]}</dd>
-            </dl>
-          </div>
-          {d.provenance?.[lang] && <div class="prose mt-m"><h2 class="eyebrow">{ui.works.provenance}</h2><p class="small">{d.provenance[lang]}</p></div>}
-          <div class="mt-l"><a class="btn btn--lime btn--xl" href={contactHref}>{ui.cta.inquire} <span class="arrow" aria-hidden="true">↗</span></a></div>
-          <div class="mt-l"><SourceList lang={lang} sources={d.sources} heading={ui.works.sources} /></div>
+          {rest.length > 0 && (
+            <ul class="obra-vistas">
+              {rest.map((img, i) => (
+                <li><figure class="foto">
+                  <button type="button" class="obra-zoom" data-lb-open data-full={img.full} data-alt={img.alt[lang]} data-title={title} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
+                    <Image src={img.src} alt={img.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 900px) 45vw, 20rem" loading="lazy" />
+                  </button>
+                  <figcaption>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${i + 2} ${ui.works.of} ${gallery.length}`)}</figcaption>
+                </figure></li>
+              ))}
+            </ul>
+          )}
         </div>
-      </aside>
+        <div class="obra-texto">
+          <p class="antetitulo">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
+          <h1>{title}</h1>
+          {d.titleStatus === 'provisional' && <p><span class="aviso">{ui.works.provisional}</span></p>}
+          <p class="texto-suave" style="font-size:1.15rem">{d.description[lang]}</p>
+          {d.context?.[lang] && <><h3 class="subtitulo-seccion" style="margin-top:1.5rem;font-size:1.4rem">{ui.works.context}</h3><p class="texto-suave">{d.context[lang]}</p></>}
+          <h3 class="subtitulo-seccion" style="margin-top:1.5rem;font-size:1.4rem">{ui.works.detailsHeading}</h3>
+          <dl class="ficha">
+            <dt>{ui.works.year}</dt><dd>{d.year ?? ui.works.yearUnknown}{d.yearNote?.[lang] && ` · ${d.yearNote[lang]}`}</dd>
+            <dt>{ui.works.materials}</dt><dd>{d.materials[lang]}</dd>
+            <dt>{ui.works.dimensions}</dt><dd>{d.dimensions ?? ui.works.dimensionsUnknown}</dd>
+            {d.collection && <><dt>{ui.works.collection}</dt><dd>{d.collection}</dd></>}
+            <dt>{ui.works.availability}</dt><dd>{ui.works.availabilityLabels[d.availability]}</dd>
+          </dl>
+          {d.provenance?.[lang] && <p class="texto-suave" style="margin-top:1rem"><strong>{ui.works.provenance}:</strong> {d.provenance[lang]}</p>}
+          <div class="botones"><a class="boton boton-principal" href={contactHref}>{ui.cta.inquire}</a></div>
+          <div style="margin-top:1.5rem"><SourceList lang={lang} sources={d.sources} heading={ui.works.sources} /></div>
+        </div>
+      </div>
     </div>
 
     {related.length > 0 && (
-      <section class="scene-paper section" aria-labelledby="related-title">
-        <div class="container">
-          <div class="section-head"><h2 id="related-title">{ui.works.related}</h2><a class="link-arrow" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a></div>
-          <div class="related-grid">{related.map((r) => <ArtworkCard work={r} lang={lang} size="small" />)}</div>
+      <section class="sala" aria-labelledby="titulo-relacionadas">
+        <div class="contenedor">
+          <h2 id="titulo-relacionadas" style="font-size:clamp(1.6rem,3vw,2.2rem)">{ui.works.related}</h2>
+          <ul class="piezas">
+            {related.map((r) => { const c = coverOf(r); return (
+              <li class="pieza">
+                {c ? <a class="pieza-imagen" href={workPath(r.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 20rem" loading="lazy" /></a> : <a class="marcador" href={workPath(r.id, lang)} style="aspect-ratio:3/4"><strong>{r.data.title[lang]}</strong></a>}
+                <p><span><strong><a href={workPath(r.id, lang)}>{r.data.title[lang]}</a></strong><span class="pieza-nota">{r.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p>
+              </li>
+            ); })}
+          </ul>
         </div>
       </section>
     )}
@@ -111,62 +98,30 @@ const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.k
 <script>
   import { rememberOrigin } from '@/lib/motion';
   function initWork() {
-    const article = document.querySelector<HTMLElement>('.work');
+    const article = document.querySelector<HTMLElement>('.obra');
     if (!article || article.dataset.ready) return;
     article.dataset.ready = '1';
-    let fromGallery = false;
-    try { fromGallery = !!sessionStorage.getItem('flv:origin'); } catch {}
-    const back = () => { if (fromGallery && history.length > 1) history.back(); else location.href = (document.querySelector<HTMLAnchorElement>('[data-back-link]')!).href; };
+    let fromGallery = false; try { fromGallery = !!sessionStorage.getItem('flv:origin'); } catch {}
     document.querySelectorAll<HTMLAnchorElement>('[data-back-link]').forEach((a) => a.addEventListener('click', (e) => { if (fromGallery && history.length > 1) { e.preventDefault(); history.back(); } }));
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      if (document.querySelector('dialog[open]')) return; // the image viewer handles its own Escape
-      if ((e.target as HTMLElement).closest('input, textarea, select')) return;
-      back();
-    });
-    document.querySelectorAll<HTMLAnchorElement>('[data-work-link]').forEach((a) => a.addEventListener('click', () => rememberOrigin(a.dataset.workLink!)));
+    document.addEventListener('keydown', (e) => { if (e.key !== 'Escape' || document.querySelector('dialog[open]') || (e.target as HTMLElement).closest('input, textarea, select')) return; if (fromGallery && history.length > 1) history.back(); });
+    document.querySelectorAll<HTMLAnchorElement>('a[href*="/obras/"], a[href*="/works/"]').forEach((a) => a.addEventListener('click', () => { const m = a.getAttribute('href')!.match(/\/(?:obras|works)\/([^/]+)\//); if (m) rememberOrigin(m[1]); }));
   }
   initWork();
   document.addEventListener('astro:page-load', initWork);
 </script>
 
 <style>
-  .work__stage { position: relative; min-height: 86svh; display: grid; isolation: isolate; background: var(--ink-soft); }
-  .work__stage-media { position: absolute; inset: 0; overflow: hidden; }
-  .work__stage-media .work__zoom { display: block; width: 100%; height: 100%; cursor: zoom-in; }
-  .work__stage-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
-  .work__stage--empty { min-height: 0; }
-  .work__stage--empty .work__stage-media { position: relative; padding: calc(var(--nav-h) + var(--space-xl)) var(--gutter) 0; display: grid; justify-items: end; width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
-  .work__stage--empty .work__stage-scrim { display: none; }
-  .work__stage--empty .work__stage-text { padding-top: var(--space-l); }
-  .work__stage-empty :global(.placeholder) { aspect-ratio: 4 / 5; width: min(100%, 420px); background: rgba(247,247,242,0.06); color: var(--color-paper); }
-  .work__stage-empty :global(.placeholder strong) { color: var(--color-paper); }
-  .work__stage-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(25, 27, 36, 0.9) 0%, rgba(25, 27, 36, 0.45) 35%, transparent 65%), linear-gradient(to bottom, rgba(25, 27, 36, 0.55), transparent 22%); pointer-events: none; }
-  .work__stage-text { position: relative; align-self: end; padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); pointer-events: none; }
-  .work__stage-text a { pointer-events: auto; }
-  .work__crumbs { color: rgba(247, 247, 242, 0.75); margin-bottom: var(--space-l); }
-  .work__crumbs a { text-decoration: none; font-weight: 700; color: var(--color-paper); }
-  .work__crumbs a:hover { text-decoration: underline; }
-  .work__stage-text .eyebrow { color: var(--color-lime); }
-  .work__title { font-size: var(--type-hero); max-width: 14ch; }
-  .work__flag { color: var(--color-coral); }
-  .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); }
-  .work__close { position: absolute; top: calc(var(--nav-h) + var(--space-s)); right: var(--gutter); z-index: 3; display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; text-decoration: none; color: var(--color-paper); }
-  .work__close > span:first-child { display: inline-grid; place-items: center; width: 48px; height: 48px; border: 1.5px solid var(--color-paper); border-radius: 999px; font-size: 1.5rem; line-height: 1; background: rgba(25, 27, 36, 0.4); }
-  .work__close:hover > span:first-child { background: var(--color-lime); color: var(--color-ink); border-color: var(--color-lime); }
-  .work__close-label { color: rgba(247, 247, 242, 0.75); }
-  .work__layout { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-xl) calc(var(--gutter) * 2); align-items: start; padding-block: var(--space-xl) var(--space-2xl); }
-  .work__gallery { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l) var(--space-m); align-items: start; }
-  .work__thumb:nth-child(3n + 2) { margin-top: var(--space-xl); }
-  .work__zoom { display: block; width: 100%; cursor: zoom-in; overflow: hidden; background: var(--ink-soft); }
-  .work__zoom :global(img) { width: 100%; height: auto; display: block; transition: transform 900ms var(--ease-paper); }
-  .work__zoom:hover :global(img) { transform: scale(1.04); }
-  .work__prov { grid-column: 1 / -1; }
-  .work__sticky { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
-  .work__desc .lead { font-size: var(--type-h4); }
-  .work__aside :global(.sources a) { color: var(--color-paper); }
-  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
-  @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } .work__close-label { display: none; } .work__stage { min-height: 70svh; } }
-  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__gallery { grid-template-columns: 1fr 1fr; gap: var(--space-m) var(--space-s); } .work__thumb:nth-child(3n + 2) { margin-top: 0; } }
-  @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
+  .obra { padding: clamp(1.5rem, 4vw, 3rem) 0 clamp(2rem, 5vw, 4rem); }
+  .miga { margin-bottom: 1.5rem; font-weight: 600; }
+  .miga a { text-decoration: none; }
+  .miga a:hover { text-decoration: underline; }
+  .obra-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (max-width: 900px) { .obra-grid { grid-template-columns: 1fr; } }
+  .obra h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin-bottom: 0.4em; }
+  .obra-zoom { display: block; width: 100%; padding: 0; border: 0; background: #221b16; border-radius: var(--radio); overflow: hidden; cursor: zoom-in; box-shadow: 0 0 0 1px rgba(255, 250, 240, 0.14), 0 10px 30px rgba(0, 0, 0, 0.45); }
+  .obra-zoom :global(img) { width: 100%; height: auto; border-radius: 0; box-shadow: none; transition: transform 0.5s ease; }
+  .obra-zoom:hover :global(img) { transform: scale(1.02); }
+  .obra-vistas { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+  .obra-texto { position: sticky; top: 5.5rem; }
+  @media (max-width: 900px) { .obra-texto { position: static; } }
 </style>

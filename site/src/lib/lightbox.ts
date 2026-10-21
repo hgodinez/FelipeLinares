@@ -3,7 +3,7 @@
  * Each trigger carries data-full (large src), data-alt and data-caption.
  * Keyboard: Esc close, ←/→ navigate, +/- or Z zoom. Touch: swipe to navigate, tap to zoom, drag to pan.
  */
-type Item = { src: string; alt: string; caption: string };
+type Item = { src: string; alt: string; caption: string; title: string };
 
 export function initLightbox() {
   const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox]');
@@ -14,6 +14,7 @@ export function initLightbox() {
   const stage = dlg.querySelector<HTMLElement>('[data-lb-stage]')!;
   const counter = dlg.querySelector<HTMLElement>('[data-lb-counter]')!;
   const caption = dlg.querySelector<HTMLElement>('[data-lb-caption]')!;
+  const titleEl = dlg.querySelector<HTMLElement>('[data-lb-title]');
   const zoomBtn = dlg.querySelector<HTMLButtonElement>('[data-lb-zoom]')!;
   const prevBtn = dlg.querySelector<HTMLButtonElement>('[data-lb-prev]')!;
   const nextBtn = dlg.querySelector<HTMLButtonElement>('[data-lb-next]')!;
@@ -32,7 +33,7 @@ export function initLightbox() {
   const setZoom = (on: boolean) => {
     zoomed = on;
     tx = 0; ty = 0;
-    stage.classList.toggle('is-zoomed', on);
+    stage.classList.toggle('ampliada', on);
     zoomBtn.setAttribute('aria-pressed', String(on));
     applyTransform();
   };
@@ -45,12 +46,13 @@ export function initLightbox() {
     img.src = it.src;
     img.alt = it.alt;
     caption.textContent = it.caption;
+    if (titleEl) titleEl.textContent = it.title;
     counter.textContent = items.length > 1 ? `${index + 1} ${ofLabel} ${items.length}` : '';
     prevBtn.hidden = nextBtn.hidden = items.length < 2;
   };
   const open = (group: HTMLElement, trigger: HTMLElement) => {
     const triggers = Array.from(group.querySelectorAll<HTMLElement>('[data-lb-open]'));
-    items = triggers.map((el) => ({ src: el.dataset.full || '', alt: el.dataset.alt || '', caption: el.dataset.caption || '' }));
+    items = triggers.map((el) => ({ src: el.dataset.full || '', alt: el.dataset.alt || '', caption: el.dataset.caption || '', title: el.dataset.title || '' }));
     opener = trigger;
     show(triggers.indexOf(trigger));
     if (!dlg.open) dlg.showModal();
@@ -66,14 +68,18 @@ export function initLightbox() {
     opener?.focus();
   });
 
+  // Capture phase so the click is handled before Astro's ClientRouter navigates the anchor.
   document.addEventListener('click', (e) => {
+    const me = e as MouseEvent;
+    if (me.metaKey || me.ctrlKey || me.shiftKey || me.button !== 0) return;
     const t = (e.target as HTMLElement).closest<HTMLElement>('[data-lb-open]');
     if (!t) return;
     const group = t.closest<HTMLElement>('[data-lb-group]');
     if (!group) return;
     e.preventDefault();
+    e.stopPropagation();
     open(group, t);
-  });
+  }, true);
 
   closeBtn.addEventListener('click', close);
   prevBtn.addEventListener('click', () => show(index - 1));
@@ -93,7 +99,7 @@ export function initLightbox() {
     down = true; moved = false;
     startX = lastX = e.clientX; startY = lastY = e.clientY;
     stage.setPointerCapture(e.pointerId);
-    if (zoomed) stage.classList.add('is-dragging');
+    if (zoomed) stage.classList.add('arrastrando');
   });
   stage.addEventListener('pointermove', (e) => {
     if (!down) return;
@@ -104,10 +110,10 @@ export function initLightbox() {
   });
   stage.addEventListener('pointerup', (e) => {
     down = false;
-    stage.classList.remove('is-dragging');
+    stage.classList.remove('arrastrando');
     const dx = e.clientX - startX;
     if (!zoomed && moved && Math.abs(dx) > 50 && items.length > 1) { show(dx < 0 ? index + 1 : index - 1); return; }
     if (!moved) setZoom(!zoomed);
   });
-  stage.addEventListener('pointercancel', () => { down = false; stage.classList.remove('is-dragging'); });
+  stage.addEventListener('pointercancel', () => { down = false; stage.classList.remove('arrastrando'); });
 }

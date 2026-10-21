@@ -3,10 +3,9 @@ import { Image } from 'astro:assets';
 import { getEntries } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import SourceList from '@/components/SourceList.astro';
-import ArtworkCard from '@/components/ArtworkCard.astro';
 import { t } from '@/i18n/ui';
-import { alternates, route, archivePath, type Lang } from '@/i18n/routes';
-import type { ArchiveItem } from '@/lib/content';
+import { alternates, route, archivePath, workPath, type Lang } from '@/i18n/routes';
+import { coverOf, type ArchiveItem } from '@/lib/content';
 
 interface Props { lang: Lang; item: ArchiveItem }
 const { lang, item } = Astro.props;
@@ -15,67 +14,36 @@ const d = item.data;
 const people = await getEntries(d.people);
 const artworks = await getEntries(d.artworks);
 const title = d.title[lang];
-const ld = {
-  '@context': 'https://schema.org',
-  '@type': d.type === 'exhibition' ? 'ExhibitionEvent' : 'CreativeWork',
-  name: title,
-  description: d.summary[lang],
-  ...(d.type === 'exhibition' ? { startDate: String(d.year), ...(d.endYear ? { endDate: String(d.endYear) } : {}), location: { '@type': 'Place', name: [d.institution, d.city].filter(Boolean).join(', ') } } : { datePublished: String(d.year) }),
-  url: new URL(archivePath(item.id, lang), Astro.site).toString(),
-};
+const ld = { '@context': 'https://schema.org', '@type': d.type === 'exhibition' ? 'ExhibitionEvent' : 'CreativeWork', name: title, description: d.summary[lang], ...(d.type === 'exhibition' ? { startDate: String(d.year), ...(d.endYear ? { endDate: String(d.endYear) } : {}), location: { '@type': 'Place', name: [d.institution, d.city].filter(Boolean).join(', ') } } : { datePublished: String(d.year) }), url: new URL(archivePath(item.id, lang), Astro.site).toString() };
 ---
 <Base lang={lang} title={title} description={d.summary[lang]} alternates={alternates('archive', item.id)} jsonLd={ld}>
-  <article class="entry scene-paper">
-    <nav class="container small entry__crumbs" aria-label="Breadcrumb"><a href={route('archive', lang)}>{ui.nav.archive}</a> <span aria-hidden="true">/</span> <span aria-current="page">{d.year}</span></nav>
-    <header class="container entry__head">
-      <div class="cluster">
-        <span class:list={['tag', { 'tag--accent': d.subject === 'artist', 'tag--cobalt': d.subject === 'tradition' }]}>{ui.archive.subjects[d.subject]}</span>
-        <span class="tag">{ui.archive.types[d.type]}</span>
-      </div>
-      <h1>{title}</h1>
-      <p class="entry__meta">
-        <span>{d.dateLabel?.[lang] ?? (d.endYear ? `${d.year}–${d.endYear}` : d.year)}</span>
-        {d.institution && <span>{d.institution}</span>}
-        {d.city && <span>{d.city}</span>}
-      </p>
-    </header>
-    <div class="container grid entry__body">
-      <div class="col-7 prose">
-        <p class="lead">{d.summary[lang]}</p>
-        {d.body?.[lang] && <p class="mt-l">{d.body[lang]}</p>}
-        {d.image && <figure class="figure mt-l"><div class="frame"><Image src={d.image} alt={d.imageAlt?.[lang] ?? ''} widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 60vw" /></div></figure>}
-      </div>
-      <aside class="col-5">
-        {people.length > 0 && (
-          <div class="entry__block">
-            <h2 class="eyebrow">{ui.archive.people}</h2>
-            <ul class="entry__people">{people.map((p) => <li><a href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.name}</a><span class="small muted"> · {p.data.role[lang]}</span></li>)}</ul>
-          </div>
-        )}
-        <div class="entry__block"><SourceList lang={lang} sources={d.sources} heading={ui.archive.sources} headingLevel="h2" /></div>
-      </aside>
-    </div>
-    {artworks.length > 0 && (
-      <section class="section scene-ink">
-        <div class="container">
-          <h2 class="mb-l">{ui.archive.artworks}</h2>
-          <div class="entry__works">{artworks.map((w, i) => <ArtworkCard work={w} lang={lang} size="small" index={i} />)}</div>
+  <section class="seccion">
+    <div class="contenedor">
+      <p style="margin-bottom:1.5rem;font-weight:600"><a href={route('archive', lang)} style="text-decoration:none">← {ui.nav.archive}</a></p>
+      <div class="dos-columnas">
+        <div>
+          <p><span class:list={['etiqueta-tema', { artista: d.subject === 'artist', tradicion: d.subject === 'tradition' }]}>{ui.archive.subjects[d.subject]}</span><span class="etiqueta-tema">{ui.archive.types[d.type]}</span></p>
+          <h1 style="font-size:clamp(1.9rem,4.5vw,3rem)">{title}</h1>
+          <p class="lema" style="font-family:var(--fuente-titulos);font-style:italic;color:var(--bermellon-oscuro);font-size:1.25rem">{d.dateLabel?.[lang] ?? (d.endYear ? `${d.year}–${d.endYear}` : d.year)}{d.institution && ` · ${d.institution}`}{d.city && ` · ${d.city}`}</p>
+          <p style="font-size:1.15rem">{d.summary[lang]}</p>
+          {d.body?.[lang] && <p class="texto-suave">{d.body[lang]}</p>}
+          {d.image && <figure class="foto" style="margin-top:1.5rem"><Image src={d.image} alt={d.imageAlt?.[lang] ?? ''} widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 40rem" /></figure>}
         </div>
-      </section>
-    )}
-  </article>
+        <div class="foto-lado">
+          {people.length > 0 && <ul class="datos"><li><strong>{ui.archive.people}</strong>{people.map((p) => <span style="display:block"><a href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#arbol`}>{p.data.name}</a> · <span class="texto-suave">{p.data.role[lang]}</span></span>)}</li></ul>}
+          <div class="datos" style="display:block"><div style="background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);padding:1.1rem 1.25rem"><SourceList lang={lang} sources={d.sources} heading={ui.archive.sources} headingLevel="h2" /></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {artworks.length > 0 && (
+    <section class="seccion seccion-oscura">
+      <div class="contenedor">
+        <h2>{ui.archive.artworks}</h2>
+        <ul class="piezas">{artworks.map((w) => { const c = coverOf(w); return (
+          <li class="pieza">{c ? <a class="pieza-imagen" href={workPath(w.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 20rem" loading="lazy" /></a> : <a class="marcador" href={workPath(w.id, lang)} style="aspect-ratio:3/4;border-radius:10px"><strong>{w.data.title[lang]}</strong><span>{ui.works.placeholderText}</span></a>}<p><span><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}</a></strong><span class="pieza-nota">{w.data.collection ?? w.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p></li>
+        ); })}</ul>
+      </div>
+    </section>
+  )}
 </Base>
-
-<style>
-  .entry__crumbs { padding-top: var(--space-m); color: var(--fg-muted); }
-  .entry__crumbs a { text-decoration: none; }
-  .entry__head { padding-block: var(--space-l) var(--space-xl); }
-  .entry__head h1 { margin-top: var(--space-s); max-width: 22ch; font-size: var(--type-h2); }
-  .entry__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); color: var(--fg-muted); }
-  .entry__body { padding-bottom: var(--space-2xl); }
-  .entry__block + .entry__block { margin-top: var(--space-l); }
-  .entry__people { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; }
-  .entry__works { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
-  @media (max-width: 760px) { .entry__works { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 480px) { .entry__works { grid-template-columns: 1fr; } }
-</style>

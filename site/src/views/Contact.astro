@@ -1,9 +1,6 @@
 ---
 import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import Paper from '@/components/Paper.astro';
-import Macro from '@/components/Macro.astro';
-import heroMacro from '@/assets/macro/calavera-montura.jpg';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { getPage, getWorks } from '@/lib/content';
@@ -12,6 +9,7 @@ import site from '@/data/site.json';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
+const es = lang === 'es';
 const page = await getPage('contacto', lang);
 const { Content } = await render(page);
 const works = await getWorks();
@@ -19,65 +17,38 @@ const types = ['artwork', 'commission', 'gallery', 'museum', 'press', 'general']
 const hasDirect = Boolean(site.contactEmail || site.whatsappNumber);
 const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}` : '';
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')} overlayHeader topScene="ink">
-  <Macro src={heroMacro} alt={lang === 'es' ? 'Cabeza anaranjada de cuernos morados de la criatura que monta la calavera, con riendas de alambre.' : 'Orange, purple-horned head of the creature the skull rides, with wire reins.'} scrim="bottom" position="50% 45%" minHeight="60svh" eager labelledby="contact-title">
-    <div class="container contact-hero">
-      <p class="eyebrow">{page.data.eyebrow}</p>
-      <h1 id="contact-title" class="giant on-photo">{ui.home.ch6Title}</h1>
-    </div>
-  </Macro>
-  <section class="contact scene-coral">
-    <div class="container contact__grid">
-      <div class="contact__intro">
-        <p class="lead">{page.data.lead}</p>
-        <div class="prose mt-l"><Content /></div>
-        <div class="contact-direct mt-xl">
-          <h2 class="eyebrow">{ui.contact.location}</h2>
-          <p>{site.workshopArea[lang]}</p>
-          {hasDirect ? (
-            <dl class="spec mt-m">
-              {site.contactEmail && <><dt>{ui.contact.emailLabel}</dt><dd><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></dd></>}
-              {site.whatsappNumber && <><dt>{ui.contact.whatsapp}</dt><dd><a href={waHref} rel="noopener noreferrer" target="_blank">{site.whatsappNumber}</a></dd></>}
-            </dl>
-          ) : (
-            <p class="notice notice--warn small contact__pending">{ui.contact.pendingContact}</p>
-          )}
-        </div>
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')}>
+  <section class="seccion seccion-crema">
+    <div class="contenedor dos-columnas" style="align-items:start">
+      <div>
+        <p class="antetitulo">{page.data.eyebrow}</p>
+        <h1 style="font-size:clamp(2.2rem,5vw,3.6rem)">{page.data.title}</h1>
+        <p class="lema" style="font-family:var(--fuente-titulos);font-style:italic;color:var(--bermellon-oscuro);font-size:clamp(1.2rem,2.4vw,1.6rem);line-height:1.3">{page.data.lead}</p>
+        <div class="texto-suave"><Content /></div>
+        <ul class="contacto-lista">
+          <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><div><strong>{ui.contact.location}</strong>{site.workshopArea[lang]}</div></li>
+          {site.contactEmail && <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg><div><strong>{ui.contact.emailLabel}</strong><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></div></li>}
+          {site.whatsappNumber && <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg><div><strong>{ui.contact.whatsapp}</strong><a href={waHref} target="_blank" rel="noopener noreferrer">{site.whatsappNumber}</a></div></li>}
+        </ul>
+        {!hasDirect && <div class="nota"><p>{ui.contact.pendingContact}</p></div>}
       </div>
-
-      <div class="contact__form-wrap unfold sheet">
-        <Paper tone="light" cut="b" fold="tr" class="contact__paper">
-          <form class="contact-form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.contactEmail} novalidate>
-            <h2 class="contact-form__title">{page.data.title}</h2>
-            <div class="field">
-              <label for="c-type">{ui.contact.inquiryType}</label>
-              <select id="c-type" name="type" required>{types.map((ty) => <option value={ty}>{ui.contact.types[ty]}</option>)}</select>
-              <span class="error" data-error-for="type"></span>
-            </div>
-            <div class="field"><label for="c-name">{ui.contact.name}</label><input id="c-name" name="name" type="text" autocomplete="name" required /><span class="error" data-error-for="name"></span></div>
-            <div class="field"><label for="c-email">{ui.contact.email}</label><input id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required /><span class="error" data-error-for="email"></span></div>
-            <div class="field">
-              <label for="c-work">{ui.contact.artwork}</label>
-              <select id="c-work" name="artwork" data-work-select>
-                <option value="">—</option>
-                {works.map((w) => <option value={w.id} data-url={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.year ? ` (${w.data.year})` : ''}</option>)}
-              </select>
-              <span class="error"></span>
-            </div>
-            <div class="field"><label for="c-message">{ui.contact.message}</label><textarea id="c-message" name="message" required minlength="10"></textarea><span class="error" data-error-for="message"></span></div>
-            <div class="field"><label class="checkbox"><input type="checkbox" name="consent" required /> <span>{ui.contact.consent}</span></label><span class="error" data-error-for="consent"></span></div>
-            <p class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
-            <input type="hidden" name="lang" value={lang} />
-            <div class="cluster"><button type="submit" class="btn btn--ink" data-submit>{ui.contact.send} <span class="arrow" aria-hidden="true">↗</span></button></div>
-            <p class="notice contact-form__status" data-status hidden role="status" aria-live="polite"></p>
-            <p class="small muted mt-l"><a href={route('privacy', lang)}>{ui.nav.privacy}</a></p>
-          </form>
-        </Paper>
-      </div>
+      <form class="formulario" data-contact-form data-endpoint={site.formEndpoint} data-email={site.contactEmail} novalidate>
+        <h2 style="font-size:1.6rem">{es ? 'Escribe al taller' : 'Write to the workshop'}</h2>
+        <div class="campo"><label for="c-type">{ui.contact.inquiryType}</label><select id="c-type" name="type" required>{types.map((ty) => <option value={ty}>{ui.contact.types[ty]}</option>)}</select><span class="error" data-error-for="type"></span></div>
+        <div class="campo"><label for="c-name">{ui.contact.name}</label><input id="c-name" name="name" type="text" autocomplete="name" required /><span class="error" data-error-for="name"></span></div>
+        <div class="campo"><label for="c-email">{ui.contact.email}</label><input id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required /><span class="error" data-error-for="email"></span></div>
+        <div class="campo"><label for="c-work">{ui.contact.artwork}</label><select id="c-work" name="artwork" data-work-select><option value="">—</option>{works.map((w) => <option value={w.id} data-url={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.year ? ` (${w.data.year})` : ''}</option>)}</select><span class="error"></span></div>
+        <div class="campo"><label for="c-message">{ui.contact.message}</label><textarea id="c-message" name="message" required minlength="10"></textarea><span class="error" data-error-for="message"></span></div>
+        <div class="campo"><label class="casilla"><input type="checkbox" name="consent" required /> <span>{ui.contact.consent}</span></label><span class="error" data-error-for="consent"></span></div>
+        <p class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
+        <input type="hidden" name="lang" value={lang} />
+        <button type="submit" class="boton boton-principal" data-submit>{ui.contact.send}</button>
+        <p class="estado" data-status hidden role="status" aria-live="polite"></p>
+        <p class="texto-suave" style="font-size:0.9rem;margin-top:1rem"><a href={route('privacy', lang)}>{ui.nav.privacy}</a></p>
+      </form>
     </div>
   </section>
 </Base>
-
 <script>
   function initContact() {
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
@@ -85,62 +56,40 @@ const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replac
     form.dataset.ready = '1';
     const status = form.querySelector<HTMLElement>('[data-status]')!;
     const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
-    const endpoint = form.dataset.endpoint || '';
-    const email = form.dataset.email || '';
+    const endpoint = form.dataset.endpoint || ''; const email = form.dataset.email || '';
     const lang = (form.querySelector<HTMLInputElement>('[name=lang]')!.value || 'es') as 'es' | 'en';
     const msg = {
       es: { required: 'Este campo es obligatorio.', email: 'Escribe un correo electrónico válido.', sending: 'Enviando…', sent: 'Gracias. Tu mensaje ha sido enviado; el taller responderá en cuanto le sea posible.', copied: 'El mensaje se copió al portapapeles. Pégalo en tu correo o aplicación de mensajería para enviarlo al taller en cuanto se publiquen sus datos de contacto.', error: 'No fue posible enviar el mensaje. Intenta de nuevo o utiliza el medio de contacto indicado.', subject: 'Mensaje desde el sitio de Felipe Linares Vargas' },
       en: { required: 'This field is required.', email: 'Enter a valid email address.', sending: 'Sending…', sent: 'Thank you. Your message has been sent; the workshop will reply as soon as possible.', copied: 'The message was copied to your clipboard. Paste it into your email or messaging app to send it to the workshop once its contact details are published.', error: 'The message could not be sent. Please try again or use the contact details listed.', subject: 'Message from the Felipe Linares Vargas website' },
     }[lang];
-    const params = new URLSearchParams(location.search);
-    const pre = params.get('obra') || params.get('work');
+    const params = new URLSearchParams(location.search); const pre = params.get('obra') || params.get('work');
     const workSel = form.querySelector<HTMLSelectElement>('[data-work-select]')!;
     if (pre && Array.from(workSel.options).some((o) => o.value === pre)) { workSel.value = pre; form.querySelector<HTMLSelectElement>('#c-type')!.value = 'artwork'; }
-    const setError = (name: string, text: string) => { const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`); const field = el?.closest<HTMLElement>('.field'); if (el) el.textContent = text; field?.setAttribute('aria-invalid', text ? 'true' : 'false'); };
+    const setError = (name: string, text: string) => { const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`); const field = el?.closest<HTMLElement>('.campo'); if (el) el.textContent = text; field?.setAttribute('aria-invalid', text ? 'true' : 'false'); };
     const validate = () => {
       let ok = true;
-      for (const name of ['name', 'email', 'message']) {
-        const input = form.elements.namedItem(name) as HTMLInputElement; const v = input.value.trim();
-        if (!v) { setError(name, msg.required); ok = false; continue; }
-        if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setError(name, msg.email); ok = false; continue; }
-        setError(name, '');
-      }
-      const consent = form.elements.namedItem('consent') as HTMLInputElement;
-      if (!consent.checked) { setError('consent', msg.required); ok = false; } else setError('consent', '');
+      for (const name of ['name', 'email', 'message']) { const input = form.elements.namedItem(name) as HTMLInputElement; const v = input.value.trim(); if (!v) { setError(name, msg.required); ok = false; continue; } if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setError(name, msg.email); ok = false; continue; } setError(name, ''); }
+      const consent = form.elements.namedItem('consent') as HTMLInputElement; if (!consent.checked) { setError('consent', msg.required); ok = false; } else setError('consent', '');
       return ok;
     };
-    const show = (text: string, kind: '' | 'warn' | 'error' = '') => { status.hidden = false; status.textContent = text; status.className = `notice contact-form__status${kind ? ` notice--${kind}` : ''}`; };
-    const compose = (fd: FormData) => {
-      const opt = workSel.selectedOptions[0];
-      const work = opt && opt.value ? `${opt.textContent} (${new URL(opt.dataset.url || '/', location.origin).href})` : '—';
-      const typeLabel = form.querySelector<HTMLSelectElement>('#c-type')!.selectedOptions[0]?.textContent || '';
-      return `${msg.subject}\n\n${typeLabel}\n${fd.get('name')} <${fd.get('email')}>\n${lang === 'es' ? 'Obra' : 'Work'}: ${work}\n\n${fd.get('message')}`;
-    };
+    const show = (text: string, kind: '' | 'aviso' | 'error' = '') => { status.hidden = false; status.textContent = text; status.className = `estado${kind ? ` estado-${kind}` : ''}`; };
+    const compose = (fd: FormData) => { const opt = workSel.selectedOptions[0]; const work = opt && opt.value ? `${opt.textContent} (${new URL(opt.dataset.url || '/', location.origin).href})` : '—'; const typeLabel = form.querySelector<HTMLSelectElement>('#c-type')!.selectedOptions[0]?.textContent || ''; return `${msg.subject}\n\n${typeLabel}\n${fd.get('name')} <${fd.get('email')}>\n${lang === 'es' ? 'Obra' : 'Work'}: ${work}\n\n${fd.get('message')}`; };
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if ((form.elements.namedItem('website') as HTMLInputElement).value) return;
       if (!validate()) { (form.querySelector('[aria-invalid="true"] input, [aria-invalid="true"] textarea') as HTMLElement | null)?.focus(); return; }
-      const fd = new FormData(form);
-      submit.disabled = true; show(msg.sending);
+      const fd = new FormData(form); submit.disabled = true; show(msg.sending);
       try {
         if (endpoint) { const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: fd }); if (!res.ok) throw new Error(String(res.status)); show(msg.sent); form.reset(); }
         else if (email) { location.href = `mailto:${email}?subject=${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(compose(fd))}`; show(msg.sent); }
-        else { await navigator.clipboard.writeText(compose(fd)); show(msg.copied, 'warn'); }
+        else { await navigator.clipboard.writeText(compose(fd)); show(msg.copied, 'aviso'); }
       } catch { show(msg.error, 'error'); } finally { submit.disabled = false; }
     });
   }
   initContact();
   document.addEventListener('astro:page-load', initContact);
 </script>
-
 <style>
-  .contact-hero { min-height: 60svh; display: grid; align-content: end; gap: var(--space-s); padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-l); }
-  .contact { padding-block: var(--space-xl) var(--space-2xl); }
-  .contact__grid { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; }
-  .contact__pending { background: rgba(247, 247, 242, 0.55); border-color: var(--color-ink); }
-  .contact__paper { padding: clamp(1.5rem, 4vw, 3rem); --fold: 56px; }
-  .contact-form__title { font-size: var(--type-h3); margin-bottom: var(--space-m); }
+  .formulario { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: clamp(1.25rem, 3vw, 2rem); box-shadow: var(--sombra); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .contact-form__status { margin-top: var(--space-m); }
-  @media (max-width: 900px) { .contact__grid { grid-template-columns: 1fr; } }
 </style>

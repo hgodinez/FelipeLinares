@@ -5,7 +5,7 @@ interface Props { lang: Lang; title?: string; text?: string; class?: string; rat
 const { lang, title, text, class: cls = '', ratio } = Astro.props;
 const ui = t(lang);
 ---
-<div class:list={['placeholder', cls]} role="img" aria-label={`${title ?? ui.works.placeholderTitle}. ${text ?? ui.works.placeholderText}`} style={ratio ? `aspect-ratio:${ratio}` : undefined}>
+<div class:list={['marcador', cls]} role="img" aria-label={`${title ?? ui.works.placeholderTitle}. ${text ?? ui.works.placeholderText}`} style={ratio ? `aspect-ratio:${ratio}` : undefined}>
   <strong aria-hidden="true">{title ?? ui.works.placeholderTitle}</strong>
   <span aria-hidden="true">{text ?? ui.works.placeholderText}</span>
 </div>

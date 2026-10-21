@@ -9,8 +9,8 @@ const Tag = headingLevel;
 ---
 {sources.length > 0 && (
   <div class="source-block">
-    <Tag class="eyebrow">{heading ?? ui.misc.sources}</Tag>
-    <ol class="sources">
+    <Tag class="antetitulo" style="margin-bottom:0.4rem">{heading ?? ui.misc.sources}</Tag>
+    <ol class="fuentes">
       {sources.map((s) => (
         <li>
           {s.url ? <a href={s.url} rel="noopener noreferrer" target="_blank">{s.title}</a> : s.title}
