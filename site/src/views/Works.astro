@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import ArtworkCard from '@/components/ArtworkCard.astro';
+import Paper from '@/components/Paper.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, type Lang } from '@/i18n/routes';
 import { getWorks } from '@/lib/content';
@@ -9,20 +10,26 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 const works = await getWorks();
+const withImages = works.filter((w) => w.data.images.length > 0);
+const documented = works.filter((w) => w.data.images.length === 0);
 const used = Array.from(new Set(works.flatMap((w) => w.data.categories)));
 const categoryOrder = ['alebrijes', 'calaveras', 'judas', 'mascaras', 'colecciones', 'encargos'] as const;
 const categories = categoryOrder.filter((c) => used.includes(c));
+const sizes: Array<'large' | 'medium' | 'small'> = ['large', 'small', 'medium', 'small', 'medium'];
 ---
 <Base lang={lang} title={ui.nav.works} description={ui.works.intro} alternates={alternates('works')}>
-  <section class="section works-head">
-    <div class="container">
-      <p class="eyebrow eyebrow--accent reveal">{ui.works.eyebrow}</p>
-      <h1 class="reveal" style="--delay:80ms">{ui.works.title}</h1>
-      <p class="lead mt-l reveal" style="--delay:160ms">{ui.works.intro}</p>
+  <section class="works-head scene-paper">
+    <div class="container works-head__grid">
+      <div>
+        <p class="eyebrow eyebrow--accent">{ui.works.eyebrow}</p>
+        <h1>{ui.works.title}</h1>
+        <p class="lead mt-m">{ui.works.intro}</p>
+      </div>
+      <div class="works-head__sheet unfold sheet--soft" aria-hidden="true"><Paper tone="lime" cut="b" fold="tr" class="works-head__paper" /></div>
     </div>
   </section>
 
-  <section class="section section--tight" aria-labelledby="gallery-title">
+  <section class="scene-paper section--tight" aria-labelledby="gallery-title">
     <div class="container">
       <h2 id="gallery-title" class="visually-hidden">{ui.works.gallery}</h2>
       <form class="filters" data-filters role="search" aria-label={ui.works.filterLabel}>
@@ -38,93 +45,133 @@ const categories = categoryOrder.filter((c) => used.includes(c));
       </form>
 
       <div class="works-grid" data-grid>
-        {works.map((w, i) => <ArtworkCard work={w} lang={lang} size={i % 5 === 0 && w.data.images.length > 0 ? 'large' : 'medium'} index={i} eager={i < 2} />)}
+        {withImages.map((w, i) => <ArtworkCard work={w} lang={lang} size={sizes[i % sizes.length]} eager={i < 2} class={`works-grid__item works-grid__item--${(i % 5) + 1}`} />)}
       </div>
-      <p class="works-empty notice" data-empty hidden>{ui.works.empty} <button type="button" class="works-empty__reset" data-reset>{ui.works.reset}</button></p>
-      <p class="small muted mt-l"><span style="color:var(--accent-ink)">*</span> {ui.works.provisional}.</p>
+
+      {documented.length > 0 && (
+        <div class="documented" data-documented>
+          <div class="section-head"><div><p class="eyebrow">{ui.works.categories.colecciones}</p><h2 class="documented__title">{lang === 'es' ? 'Obras documentadas sin fotografía autorizada' : 'Documented works without an authorized photograph'}</h2></div></div>
+          <ul class="documented__list">
+            {documented.map((w) => (
+              <li class="work-card documented__item" data-categories={w.data.categories.join(' ')} data-title={w.data.title[lang].toLowerCase()}>
+                <a class="documented__link" href={`${route('works', lang)}${w.id}/`} data-work-link={w.id}>
+                  <span class="documented__year micro">{w.data.year ?? ui.works.yearUnknown}</span>
+                  <span class="documented__name">{w.data.title[lang]}</span>
+                  <span class="small muted">{w.data.collection ?? w.data.categories.map((c) => ui.works.categories[c]).join(' · ')}</span>
+                  <span class="link-arrow" aria-hidden="true">{ui.cta.viewWork} <span class="arrow">→</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <p class="notice" data-empty hidden>{ui.works.empty} <button type="button" class="works-empty__reset" data-reset>{ui.works.reset}</button></p>
+      <p class="small muted mt-l"><span style="color:var(--coral-ink)">*</span> {ui.works.provisional}.</p>
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="scene-ink section">
     <div class="container--narrow container text-center">
-      <h2 class="reveal">{lang === 'es' ? '¿Te interesa una obra o un encargo?' : 'Interested in a work or a commission?'}</h2>
-      <a class="btn btn--solid mt-l reveal" style="--delay:100ms" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">→</span></a>
+      <h2>{lang === 'es' ? '¿Te interesa una obra o un encargo?' : 'Interested in a work or a commission?'}</h2>
+      <a class="btn btn--lime mt-l" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
     </div>
   </section>
 </Base>
 
 <script>
-  import { initReveal } from '@/lib/reveal';
+  import { restoreOrigin, rememberOrigin } from '@/lib/motion';
   function initFilters() {
     const form = document.querySelector<HTMLFormElement>('[data-filters]');
-    const grid = document.querySelector<HTMLElement>('[data-grid]');
-    if (!form || !grid || form.dataset.ready) return;
+    if (!form || form.dataset.ready) return;
     form.dataset.ready = '1';
-    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.work-card'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.work-card'));
     const chips = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-cat]'));
     const search = form.querySelector<HTMLInputElement>('[data-search]')!;
     const count = form.querySelector<HTMLElement>('[data-count]')!;
     const empty = document.querySelector<HTMLElement>('[data-empty]')!;
     const reset = document.querySelector<HTMLButtonElement>('[data-reset]')!;
-    const countTemplate = count.textContent || '';
-    const num = cards.length;
-    let cat = new URLSearchParams(location.search).get('categoria') || new URLSearchParams(location.search).get('category') || '';
-    const label = (n: number) => countTemplate.replace(String(num), String(n)).replace(/^1 (\w+)s$/, '1 $1');
+    const documented = document.querySelector<HTMLElement>('[data-documented]');
+    const template = count.textContent || '';
+    const total = cards.length;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const params = new URLSearchParams(location.search);
+    let cat = params.get('categoria') || params.get('category') || '';
+    const label = (n: number) => template.replace(String(total), String(n)).replace(/^1 (\w+)s$/, '1 $1');
+    const timers = new WeakMap<HTMLElement, number>();
 
+    const setShown = (c: HTMLElement, show: boolean) => {
+      const prev = timers.get(c); if (prev) window.clearTimeout(prev);
+      if (show) { c.hidden = false; requestAnimationFrame(() => c.classList.remove('is-out')); }
+      else if (reduce) { c.hidden = true; }
+      else { c.classList.add('is-out'); timers.set(c, window.setTimeout(() => { c.hidden = true; }, 200)); }
+    };
     const apply = () => {
       const q = search.value.trim().toLowerCase();
-      let shown = 0;
+      let shown = 0, docShown = 0;
       for (const c of cards) {
-        const okCat = !cat || (c.dataset.categories || '').split(' ').includes(cat);
-        const okQ = !q || (c.dataset.title || '').includes(q);
-        const show = okCat && okQ;
-        c.hidden = !show;
-        if (show) { shown++; c.classList.add('is-visible'); }
+        const ok = (!cat || (c.dataset.categories || '').split(' ').includes(cat)) && (!q || (c.dataset.title || '').includes(q));
+        setShown(c, ok);
+        if (ok) { shown++; if (c.classList.contains('documented__item')) docShown++; }
       }
+      if (documented) documented.hidden = docShown === 0;
       count.textContent = label(shown);
       empty.hidden = shown > 0;
       chips.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.cat || '') === cat)));
       const url = new URL(location.href);
-      if (cat) url.searchParams.set(document.documentElement.lang.startsWith('es') ? 'categoria' : 'category', cat); else { url.searchParams.delete('categoria'); url.searchParams.delete('category'); }
-      history.replaceState(null, '', url);
+      const key = document.documentElement.lang.startsWith('es') ? 'categoria' : 'category';
+      url.searchParams.delete('categoria'); url.searchParams.delete('category');
+      if (cat) url.searchParams.set(key, cat);
+      history.replaceState(history.state, '', url);
     };
     chips.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat || ''; apply(); }));
     search.addEventListener('input', apply);
     form.addEventListener('submit', (e) => e.preventDefault());
-    reset.addEventListener('click', () => { cat = ''; search.value = ''; apply(); });
+    reset.addEventListener('click', () => { cat = ''; search.value = ''; apply(); search.focus(); });
+    document.querySelectorAll<HTMLAnchorElement>('[data-work-link]').forEach((a) => a.addEventListener('click', () => rememberOrigin(a.dataset.workLink!)));
     apply();
-    initReveal();
+    restoreOrigin();
   }
   initFilters();
   document.addEventListener('astro:page-load', initFilters);
 </script>
 
 <style>
-  .works-head { padding-bottom: var(--space-l); }
-  .works-head h1 { font-size: var(--step-5); }
-  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s) var(--space-m); padding-block: var(--space-s); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: var(--space-xl); }
+  .works-head { padding-block: var(--space-xl) var(--space-l); overflow: hidden; }
+  .works-head__grid { display: grid; grid-template-columns: 7fr 5fr; gap: var(--gutter); align-items: end; }
+  .works-head__sheet { aspect-ratio: 16 / 9; }
+  .works-head__paper { width: 100%; height: 100%; --fold: 56px; }
+  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s) var(--space-m); padding-block: var(--space-s); border-top: 1.5px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: var(--space-xl); }
   .filters__cats { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .chip { min-height: 44px; padding: 0 1em; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; transition: background-color 200ms, color 200ms; }
-  .chip:hover { border-color: var(--fg); }
-  .chip[aria-pressed='true'] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .chip { min-height: 44px; padding: 0 1.1em; border: 1.5px solid var(--line-strong); border-radius: 999px; font-size: var(--type-meta); font-weight: 700; transition: background-color var(--d-control), color var(--d-control), border-color var(--d-control); }
+  .chip:hover { border-color: var(--color-ink); }
+  .chip[aria-pressed='true'] { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
   .filters__search { margin-left: auto; min-width: min(100%, 260px); }
-  .filters__search input { width: 100%; min-height: 44px; font: inherit; font-size: var(--step--1); background: transparent; border: 0; border-bottom: 1px solid var(--line-strong); padding: 0.4em 0; color: inherit; border-radius: 0; }
-  .filters__search input:focus-visible { outline: none; border-bottom-color: var(--turquoise); box-shadow: 0 1px 0 var(--turquoise); }
+  .filters__search input { width: 100%; min-height: 44px; font: inherit; font-size: var(--type-meta); background: transparent; border: 0; border-bottom: 1.5px solid var(--line-strong); padding: 0.4em 0; color: inherit; border-radius: 0; }
+  .filters__search input:focus-visible { outline: none; border-bottom-color: var(--focus); box-shadow: 0 2px 0 var(--focus); }
   .filters__count { margin: 0; flex-basis: 100%; }
   @media (min-width: 900px) { .filters__count { flex-basis: auto; } }
+
   .works-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-xl) var(--gutter); align-items: start; }
-  .works-grid > :global(.work-card--large) { grid-column: span 7; }
-  .works-grid > :global(.work-card--medium) { grid-column: span 5; }
-  .works-grid > :global(.work-card--medium:nth-child(5n + 3)) { grid-column: span 4; }
-  .works-grid > :global(.work-card--medium:nth-child(5n + 4)) { grid-column: span 4; margin-top: var(--space-xl); }
-  .works-grid > :global(.work-card--medium:nth-child(5n)) { grid-column: span 4; }
-  .works-grid > :global(.work-card--large:nth-child(5n + 1):not(:first-child)) { grid-column: 3 / span 7; }
-  .works-grid > :global(.work-card--medium:nth-child(5n + 2)) { margin-top: var(--space-2xl); }
+  .works-grid :global(.works-grid__item--1) { grid-column: 1 / 8; }
+  .works-grid :global(.works-grid__item--2) { grid-column: 9 / 13; margin-top: var(--space-2xl); }
+  .works-grid :global(.works-grid__item--3) { grid-column: 2 / 8; margin-top: var(--space-l); }
+  .works-grid :global(.works-grid__item--4) { grid-column: 9 / 13; }
+  .works-grid :global(.works-grid__item--5) { grid-column: 4 / 11; }
+  .works-grid :global(.work-card) { transition: opacity var(--d-filter) var(--ease-paper), transform var(--d-filter) var(--ease-paper); }
+  .works-grid :global(.work-card.is-out) { opacity: 0; transform: translateY(6px); }
   @media (max-width: 900px) {
-    .works-grid > :global(.work-card) { grid-column: span 6 !important; margin-top: 0 !important; }
-    .works-grid > :global(.work-card--large) { grid-column: span 12 !important; }
+    .works-head__grid { grid-template-columns: 1fr; } .works-head__sheet { display: none; }
+    .works-grid :global(.work-card) { grid-column: span 6 !important; margin-top: 0 !important; }
+    .works-grid :global(.works-grid__item--1), .works-grid :global(.works-grid__item--5) { grid-column: span 12 !important; }
   }
-  @media (max-width: 540px) { .works-grid > :global(.work-card) { grid-column: span 12 !important; } }
-  .works-empty { margin-top: var(--space-m); }
-  .works-empty__reset { text-decoration: underline; margin-left: 0.5em; }
+  @media (max-width: 540px) { .works-grid :global(.work-card) { grid-column: span 12 !important; } }
+
+  .documented { margin-top: var(--space-2xl); border-top: 1.5px solid var(--line-strong); padding-top: var(--space-l); }
+  .documented__title { font-size: var(--type-h3); }
+  .documented__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--gutter); }
+  .documented__link { display: grid; gap: 0.3rem; padding: var(--space-m); text-decoration: none; background: var(--paper-deep); min-height: 100%; transition: background-color var(--d-control); }
+  .documented__link:hover { background: var(--color-lime); }
+  .documented__name { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h4); }
+  .works-empty__reset { text-decoration: underline; margin-left: 0.5em; font-weight: 700; }
 </style>

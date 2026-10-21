@@ -45,8 +45,8 @@ const ui = t(lang);
     height: 100dvh;
     max-width: none;
     max-height: none;
-    background: var(--charcoal);
-    color: var(--ivory);
+    background: var(--color-ink);
+    color: var(--color-paper);
     display: none;
     grid-template-rows: auto 1fr auto auto;
     grid-template-columns: auto 1fr auto;
@@ -59,17 +59,18 @@ const ui = t(lang);
   .lightbox__controls { display: flex; gap: 0.25rem; }
   .lightbox__btn, .lightbox__nav { color: inherit; display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; transition: background-color 200ms; }
   .lightbox__btn:hover, .lightbox__nav:hover { background: rgba(255, 255, 255, 0.1); }
-  .lightbox__btn[aria-pressed='true'] { background: var(--ivory); color: var(--charcoal); }
+  .lightbox__btn[aria-pressed='true'] { background: var(--color-lime); color: var(--color-ink); }
+  .lightbox :focus-visible { outline-color: var(--color-lime); }
   .lightbox__nav { align-self: center; margin: 0 0.5rem; }
   .lightbox__nav--prev { grid-area: prev; }
   .lightbox__nav--next { grid-area: next; }
   .lightbox__stage { grid-area: stage; position: relative; overflow: hidden; min-height: 0; min-width: 0; display: grid; place-items: center; touch-action: none; cursor: zoom-in; padding: 0 0.5rem; }
   .lightbox__stage.is-zoomed { cursor: grab; }
   .lightbox__stage.is-dragging { cursor: grabbing; }
-  .lightbox__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; margin: 0; user-select: none; transform-origin: center; will-change: transform; transition: opacity 200ms, transform 220ms var(--ease-out); }
+  .lightbox__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; margin: 0; user-select: none; transform-origin: center; will-change: transform; transition: opacity 200ms, transform 220ms var(--ease-paper); }
   .lightbox__stage.is-dragging .lightbox__img { transition: none; }
-  .lightbox__caption { grid-area: cap; margin: 0; padding: 0.5rem var(--gutter); font-size: var(--step--1); color: rgba(242, 232, 213, 0.8); text-align: center; max-width: none; }
-  .lightbox__hint { grid-area: hint; margin: 0; padding: 0 var(--gutter) 0.75rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(242, 232, 213, 0.45); text-align: center; max-width: none; }
+  .lightbox__caption { grid-area: cap; margin: 0; padding: 0.5rem var(--gutter); font-size: var(--type-meta); color: rgba(247, 247, 242, 0.8); text-align: center; max-width: none; }
+  .lightbox__hint { grid-area: hint; margin: 0; padding: 0 var(--gutter) 0.75rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247, 247, 242, 0.45); text-align: center; max-width: none; }
   @media (max-width: 700px) {
     .lightbox { grid-template-columns: 1fr; grid-template-areas: 'bar' 'stage' 'cap' 'hint'; }
     .lightbox__nav { position: absolute; bottom: 4.2rem; z-index: 2; background: rgba(0,0,0,0.35); }

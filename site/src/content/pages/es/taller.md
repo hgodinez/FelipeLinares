@@ -1,28 +1,24 @@
 ---
-title: El taller
+title: De papel a imposible
 eyebrow: El proceso
-lead: Papel, cartón, engrudo, alambre y pincel. La cartonería es un oficio de capas y de paciencia; cada pieza se construye de adentro hacia afuera.
-seoTitle: El taller · Felipe Linares Vargas
-seoDescription: "Cómo se hace una pieza de cartonería en el taller de Felipe Linares Vargas en la Ciudad de México: estructura, papel y engrudo, modelado, secado, pintura y detalle."
+lead: Papel, engrudo, volumen y pintura. La cartonería es un oficio de capas y de paciencia; cada criatura se construye de adentro hacia afuera.
+seoTitle: El proceso · Felipe Linares Vargas
+seoDescription: "Cómo se construye una pieza de cartonería en el taller de Felipe Linares Vargas en la Ciudad de México: materiales, estructura, volumen, pintura y obra terminada."
 sections:
-  - heading: Imaginar
-    text: Todo alebrije empieza como una combinación. Un felino con astas, una rana con pico, un tigre con alas y cola de serpiente. La tradición que inició Pedro Linares López consiste en reunir en un solo cuerpo partes de animales distintos, y en decidir qué proporción le corresponde a cada una.
-  - heading: La estructura
-    text: La cartonería tradicional de la Ciudad de México se levanta sobre una armadura ligera —alambre, carrizo o cartón— que define la postura de la figura y sostiene las partes que sobresalen, como alas, astas y colas.
-  - heading: Papel y engrudo
-    text: Sobre la estructura se aplican capas de papel y cartón adheridas con engrudo, una pasta de harina y agua. Cada capa se deja secar antes de la siguiente; así la pieza gana rigidez sin perder ligereza.
-  - heading: Modelar
-    text: Con las manos y herramientas sencillas se afinan los volúmenes —el hocico, los ojos, las garras— y se corrigen las uniones hasta que la figura tiene una superficie continua, lista para recibir el color.
-  - heading: Secar
-    text: La pieza se seca al aire, a veces durante días. Es un tiempo de espera que decide la durabilidad del objeto; una base mal seca se deforma bajo la pintura.
-  - heading: Pintar
-    text: Primero una base de color sobre toda la superficie. Después, los grandes campos de color que distinguen cada parte del cuerpo.
-  - heading: El detalle
-    text: Manchas, escamas, nervaduras, pelaje y puntos de distintos tamaños se pintan a pincel, uno por uno. Es la etapa más larga y la que da a cada pieza su carácter.
-  - heading: Acabado
-    text: Un último barniz o capa protectora fija el color y da brillo a la superficie. La pieza está lista para salir del taller.
-    note: Las fotografías de esta página fueron tomadas en el taller familiar; muestran piezas en distintas etapas del proceso. El taller de Felipe Linares Vargas se documentará con fotografía y video propios en cuanto estén disponibles.
+  - heading: Materiales
+    text: Papel, cartón, engrudo de harina y agua, alambre o carrizo para la armadura, pinceles y pintura. Todo cabe en una mesa de trabajo. El material es humilde a propósito; lo extraordinario lo ponen las manos.
+    note: Fotografía cenital de los materiales reales sobre la mesa de trabajo, por realizar.
+  - heading: Estructura
+    text: Cada criatura empieza como una armadura ligera que fija la postura y sostiene lo que sobresale, como alas, astas, garras y colas. Es la decisión más importante de la pieza, aunque después nadie la vea.
+    note: Fotografía de la armadura de una pieza concreta, por realizar.
+  - heading: Volumen
+    text: Sobre la estructura se aplican capas de papel y cartón adheridas con engrudo. Cada capa se seca antes de la siguiente, a veces durante días. Con las manos y herramientas sencillas se afinan el hocico, los ojos y las garras hasta obtener una superficie continua.
+    note: Fotografía de las capas de papel y el modelado, por realizar.
+  - heading: Pintura
+    text: Primero una base de color sobre toda la superficie; después los grandes campos que distinguen cada parte del cuerpo; al final, manchas, escamas, nervaduras y puntos pintados uno por uno. Es la etapa más larga y la que da a cada pieza su carácter.
+  - heading: Obra terminada
+    text: "Un último barniz fija el color y da brillo a la superficie. La criatura, completa, sale del taller con todas sus extensiones intactas: nada se recorta para que quepa en una caja."
 ---
 La familia Linares trabaja en la zona de Merced Balbuena, al oriente del centro de la Ciudad de México, cerca del Mercado de Sonora, donde las casas son al mismo tiempo talleres. Cada integrante tiene el suyo. En estas mesas conviven frascos de pintura, pinceles, piezas a medio secar y figuras terminadas que esperan a sus destinatarios.
 
-Los pasos que siguen describen el proceso general de la cartonería tradicional tal como lo documentan las fuentes consultadas y como se aprecia en las fotografías de taller incluidas en este sitio. Los detalles específicos del método de Felipe Linares Vargas —tiempos de secado, tipo de pinturas, herramientas— se incorporarán con su confirmación.
+Las cinco estaciones que siguen describen el proceso general de la cartonería tradicional tal como lo documentan las fuentes consultadas y como se aprecia en las fotografías de taller incluidas en este sitio. Las fotografías documentan el oficio en general: no muestran la fabricación continua de una sola pieza. Los detalles propios del método de Felipe Linares Vargas se incorporarán con su confirmación.

@@ -1,0 +1,19 @@
+---
+/**
+ * A sheet of paper. Purely graphic: color, an organic edge, an optional lifted corner.
+ * Shadows are applied by the parent (.sheet wrappers) so they follow the clipped edge.
+ */
+interface Props {
+  tone?: 'light' | 'deep' | 'lime' | 'cobalt' | 'coral' | 'ink';
+  cut?: 'a' | 'b' | 'c' | 'd';
+  fold?: 'tr' | 'bl' | 'none';
+  class?: string;
+  style?: string;
+  as?: 'div' | 'section' | 'article' | 'span';
+  [key: string]: unknown;
+}
+const { tone = 'light', cut = 'a', fold = 'none', class: cls = '', style, as: Tag = 'div', ...rest } = Astro.props;
+---
+<Tag class:list={['paper', `paper--${tone}`, { 'paper--fold-tr': fold === 'tr', 'paper--fold-bl': fold === 'bl' }, cls]} style={`--cut: var(--cut-${cut});${style ?? ''}`} aria-hidden={Astro.slots.has('default') ? undefined : 'true'} {...rest}>
+  <slot />
+</Tag>

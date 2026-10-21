@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
+import Paper from '@/components/Paper.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { getPage, getWorks } from '@/lib/content';
@@ -16,72 +17,56 @@ const types = ['artwork', 'commission', 'gallery', 'museum', 'press', 'general']
 const hasDirect = Boolean(site.contactEmail || site.whatsappNumber);
 const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replace(/\D/g, '')}` : '';
 ---
-<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')}>
-  <section class="section contact-hero">
-    <div class="container grid">
-      <div class="col-6">
-        <p class="eyebrow eyebrow--accent reveal">{page.data.eyebrow}</p>
-        <h1 class="reveal" style="--delay:80ms">{page.data.title}</h1>
-        <p class="lead mt-l reveal" style="--delay:160ms">{page.data.lead}</p>
-        <div class="prose mt-l reveal" style="--delay:220ms"><Content /></div>
-        <div class="contact-direct mt-xl reveal" style="--delay:280ms">
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('contact')} topScene="coral">
+  <section class="contact scene-coral">
+    <div class="container contact__grid">
+      <div class="contact__intro">
+        <p class="eyebrow">{page.data.eyebrow}</p>
+        <h1>{ui.home.ch6Title}</h1>
+        <p class="lead mt-m">{page.data.lead}</p>
+        <div class="prose mt-l"><Content /></div>
+        <div class="contact-direct mt-xl">
           <h2 class="eyebrow">{ui.contact.location}</h2>
           <p>{site.workshopArea[lang]}</p>
           {hasDirect ? (
-            <dl class="spec mt-l">
+            <dl class="spec mt-m">
               {site.contactEmail && <><dt>{ui.contact.emailLabel}</dt><dd><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></dd></>}
               {site.whatsappNumber && <><dt>{ui.contact.whatsapp}</dt><dd><a href={waHref} rel="noopener noreferrer" target="_blank">{site.whatsappNumber}</a></dd></>}
             </dl>
           ) : (
-            <p class="notice notice--warn small">{ui.contact.pendingContact}</p>
+            <p class="notice notice--warn small contact__pending">{ui.contact.pendingContact}</p>
           )}
         </div>
       </div>
 
-      <div class="col-6 reveal" style="--delay:120ms">
-        <form class="contact-form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.contactEmail} novalidate>
-          <div class="field">
-            <label for="c-type">{ui.contact.inquiryType}</label>
-            <select id="c-type" name="type" required>
-              {types.map((ty) => <option value={ty}>{ui.contact.types[ty]}</option>)}
-            </select>
-            <span class="error" data-error-for="type"></span>
-          </div>
-          <div class="field">
-            <label for="c-name">{ui.contact.name}</label>
-            <input id="c-name" name="name" type="text" autocomplete="name" required />
-            <span class="error" data-error-for="name"></span>
-          </div>
-          <div class="field">
-            <label for="c-email">{ui.contact.email}</label>
-            <input id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required />
-            <span class="error" data-error-for="email"></span>
-          </div>
-          <div class="field">
-            <label for="c-work">{ui.contact.artwork}</label>
-            <select id="c-work" name="artwork" data-work-select>
-              <option value="">—</option>
-              {works.map((w) => <option value={w.id} data-url={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.year ? ` (${w.data.year})` : ''}</option>)}
-            </select>
-            <span class="error"></span>
-          </div>
-          <div class="field">
-            <label for="c-message">{ui.contact.message}</label>
-            <textarea id="c-message" name="message" required minlength="10"></textarea>
-            <span class="error" data-error-for="message"></span>
-          </div>
-          <div class="field">
-            <label class="checkbox"><input type="checkbox" name="consent" required /> <span>{ui.contact.consent}</span></label>
-            <span class="error" data-error-for="consent"></span>
-          </div>
-          <p class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
-          <input type="hidden" name="lang" value={lang} />
-          <div class="cluster">
-            <button type="submit" class="btn btn--solid" data-submit>{ui.contact.send} <span class="arrow" aria-hidden="true">→</span></button>
-          </div>
-          <p class="notice contact-form__status" data-status hidden role="status" aria-live="polite"></p>
-          <p class="small muted mt-l"><a href={route('privacy', lang)}>{ui.nav.privacy}</a></p>
-        </form>
+      <div class="contact__form-wrap unfold sheet">
+        <Paper tone="light" cut="b" fold="tr" class="contact__paper">
+          <form class="contact-form" data-contact-form data-endpoint={site.formEndpoint} data-email={site.contactEmail} novalidate>
+            <h2 class="contact-form__title">{page.data.title}</h2>
+            <div class="field">
+              <label for="c-type">{ui.contact.inquiryType}</label>
+              <select id="c-type" name="type" required>{types.map((ty) => <option value={ty}>{ui.contact.types[ty]}</option>)}</select>
+              <span class="error" data-error-for="type"></span>
+            </div>
+            <div class="field"><label for="c-name">{ui.contact.name}</label><input id="c-name" name="name" type="text" autocomplete="name" required /><span class="error" data-error-for="name"></span></div>
+            <div class="field"><label for="c-email">{ui.contact.email}</label><input id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required /><span class="error" data-error-for="email"></span></div>
+            <div class="field">
+              <label for="c-work">{ui.contact.artwork}</label>
+              <select id="c-work" name="artwork" data-work-select>
+                <option value="">—</option>
+                {works.map((w) => <option value={w.id} data-url={workPath(w.id, lang)}>{w.data.title[lang]}{w.data.year ? ` (${w.data.year})` : ''}</option>)}
+              </select>
+              <span class="error"></span>
+            </div>
+            <div class="field"><label for="c-message">{ui.contact.message}</label><textarea id="c-message" name="message" required minlength="10"></textarea><span class="error" data-error-for="message"></span></div>
+            <div class="field"><label class="checkbox"><input type="checkbox" name="consent" required /> <span>{ui.contact.consent}</span></label><span class="error" data-error-for="consent"></span></div>
+            <p class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label></p>
+            <input type="hidden" name="lang" value={lang} />
+            <div class="cluster"><button type="submit" class="btn btn--ink" data-submit>{ui.contact.send} <span class="arrow" aria-hidden="true">↗</span></button></div>
+            <p class="notice contact-form__status" data-status hidden role="status" aria-live="polite"></p>
+            <p class="small muted mt-l"><a href={route('privacy', lang)}>{ui.nav.privacy}</a></p>
+          </form>
+        </Paper>
       </div>
     </div>
   </section>
@@ -101,24 +86,15 @@ const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replac
       es: { required: 'Este campo es obligatorio.', email: 'Escribe un correo electrónico válido.', sending: 'Enviando…', sent: 'Gracias. Tu mensaje ha sido enviado; el taller responderá en cuanto le sea posible.', copied: 'El mensaje se copió al portapapeles. Pégalo en tu correo o aplicación de mensajería para enviarlo al taller en cuanto se publiquen sus datos de contacto.', error: 'No fue posible enviar el mensaje. Intenta de nuevo o utiliza el medio de contacto indicado.', subject: 'Mensaje desde el sitio de Felipe Linares Vargas' },
       en: { required: 'This field is required.', email: 'Enter a valid email address.', sending: 'Sending…', sent: 'Thank you. Your message has been sent; the workshop will reply as soon as possible.', copied: 'The message was copied to your clipboard. Paste it into your email or messaging app to send it to the workshop once its contact details are published.', error: 'The message could not be sent. Please try again or use the contact details listed.', subject: 'Message from the Felipe Linares Vargas website' },
     }[lang];
-
-    // Prefill the artwork from ?obra= / ?work=
     const params = new URLSearchParams(location.search);
     const pre = params.get('obra') || params.get('work');
     const workSel = form.querySelector<HTMLSelectElement>('[data-work-select]')!;
-    if (pre && Array.from(workSel.options).some((o) => o.value === pre)) { workSel.value = pre; const t = form.querySelector<HTMLSelectElement>('#c-type')!; t.value = 'artwork'; }
-
-    const setError = (name: string, text: string) => {
-      const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
-      const field = el?.closest<HTMLElement>('.field');
-      if (el) el.textContent = text;
-      field?.setAttribute('aria-invalid', text ? 'true' : 'false');
-    };
+    if (pre && Array.from(workSel.options).some((o) => o.value === pre)) { workSel.value = pre; form.querySelector<HTMLSelectElement>('#c-type')!.value = 'artwork'; }
+    const setError = (name: string, text: string) => { const el = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`); const field = el?.closest<HTMLElement>('.field'); if (el) el.textContent = text; field?.setAttribute('aria-invalid', text ? 'true' : 'false'); };
     const validate = () => {
       let ok = true;
       for (const name of ['name', 'email', 'message']) {
-        const input = form.elements.namedItem(name) as HTMLInputElement;
-        const v = input.value.trim();
+        const input = form.elements.namedItem(name) as HTMLInputElement; const v = input.value.trim();
         if (!v) { setError(name, msg.required); ok = false; continue; }
         if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setError(name, msg.email); ok = false; continue; }
         setError(name, '');
@@ -127,42 +103,24 @@ const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replac
       if (!consent.checked) { setError('consent', msg.required); ok = false; } else setError('consent', '');
       return ok;
     };
-    const show = (text: string, kind: '' | 'warn' | 'error' = '') => {
-      status.hidden = false; status.textContent = text;
-      status.className = `notice contact-form__status${kind ? ` notice--${kind}` : ''}`;
-    };
+    const show = (text: string, kind: '' | 'warn' | 'error' = '') => { status.hidden = false; status.textContent = text; status.className = `notice contact-form__status${kind ? ` notice--${kind}` : ''}`; };
     const compose = (fd: FormData) => {
       const opt = workSel.selectedOptions[0];
       const work = opt && opt.value ? `${opt.textContent} (${new URL(opt.dataset.url || '/', location.origin).href})` : '—';
-      const typeLabel = (form.querySelector<HTMLSelectElement>('#c-type')!.selectedOptions[0] || {}).textContent || '';
+      const typeLabel = form.querySelector<HTMLSelectElement>('#c-type')!.selectedOptions[0]?.textContent || '';
       return `${msg.subject}\n\n${typeLabel}\n${fd.get('name')} <${fd.get('email')}>\n${lang === 'es' ? 'Obra' : 'Work'}: ${work}\n\n${fd.get('message')}`;
     };
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if ((form.elements.namedItem('website') as HTMLInputElement).value) return; // honeypot
+      if ((form.elements.namedItem('website') as HTMLInputElement).value) return;
       if (!validate()) { (form.querySelector('[aria-invalid="true"] input, [aria-invalid="true"] textarea') as HTMLElement | null)?.focus(); return; }
       const fd = new FormData(form);
-      submit.disabled = true;
-      show(msg.sending);
+      submit.disabled = true; show(msg.sending);
       try {
-        if (endpoint) {
-          const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: fd });
-          if (!res.ok) throw new Error(String(res.status));
-          show(msg.sent); form.reset();
-        } else if (email) {
-          const body = compose(fd);
-          location.href = `mailto:${email}?subject=${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(body)}`;
-          show(msg.sent);
-        } else {
-          await navigator.clipboard.writeText(compose(fd));
-          show(msg.copied, 'warn');
-        }
-      } catch {
-        show(msg.error, 'error');
-      } finally {
-        submit.disabled = false;
-      }
+        if (endpoint) { const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: fd }); if (!res.ok) throw new Error(String(res.status)); show(msg.sent); form.reset(); }
+        else if (email) { location.href = `mailto:${email}?subject=${encodeURIComponent(msg.subject)}&body=${encodeURIComponent(compose(fd))}`; show(msg.sent); }
+        else { await navigator.clipboard.writeText(compose(fd)); show(msg.copied, 'warn'); }
+      } catch { show(msg.error, 'error'); } finally { submit.disabled = false; }
     });
   }
   initContact();
@@ -170,8 +128,13 @@ const waHref = site.whatsappNumber ? `https://wa.me/${site.whatsappNumber.replac
 </script>
 
 <style>
-  .contact-hero h1 { font-size: var(--step-4); }
-  .contact-form { border-top: 1px solid var(--line-strong); padding-top: var(--space-l); }
+  .contact { padding-block: var(--space-xl) var(--space-2xl); }
+  .contact__grid { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; }
+  .contact h1 { font-size: var(--type-h2); }
+  .contact__pending { background: rgba(247, 247, 242, 0.55); border-color: var(--color-ink); }
+  .contact__paper { padding: clamp(1.5rem, 4vw, 3rem); --fold: 56px; }
+  .contact-form__title { font-size: var(--type-h3); margin-bottom: var(--space-m); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .contact-form__status { margin-top: var(--space-m); }
+  @media (max-width: 900px) { .contact__grid { grid-template-columns: 1fr; } }
 </style>

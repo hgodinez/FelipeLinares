@@ -1,23 +1,38 @@
 ---
 import { Image, getImage } from 'astro:assets';
+import { getEntry } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import ArtworkCard from '@/components/ArtworkCard.astro';
+import Paper from '@/components/Paper.astro';
+import Marks from '@/components/Marks.astro';
 import { t } from '@/i18n/ui';
 import { route, alternates, workPath, type Lang } from '@/i18n/routes';
-import { getPage, getWorks, coverOf } from '@/lib/content';
+import { getPage, getPeople } from '@/lib/content';
 import site from '@/data/site.json';
-import heroImg from '@/assets/works/alebrije-astado-repisa.jpg';
-import handImg from '@/assets/works/alebrije-astado-mano.jpg';
+import heroImg from '@/assets/works/alebrije-tigre-cenital.jpg';
 import workshopImg from '@/assets/works/alebrije-astado-frente-taller.jpg';
-import workshopImg2 from '@/assets/works/jinete-calavera-taller.jpg';
+import paintImg from '@/assets/works/jinete-calavera-taller.jpg';
+import paintImg2 from '@/assets/works/alebrije-astado-cenital-taller.jpg';
+import finishedImg from '@/assets/works/alebrije-astado-repisa.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
+const h = ui.home;
 const page = await getPage('inicio', lang);
-const sections = page.data.sections ?? [];
-const works = (await getWorks()).filter((w) => w.data.featured && w.data.images.length > 0).slice(0, 4);
-const [s1, s2, s3, s4, s5] = sections;
+const taller = await getPage('taller', lang);
+const stages = taller.data.sections ?? [];
+const people = await getPeople();
+const byId = Object.fromEntries(people.map((p) => [p.id, p]));
+const lineage = ['pedro-linares-lopez', 'felipe-linares-mendoza', 'felipe-linares-vargas'].map((id) => byId[id]).filter(Boolean);
+
+const w = async (id: string) => (await getEntry('artworks', id))!;
+const jaguar = await w('alebrije-jaguar-astado');
+const rana = await w('alebrije-rana-picuda');
+const calavera = await w('calavera-alada-sobre-alebrije');
+const catrina = await w('catrina-con-tocado-de-plumas');
+const tigre = await w('alebrije-tigre-alado');
+const tzompantli = await w('tzompantli-2010');
 const og = await getImage({ src: heroImg, width: 1200, format: 'jpg' });
 
 const personLd = {
@@ -31,177 +46,314 @@ const personLd = {
   knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'],
 };
 ---
-<Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd} overlayHeader>
-  <!-- HERO: one magnificent work, full bleed -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero__media">
-      <Image src={heroImg} alt={lang === 'es' ? 'Alebrije de cartonería con cabeza de felino negro, astas de venado y alas rojas, obra de Felipe Linares Vargas.' : 'Cartonería alebrije with a black feline head, deer antlers and red wings, by Felipe Linares Vargas.'} widths={[640, 1024, 1600, 2400]} sizes="100vw" loading="eager" fetchpriority="high" decoding="sync" />
-    </div>
-    <div class="hero__content container">
-      <p class="eyebrow hero__eyebrow reveal">{page.data.eyebrow}</p>
-      <h1 id="hero-title" class="hero__title reveal" style="--delay:80ms">Felipe Linares Vargas</h1>
-      <p class="hero__statement reveal" style="--delay:160ms">{site.heroStatement[lang]}</p>
-      <div class="hero__actions cluster reveal" style="--delay:240ms">
-        <a class="btn btn--solid" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">→</span></a>
-        <a class="btn hero__btn-ghost" href={route('artist', lang)}>{ui.cta.artist}</a>
-      </div>
-    </div>
-    <p class="hero__scroll" aria-hidden="true"><span></span></p>
-  </section>
+<Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd} overlayHeader topScene="ink">
 
-  <!-- INTRO -->
-  <section class="section intro">
-    <div class="container grid">
-      <div class="col-7">
-        <p class="lead reveal">{page.data.lead}</p>
-      </div>
-      <div class="col-5 intro__aside reveal" style="--delay:120ms">
-        <p class="small muted">{s2.text}</p>
-        <a class="link-arrow" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SELECTED WORKS: editorial, asymmetric -->
-  <section class="section section--tight works-preview" aria-labelledby="works-title">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow eyebrow--accent">{ui.works.eyebrow}</p>
-          <h2 id="works-title">{s1.heading}</h2>
+  <!-- 01 · EL ENCUENTRO ------------------------------------------------------ -->
+  <section class="hero scene-ink" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow hero__eyebrow">{ui.tagline}</p>
+        <h1 id="hero-title" class="hero__name">Felipe Linares<br />Vargas</h1>
+        <p class="hero__intro lead">{h.heroIntro}</p>
+        <div class="hero__actions">
+          <a class="btn btn--lime" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="link-arrow hero__secondary" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
         </div>
-        <p class="muted small works-preview__intro">{s1.text}</p>
       </div>
-      <div class="works-preview__grid">
-        {works.map((w, i) => (
-          <div class:list={['works-preview__item', `works-preview__item--${i + 1}`]}>
-            <ArtworkCard work={w} lang={lang} size={i === 0 ? 'large' : 'medium'} index={i} />
+
+      <div class="hero__stage" data-hero-stage>
+        <div class="sheet sheet--soft hero__cobalt"><Paper tone="cobalt" cut="b" /></div>
+        <div class="sheet hero__lime"><Paper tone="lime" cut="a" fold="tr" /></div>
+        <div class="sheet--soft hero__coral"><Paper tone="coral" cut="d" /></div>
+        <figure class="hero__window sheet--near">
+          <div class="hero__photo">
+            <Image src={heroImg} alt={h.heroAlt} widths={[480, 760, 1000, 1400]} sizes="(max-width: 900px) 80vw, 36vw" loading="eager" fetchpriority="high" decoding="sync" />
           </div>
-        ))}
-      </div>
-      <div class="text-center mt-l">
-        <a class="btn" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a>
+          <figcaption class="hero__caption micro">{h.stageCaption}</figcaption>
+        </figure>
       </div>
     </div>
+    <a class="hero__next" href="#criaturas" aria-label={h.next}><Marks kind="wing" class="hero__wing" /><span class="micro">{h.ch2}</span></a>
   </section>
 
-  <!-- ARTIST: dark room -->
-  <section class="section section--dark artist-band" aria-labelledby="artist-title">
-    <div class="container grid">
-      <div class="col-5 artist-band__media reveal">
-        <div class="frame aspect-3-4">
-          <Image src={handImg} alt={lang === 'es' ? 'Una mano sostiene un alebrije de cabeza negra y astas; muestra la escala íntima de la pieza.' : 'A hand holds a black-headed, antlered alebrije; it shows the intimate scale of the piece.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" />
-        </div>
-      </div>
-      <div class="col-7 artist-band__text">
-        <p class="eyebrow reveal">{ui.nav.artist}</p>
-        <h2 class="reveal" style="--delay:80ms">{s2.heading}</h2>
-        <p class="reveal mt-l" style="--delay:160ms">{s2.text}</p>
-        <a class="btn reveal" style="--delay:240ms" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </section>
+  <!-- Transition: the concept line -->
+  <div class="concept scene-ink" aria-hidden="true">
+    <div class="container"><p class="statement concept__line">{h.heroStatement}</p></div>
+  </div>
 
-  <!-- LEGACY: typographic -->
-  <section class="section legacy-band" aria-labelledby="legacy-title">
+  <!-- 02 · LAS CRIATURAS ------------------------------------------------------ -->
+  <section id="criaturas" class="creatures scene-paper section" aria-labelledby="creatures-title">
     <div class="container">
-      <div class="legacy-band__inner">
-        <p class="eyebrow eyebrow--accent reveal">{ui.nav.legacy}</p>
-        <h2 id="legacy-title" class="legacy-band__title reveal" style="--delay:80ms">{s3.heading}</h2>
-        <p class="lead reveal" style="--delay:160ms">{s3.text}</p>
-        <div class="legacy-band__years reveal" style="--delay:240ms" aria-hidden="true">
-          <span>1906</span><span>1936</span><span>1990</span><span>2010</span><span>2026</span>
+      <div class="unfold creatures__sheet"><Paper tone="deep" cut="c" class="creatures__sheet-paper" /></div>
+      <header class="creatures__head">
+        <p class="eyebrow eyebrow--accent">02 · {h.ch2}</p>
+        <h2 id="creatures-title">{h.ch2Title}</h2>
+        <p class="lead">{h.ch2Text}</p>
+      </header>
+
+      <div class="creatures__grid">
+        <div class="creatures__item creatures__item--jaguar"><ArtworkCard work={jaguar} lang={lang} size="large" eager /></div>
+        <div class="creatures__item creatures__item--rana"><ArtworkCard work={rana} lang={lang} size="small" /></div>
+
+        <div class="creatures__item creatures__item--calavera">
+          <div class="creatures__field sheet--soft"><Paper tone="cobalt" cut="b" fold="bl" /></div>
+          <div class="creatures__field-inner scene-cobalt">
+            <div class="creatures__field-text">
+              <p class="eyebrow">{ui.works.categories.calaveras}</p>
+              <p class="statement creatures__field-line">{lang === 'es' ? 'Una calavera que cabalga.' : 'A skull that rides.'}</p>
+            </div>
+            <ArtworkCard work={calavera} lang={lang} size="medium" />
+          </div>
         </div>
-        <a class="btn btn--accent reveal" style="--delay:300ms" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">→</span></a>
+
+        <div class="creatures__item creatures__item--catrina"><ArtworkCard work={catrina} lang={lang} size="small" /></div>
+        <div class="creatures__item creatures__item--tigre"><ArtworkCard work={tigre} lang={lang} size="medium" /></div>
+      </div>
+
+      <div class="creatures__all">
+        <a class="btn btn--ink" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
 
-  <!-- WORKSHOP: two documentary images -->
-  <section class="section section--alt workshop-band" aria-labelledby="workshop-title">
-    <div class="container grid">
-      <div class="col-4 workshop-band__text">
-        <p class="eyebrow reveal">{ui.nav.workshop}</p>
-        <h2 id="workshop-title" class="reveal" style="--delay:80ms">{s4.heading}</h2>
-        <p class="reveal mt-l" style="--delay:160ms">{s4.text}</p>
-        <a class="link-arrow reveal" style="--delay:240ms" href={route('workshop', lang)}>{ui.cta.readMore} <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-      <div class="col-8 workshop-band__media">
-        <figure class="figure reveal" style="--delay:120ms">
-          <div class="frame aspect-3-4"><Image src={workshopImg} alt={lang === 'es' ? 'Alebrije en proceso sobre la mesa del taller, rodeado de pinceles, frascos y otras piezas.' : 'Alebrije in progress on the workshop table, surrounded by brushes, jars and other pieces.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 35vw" loading="lazy" /></div>
-        </figure>
-        <figure class="figure reveal" style="--delay:240ms">
-          <div class="frame aspect-3-4"><Image src={workshopImg2} alt={lang === 'es' ? 'Esqueleto con alas de mariposa sobre una criatura anaranjada, en proceso en el taller.' : 'Skeleton with butterfly wings on an orange creature, in progress in the workshop.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 35vw" loading="lazy" /></div>
-        </figure>
+  <!-- 03 · LAS MANOS QUE LAS CREAN -------------------------------------------- -->
+  <section class="hands scene-lime section" aria-labelledby="hands-title">
+    <div class="container hands__grid">
+      <figure class="hands__figure figure">
+        <div class="sheet hands__sheet"><Paper tone="light" cut="d" class="hands__paper">
+          <div class="hands__photo reveal-mask">
+            <Image src={workshopImg} alt={lang === 'es' ? 'Alebrije de cabeza negra y astas sobre la mesa del taller familiar, entre frascos de pintura y pinceles.' : 'Black-headed, antlered alebrije on the family workshop table, among paint jars and brushes.'} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 42vw" loading="lazy" />
+          </div>
+        </Paper></div>
+        <figcaption><span>{h.ch3Note}</span></figcaption>
+      </figure>
+      <div class="hands__text">
+        <p class="eyebrow">03 · {h.ch3}</p>
+        <h2 id="hands-title">{h.ch3Title}</h2>
+        <p class="lead">{h.ch3Text}</p>
+        <a class="btn btn--ink mt-m" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
 
-  <!-- INVITATION -->
-  <section class="section invite" aria-labelledby="invite-title">
-    <div class="container--narrow container text-center">
-      <p class="eyebrow reveal">{ui.nav.contact}</p>
-      <h2 id="invite-title" class="reveal" style="--delay:80ms">{s5.heading}</h2>
-      <p class="reveal mt-l invite__text" style="--delay:160ms">{s5.text}</p>
-      <a class="btn btn--solid reveal" style="--delay:240ms" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">→</span></a>
+  <!-- 04 · DE PAPEL A IMPOSIBLE ----------------------------------------------- -->
+  <section class="process scene-cobalt section" aria-labelledby="process-title">
+    <div class="container">
+      <header class="process__head">
+        <p class="eyebrow">04 · {h.ch4}</p>
+        <h2 id="process-title">{h.ch4Title}</h2>
+        <p class="lead">{h.ch4Text}</p>
+      </header>
+      <ol class="stations">
+        {stages.map((s, i) => (
+          <li class:list={['station', `station--${i + 1}`, { 'station--alt': i % 2 === 1 }]}>
+            <div class="station__text">
+              <span class="station__num" aria-hidden="true">0{i + 1}</span>
+              <h3>{s.heading}</h3>
+              <p>{s.text}</p>
+            </div>
+            <div class="station__media">
+              {i < 3 && (
+                <div class="sheet--soft"><Paper tone={i === 0 ? 'lime' : i === 1 ? 'light' : 'deep'} cut={i === 0 ? 'a' : i === 1 ? 'c' : 'b'} fold={i === 1 ? 'tr' : 'none'} class="station__card">
+                  {i === 1 && <Marks kind="antler" class="station__mark" />}
+                  {i === 0 && <Marks kind="spots" class="station__mark station__mark--spots" />}
+                  {i === 2 && <Marks kind="wing" class="station__mark" />}
+                  <p class="station__pending small">{s.note}</p>
+                </Paper></div>
+              )}
+              {i === 3 && (
+                <div class="station__photos">
+                  <div class="reveal-mask sheet--soft"><Image src={paintImg2} alt={lang === 'es' ? 'Alebrije en proceso visto desde arriba: alas rojas con nervaduras pintadas y cuerpo moteado.' : 'Alebrije in progress seen from above: red wings with painted veins and spotted body.'} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div>
+                  <div class="reveal-mask sheet--soft" style="--delay:120ms"><Image src={paintImg} alt={lang === 'es' ? 'Esqueleto con alas de mariposa sobre una criatura anaranjada, en proceso de pintura en el taller.' : 'Skeleton with butterfly wings on an orange creature, being painted in the workshop.'} widths={[420, 700]} sizes="(max-width: 900px) 60vw, 24vw" loading="lazy" /></div>
+                </div>
+              )}
+              {i === 4 && (
+                <div class="reveal-mask reveal-mask--up sheet"><Image src={finishedImg} alt={lang === 'es' ? 'Alebrije terminado con cabeza negra, astas y alas rojas, sobre una repisa.' : 'Finished alebrije with black head, antlers and red wings, on a shelf.'} widths={[480, 800, 1100]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="small process__note">{h.ch4Note}</p>
+      <a class="btn btn--paper" href={route('workshop', lang)}>{ui.cta.process} <span class="arrow" aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <!-- 05 · UNA HISTORIA QUE CONTINÚA ------------------------------------------- -->
+  <section class="story scene-paper section" aria-labelledby="story-title">
+    <div class="container story__grid">
+      <header class="story__head">
+        <p class="eyebrow eyebrow--accent">05 · {h.ch5}</p>
+        <h2 id="story-title">{h.ch5Title}</h2>
+        <p class="lead">{h.ch5Text}</p>
+        <a class="btn btn--ink mt-m" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">↗</span></a>
+      </header>
+      <ol class="strips">
+        {lineage.map((p, i) => (
+          <li class="strip" style={`--i:${i}`}>
+            <div class="sheet--soft"><Paper tone={i === lineage.length - 1 ? 'lime' : i === 0 ? 'deep' : 'light'} cut={i === 0 ? 'a' : i === 1 ? 'c' : 'b'} class="strip__paper">
+              <div class="strip__inner">
+                <span class="strip__dates micro">{p.data.born ? `${p.data.born}${p.data.died ? `–${p.data.died}` : ''}` : (lang === 'es' ? 'Generación actual' : 'Current generation')}</span>
+                <h3 class="strip__name">{p.data.name}</h3>
+                <p class="small strip__role">{p.data.role[lang]}</p>
+                <a class="link-arrow" href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.isFeaturedArtist ? ui.cta.artist : (lang === 'es' ? 'Ver semblanza' : 'View profile')} <span class="arrow" aria-hidden="true">→</span></a>
+              </div>
+            </Paper></div>
+          </li>
+        ))}
+        <li class="strip strip--archive" style="--i:3">
+          <div class="sheet--soft"><Paper tone="light" cut="d" class="strip__paper">
+            <div class="strip__inner">
+              <span class="micro">{ui.archive.types.collection} · 2010</span>
+              <h3 class="strip__name">Tzompantli</h3>
+              <p class="small strip__role">{tzompantli.data.collection} · {tzompantli.data.dimensions}</p>
+              <a class="link-arrow" href={workPath(tzompantli.id, lang)}>{ui.cta.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
+            </div>
+          </Paper></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 06 · EL PRÓXIMO ENCUENTRO ------------------------------------------------ -->
+  <section class="encounter scene-coral section" aria-labelledby="encounter-title">
+    <div class="container">
+      <div class="encounter__sheet unfold sheet"><Paper tone="light" cut="a" fold="bl" class="encounter__paper">
+        <div class="encounter__inner">
+          <p class="eyebrow">06 · {h.ch6}</p>
+          <h2 id="encounter-title">{h.ch6Title}</h2>
+          <p class="lead">{h.ch6Text}</p>
+          <a class="btn btn--ink mt-m" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </Paper></div>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { position: relative; min-height: 100svh; display: grid; align-items: end; color: var(--ivory); isolation: isolate; }
-  .hero__media { position: absolute; inset: 0; z-index: -1; background: var(--charcoal); }
-  .hero__media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 72% 42%; }
-  .hero__media::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(20, 18, 15, 0.82) 0%, rgba(20, 18, 15, 0.35) 40%, rgba(20, 18, 15, 0.12) 70%, rgba(20, 18, 15, 0.3) 100%);
+  /* ----- 01 Hero ----- */
+  .hero { position: relative; padding-top: calc(var(--nav-h) + var(--space-l)); padding-bottom: var(--space-xl); min-height: min(100svh, 880px); display: grid; align-items: center; overflow: hidden; }
+  .hero__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-l) var(--gutter); align-items: center; }
+  .hero__text { grid-column: 1 / 7; position: relative; z-index: 2; }
+  .hero__eyebrow { color: var(--color-lime); }
+  .hero__name { font-size: var(--type-hero); max-width: 11ch; }
+  .hero__intro { margin-top: var(--space-m); color: var(--paper-muted); max-width: 36ch; }
+  .hero__actions { margin-top: var(--space-l); display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); align-items: center; }
+  .hero__secondary { color: var(--color-paper); }
+  .hero__secondary:hover { border-bottom-color: var(--color-lime); }
+
+  .hero__stage { grid-column: 7 / 13; position: relative; aspect-ratio: 5 / 6; max-height: 720px; }
+  .hero__stage > * { position: absolute; }
+  .hero__cobalt { inset: 12% -6% -4% 22%; }
+  .hero__cobalt :global(.paper) { width: 100%; height: 100%; }
+  .hero__lime { inset: 0 18% 10% 0; }
+  .hero__lime :global(.paper) { width: 100%; height: 100%; --fold: 72px; }
+  .hero__coral { left: 2%; bottom: 0; width: 26%; height: 20%; }
+  .hero__coral :global(.paper) { width: 100%; height: 100%; }
+  .hero__window { margin: 0; inset: 6% 8% 4% 14%; display: grid; grid-template-rows: 1fr auto; }
+  .hero__photo { background: var(--color-paper); padding: 10px; height: 100%; min-height: 0; }
+  .hero__photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+  .hero__caption { background: var(--color-paper); color: var(--ink-muted); padding: 0.55rem 0.9rem 0.75rem; text-transform: none; letter-spacing: 0.02em; font-weight: 600; }
+  .hero__next { position: absolute; right: var(--gutter); bottom: var(--space-m); display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--paper-muted); }
+  .hero__next:hover { color: var(--color-lime); }
+  .hero__wing { width: 72px; color: var(--color-lime); }
+
+  /* Entrance (DESPLEGAR + REVELAR), 800 ms total, runs once per page render. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__lime { animation: lime-in 220ms var(--ease-paper) both; }
+    .hero__cobalt { animation: cobalt-in 400ms var(--ease-paper) 180ms both; }
+    .hero__coral { animation: cobalt-in 300ms var(--ease-paper) 420ms both; }
+    .hero__window { animation: window-in 400ms var(--ease-paper) 180ms both, settle 400ms var(--ease-paper) 400ms both; }
   }
-  .hero__content { padding-block: var(--space-xl) calc(var(--space-xl) + 2rem); }
-  .hero__eyebrow { color: rgba(242, 232, 213, 0.75); }
-  .hero__title { font-size: var(--step-5); max-width: 12ch; }
-  .hero__statement { font-family: var(--font-display); font-style: italic; font-size: var(--step-2); margin-top: var(--space-m); max-width: 28ch; font-variation-settings: 'opsz' 72, 'SOFT' 60; }
-  .hero__actions { margin-top: var(--space-l); }
-  .hero__btn-ghost { color: var(--ivory); border-color: rgba(242, 232, 213, 0.6); }
-  .hero__btn-ghost:hover { background: var(--ivory); color: var(--charcoal); }
-  .hero :global(.btn--solid) { background: var(--ivory); color: var(--charcoal); border-color: var(--ivory); }
-  .hero :global(.btn--solid:hover) { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .hero__scroll { position: absolute; right: var(--gutter); bottom: var(--space-l); margin: 0; width: 1px; height: 64px; overflow: hidden; }
-  .hero__scroll span { display: block; width: 1px; height: 100%; background: rgba(242, 232, 213, 0.6); animation: scroll-line 2.4s var(--ease-out) infinite; transform-origin: top; }
-  @keyframes scroll-line { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
-  @media (prefers-reduced-motion: reduce) { .hero__scroll { display: none; } }
+  @keyframes lime-in { from { transform: translateY(24px) rotate(-0.6deg); } to { transform: none; } }
+  @keyframes cobalt-in { from { opacity: 0; transform: translate(-16px, -10px); } to { opacity: 1; transform: none; } }
+  @keyframes window-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes settle { from { translate: 0 8px; } to { translate: 0 0; } }
 
-  .intro__aside { align-self: end; display: grid; gap: var(--space-s); }
+  .concept { padding-block: var(--space-m) var(--space-xl); }
+  .concept__line { font-size: var(--type-h2); color: var(--color-lime); max-width: 20ch; }
 
-  .works-preview__intro { max-width: 38ch; }
-  .works-preview__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-xl) var(--gutter); align-items: start; }
-  .works-preview__item--1 { grid-column: 1 / 8; }
-  .works-preview__item--2 { grid-column: 9 / 13; margin-top: clamp(2rem, 10vw, 10rem); }
-  .works-preview__item--3 { grid-column: 2 / 6; }
-  .works-preview__item--4 { grid-column: 7 / 12; margin-top: clamp(1rem, 6vw, 6rem); }
+  /* ----- 02 Creatures ----- */
+  .creatures { position: relative; overflow: hidden; }
+  .creatures__sheet { position: absolute; top: 0; right: -8%; width: 46%; height: 34%; z-index: 0; pointer-events: none; }
+  .creatures__sheet-paper { width: 100%; height: 100%; }
+  .creatures .container { position: relative; z-index: 1; }
+  .creatures__head { max-width: 60ch; margin-bottom: var(--space-xl); }
+  .creatures__head h2 { margin-bottom: var(--space-s); }
+  .creatures__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-xl) var(--gutter); align-items: start; }
+  .creatures__item--jaguar { grid-column: 1 / 8; }
+  .creatures__item--rana { grid-column: 9 / 13; margin-top: clamp(3rem, 12vw, 12rem); }
+  .creatures__item--calavera { grid-column: 1 / 13; position: relative; margin-block: var(--space-l); }
+  .creatures__field { position: absolute; inset: 8% -2% -6% 6%; z-index: 0; }
+  .creatures__field :global(.paper) { width: 100%; height: 100%; --fold: 64px; }
+  .creatures__field-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 5fr 4fr; gap: var(--gutter); align-items: center; padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 8vw, 7rem) clamp(2rem, 6vw, 5rem) clamp(2rem, 10vw, 9rem); background: transparent; }
+  .creatures__field-line { font-size: var(--type-h3); color: var(--color-lime); margin-top: var(--space-s); }
+  .creatures__item--catrina { grid-column: 2 / 6; }
+  .creatures__item--tigre { grid-column: 7 / 13; margin-top: var(--space-xl); }
+  .creatures__all { margin-top: var(--space-2xl); display: flex; justify-content: center; }
   @media (max-width: 900px) {
-    .works-preview__grid { gap: var(--space-l) var(--gutter); }
-    .works-preview__item--1 { grid-column: 1 / 13; }
-    .works-preview__item--2 { grid-column: 1 / 7; margin-top: 0; }
-    .works-preview__item--3 { grid-column: 7 / 13; margin-top: var(--space-xl); }
-    .works-preview__item--4 { grid-column: 2 / 12; margin-top: 0; }
+    .creatures__item--jaguar { grid-column: 1 / 13; }
+    .creatures__item--rana { grid-column: 3 / 11; margin-top: 0; }
+    .creatures__field { inset: 4% -4% -4% -4%; }
+    .creatures__field-inner { grid-template-columns: 1fr; padding: var(--space-l) var(--space-m); }
+    .creatures__item--catrina { grid-column: 1 / 8; }
+    .creatures__item--tigre { grid-column: 1 / 13; margin-top: 0; }
   }
-  @media (max-width: 560px) {
-    .works-preview__item--2, .works-preview__item--3, .works-preview__item--4 { grid-column: 1 / 13; margin-top: 0; }
+  @media (max-width: 560px) { .creatures__item--rana, .creatures__item--catrina { grid-column: 1 / 13; } }
+
+  /* ----- 03 Hands ----- */
+  .hands__grid { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-xl) var(--gutter); align-items: center; }
+  .hands__paper { padding: 14px; }
+  .hands__photo { aspect-ratio: 4 / 5; overflow: hidden; }
+  .hands__photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .hands__figure figcaption { margin-top: var(--space-s); }
+  .hands__text h2 { margin-bottom: var(--space-s); }
+  @media (max-width: 900px) { .hands__grid { grid-template-columns: 1fr; } .hands__figure { order: 2; } }
+
+  /* ----- 04 Process ----- */
+  .process__head { max-width: 60ch; margin-bottom: var(--space-xl); }
+  .process__head h2 { margin-bottom: var(--space-s); }
+  .stations { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xl); }
+  .station { display: grid; grid-template-columns: 5fr 6fr; gap: var(--space-l) var(--gutter); align-items: center; }
+  .station--alt .station__text { order: 2; }
+  .station__num { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h2); color: var(--color-lime); line-height: 1; display: block; margin-bottom: var(--space-s); }
+  .station__text h3 { margin-bottom: var(--space-s); }
+  .station__card { aspect-ratio: 5 / 4; display: grid; align-content: end; padding: var(--space-m); --fold: 52px; }
+  .station__mark { position: absolute; top: 10%; left: 8%; width: 44%; color: currentColor; opacity: 0.55; }
+  .station__mark--spots { width: 60%; }
+  .station__pending { position: relative; max-width: 30ch; font-weight: 600; }
+  .station__photos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
+  .station__photos > :last-child { margin-top: var(--space-l); }
+  .station__photos :global(img), .station__media :global(.reveal-mask > img) { width: 100%; height: auto; }
+  .process__note { margin: var(--space-xl) 0 var(--space-m); color: var(--fg-muted); max-width: 60ch; }
+  @media (max-width: 900px) { .station { grid-template-columns: 1fr; } .station--alt .station__text { order: 0; } .stations { gap: var(--space-xl); } }
+
+  /* ----- 05 Story ----- */
+  .story__grid { display: grid; grid-template-columns: 5fr 7fr; gap: var(--space-xl) var(--gutter); align-items: start; }
+  .story__head { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
+  .story__head h2 { margin-bottom: var(--space-s); }
+  .strips { list-style: none; margin: 0; padding: 0; display: grid; }
+  .strip { margin-top: calc(var(--i) * -0.5rem); margin-left: calc(var(--i) * 4%); }
+  .strip + .strip { margin-top: -1.25rem; }
+  .strip__paper { padding: var(--space-m) var(--space-l) var(--space-l); }
+  .strip__inner { display: grid; gap: 0.35rem; }
+  .strip__name { font-size: var(--type-h3); }
+  .strip--archive { margin-top: var(--space-m); }
+  @media (max-width: 900px) { .story__grid { grid-template-columns: 1fr; } .story__head { position: static; } .strip { margin-left: calc(var(--i) * 2%); } }
+
+  /* ----- 06 Encounter ----- */
+  .encounter__paper { padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 7vw, 6rem); --fold: 64px; }
+  .encounter__inner { max-width: 60ch; }
+  .encounter__inner h2 { margin-bottom: var(--space-s); font-size: var(--type-h2); }
+
+  @media (max-width: 900px) {
+    .hero { padding-top: calc(var(--nav-h) + var(--space-m)); min-height: 0; }
+    .hero__grid { grid-template-columns: 1fr; gap: var(--space-l); }
+    .hero__text, .hero__stage { grid-column: 1; }
+    .hero__name { font-size: clamp(2.75rem, 2rem + 4vw, 3.4rem); }
+    .hero__stage { width: min(100%, 420px); margin-inline: auto; aspect-ratio: 5 / 6; max-height: 60vh; }
+    .hero__next { position: static; margin-top: var(--space-m); justify-content: flex-end; width: 100%; }
+    .hero__wing { width: 56px; }
+    .concept__line { font-size: var(--type-h3); }
   }
-
-  .artist-band__text { align-self: center; }
-  .artist-band__text .btn { margin-top: var(--space-l); }
-
-  .legacy-band__inner { max-width: 60ch; margin-inline: auto; text-align: center; display: grid; justify-items: center; gap: var(--space-m); }
-  .legacy-band__title { font-size: var(--step-4); }
-  .legacy-band__years { display: flex; gap: clamp(1rem, 4vw, 3rem); font-family: var(--font-display); font-size: var(--step-1); color: var(--fg-muted); font-variation-settings: 'opsz' 36; }
-
-  .workshop-band__media { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
-  .workshop-band__media figure:last-child { margin-top: var(--space-xl); }
-  .workshop-band__text { align-self: center; }
-  @media (max-width: 600px) { .workshop-band__media { grid-template-columns: 1fr; } .workshop-band__media figure:last-child { margin-top: 0; } }
-
-  .invite__text { margin-inline: auto; }
-  .invite .btn { margin-top: var(--space-l); }
 </style>

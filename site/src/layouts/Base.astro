@@ -9,6 +9,8 @@ import site from '@/data/site.json';
 
 interface Props {
   lang: Lang;
+  /** Scene the page opens with; the header adapts its ink. */
+  topScene?: 'paper' | 'ink' | 'lime' | 'cobalt' | 'coral';
   title: string;
   description?: string;
   alternates: Record<Lang, string>;
@@ -19,7 +21,7 @@ interface Props {
   overlayHeader?: boolean;
 }
 
-const { lang, title, description, alternates, ogImage, jsonLd, bodyClass = '', overlayHeader = false } = Astro.props;
+const { lang, title, description, alternates, ogImage, jsonLd, bodyClass = '', overlayHeader = false, topScene = 'paper' } = Astro.props;
 const ui = t(lang);
 const siteUrl = Astro.site ?? new URL('http://localhost/');
 const canonical = new URL(alternates[lang], siteUrl).toString();
@@ -49,7 +51,7 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, siteUrl).toString()} />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
-    <meta name="theme-color" content="#f2e8d5" />
+    <meta name="theme-color" content="#191b24" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.artistName} />
     <meta property="og:title" content={fullTitle} />
@@ -62,33 +64,19 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <script is:inline>document.documentElement.classList.remove('no-js');</script>
     <ClientRouter fallback="none" />
   </head>
-  <body class={bodyClass} data-overlay-header={overlayHeader ? 'true' : undefined}>
+  <body class={bodyClass} data-overlay-header={overlayHeader ? 'true' : undefined} data-top-scene={topScene}>
     <a class="skip" href="#main">{ui.skip}</a>
-    <Header lang={lang} alternates={alternates} overlay={overlayHeader} />
+    <Header lang={lang} alternates={alternates} overlay={overlayHeader} scene={topScene} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer lang={lang} />
     <script>
-      import { initReveal } from '@/lib/reveal';
-      initReveal();
-      document.addEventListener('astro:page-load', initReveal);
+      import { initMotion } from '@/lib/motion';
+      initMotion();
+      document.addEventListener('astro:page-load', initMotion);
     </script>
   </body>
 </html>
 
-<style is:global>
-  .skip {
-    position: absolute;
-    left: var(--gutter);
-    top: -4rem;
-    z-index: 100;
-    background: var(--charcoal);
-    color: var(--ivory);
-    padding: 0.75rem 1rem;
-    text-decoration: none;
-    transition: top 150ms;
-  }
-  .skip:focus { top: var(--space-s); }
-  main:focus { outline: none; }
-</style>
+

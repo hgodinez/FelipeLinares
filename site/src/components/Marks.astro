@@ -1,0 +1,30 @@
+---
+/**
+ * Original graphic motifs drawn from features of the documented sculptures:
+ * a wing contour, antler branching, and a cluster of painted spots.
+ * Abstract schemas, not reproductions of any specific work. Decorative only.
+ */
+interface Props { kind: 'wing' | 'antler' | 'spots'; class?: string; style?: string; [key: string]: unknown }
+const { kind, class: cls = '', style, ...rest } = Astro.props;
+---
+{kind === 'wing' && (
+  <svg class={cls} style={style} {...rest} viewBox="0 0 320 120" fill="none" aria-hidden="true" focusable="false">
+    <path d="M2 118C40 60 96 30 170 22c48-5 98 2 148 24-30-2-58 6-84 18 22 2 42 8 60 18-28-4-56 0-84 10 16 6 30 14 44 26-40-16-82-20-122-14-30 4-56 16-78 32C44 112 24 118 2 118Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+    <path d="M60 104c30-36 70-56 118-62M80 112c34-26 72-40 114-42M110 116c28-14 58-22 90-22" stroke="currentColor" stroke-width="1" opacity=".55" />
+  </svg>
+)}
+{kind === 'antler' && (
+  <svg class={cls} style={style} {...rest} viewBox="0 0 200 240" fill="none" aria-hidden="true" focusable="false">
+    <path d="M100 238c-4-60-6-110 2-160 6-36 24-56 54-74M102 150c-18-10-34-30-42-58M104 110c20-6 36-20 46-40M100 78c-12-4-22-14-28-30M100 200c-22-8-40-26-50-52M106 170c22-4 40-18 50-40" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+    <circle cx="100" cy="238" r="4" fill="currentColor" />
+  </svg>
+)}
+{kind === 'spots' && (
+  <svg class={cls} style={style} {...rest} viewBox="0 0 240 160" fill="none" aria-hidden="true" focusable="false">
+    <g stroke="currentColor" stroke-width="2">
+      <path d="M30 40c10-14 30-12 36 2 4 10-6 22-18 22S24 50 30 40Z" /><path d="M96 28c6-10 24-10 28 2 3 9-6 18-16 18-11 0-16-10-12-20Z" /><path d="M160 46c8-12 26-10 32 2 4 9-4 20-16 20-13 0-21-10-16-22Z" />
+      <path d="M58 102c8-14 30-12 36 0 5 10-4 22-18 22-14 0-24-10-18-22Z" /><path d="M128 96c6-10 22-10 28 0 4 8-4 18-14 18-12 0-18-8-14-18Z" /><path d="M196 110c6-12 24-10 30 0 4 9-4 18-14 18-12 0-20-8-16-18Z" />
+    </g>
+    <g fill="currentColor" opacity=".9"><circle cx="46" cy="48" r="3" /><circle cx="110" cy="36" r="2.5" /><circle cx="176" cy="54" r="3" /><circle cx="76" cy="110" r="3" /><circle cx="142" cy="104" r="2.5" /><circle cx="212" cy="118" r="3" /></g>
+  </svg>
+)}

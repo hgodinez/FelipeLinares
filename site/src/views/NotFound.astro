@@ -6,15 +6,15 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ui = t(lang);
 ---
-<Base lang={lang} title={ui.misc.notFound} alternates={alternates('home')}>
-  <section class="section nf">
+<Base lang={lang} title={ui.misc.notFound} alternates={alternates('home')} topScene="ink">
+  <section class="section nf scene-ink">
     <div class="container--narrow container text-center">
       <p class="eyebrow eyebrow--accent">404</p>
       <h1>{ui.misc.notFound}</h1>
-      <p class="lead mt-l" style="margin-inline:auto">{ui.misc.notFoundText}</p>
+      <p class="lead mt-m" style="margin-inline:auto">{ui.misc.notFoundText}</p>
       <div class="cluster mt-xl" style="justify-content:center">
-        <a class="btn btn--solid" href={route('home', lang)}>{ui.nav.home}</a>
-        <a class="btn" href={route('works', lang)}>{ui.cta.works}</a>
+        <a class="btn btn--lime" href={route('home', lang)}>{ui.nav.home}</a>
+        <a class="btn" style="color:var(--color-paper)" href={route('works', lang)}>{ui.cta.works}</a>
       </div>
     </div>
   </section>

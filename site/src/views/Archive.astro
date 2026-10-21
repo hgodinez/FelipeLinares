@@ -18,15 +18,15 @@ const intro = lang === 'es'
   : 'Documentary record of the public presence of Felipe Linares Vargas and the Linares family: exhibitions, collections, press, publications and recognitions. Each entry links to its sources and states whether it refers to the artist, the family or the tradition.';
 ---
 <Base lang={lang} title={title} description={intro} alternates={alternates('archive')}>
-  <section class="section archive-head">
+  <section class="section archive-head scene-paper">
     <div class="container">
-      <p class="eyebrow eyebrow--accent reveal">{ui.nav.archive}</p>
-      <h1 class="reveal" style="--delay:80ms">{title}</h1>
-      <p class="lead mt-l reveal" style="--delay:160ms">{intro}</p>
+      <p class="eyebrow eyebrow--accent">{ui.nav.archive}</p>
+      <h1>{title}</h1>
+      <p class="lead mt-m">{intro}</p>
     </div>
   </section>
 
-  <section class="section section--tight">
+  <section class="section--tight scene-paper">
     <div class="container archive-layout">
       <form class="archive-filters" data-archive-filters aria-label={ui.archive.filters}>
         <p class="eyebrow">{ui.archive.filters}</p>
@@ -52,12 +52,12 @@ const intro = lang === 'es'
 
       <ol class="archive-list" data-archive-list>
         {items.map((it, i) => (
-          <li class="archive-item reveal" style={`--delay:${(i % 4) * 50}ms`} data-subject={it.data.subject} data-year={it.data.year} data-type={it.data.type} data-institution={it.data.institution ?? ''}>
+          <li class="archive-item" data-subject={it.data.subject} data-year={it.data.year} data-type={it.data.type} data-institution={it.data.institution ?? ''}>
             <a class="archive-item__link" href={archivePath(it.id, lang)}>
               <span class="archive-item__year">{it.data.year}{it.data.endYear && <span class="archive-item__end">–{it.data.endYear}</span>}</span>
               <span class="archive-item__body">
                 <span class="archive-item__tags">
-                  <span class:list={['tag', { 'tag--accent': it.data.subject === 'artist', 'tag--turquoise': it.data.subject === 'tradition' }]}>{ui.archive.subjects[it.data.subject]}</span>
+                  <span class:list={['tag', { 'tag--accent': it.data.subject === 'artist', 'tag--cobalt': it.data.subject === 'tradition' }]}>{ui.archive.subjects[it.data.subject]}</span>
                   <span class="tag">{ui.archive.types[it.data.type]}</span>
                 </span>
                 <span class="archive-item__title">{it.data.title[lang]}</span>
@@ -92,7 +92,7 @@ const intro = lang === 'es'
       let shown = 0;
       for (const it of items) {
         const ok = active.every(([k, v]) => (it.dataset[k] || '') === v);
-        it.hidden = !ok; if (ok) { shown++; it.classList.add('is-visible'); }
+        it.hidden = !ok; if (ok) shown++;
       }
       count.textContent = template.replace(String(total), String(shown)).replace(/^1 (\w+)s$/, '1 $1');
       empty.hidden = shown > 0;
@@ -109,20 +109,20 @@ const intro = lang === 'es'
 </script>
 
 <style>
-  .archive-head h1 { font-size: var(--step-5); }
+  .archive-head h1 { font-size: var(--type-hero); }
   .archive-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--space-xl); align-items: start; }
-  .archive-filters { position: sticky; top: 100px; }
+  .archive-filters { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
   .archive-filters .field { margin-bottom: var(--space-s); }
-  .archive-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+  .archive-list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--line-strong); }
   .archive-item { border-bottom: 1px solid var(--line); }
   .archive-item__link { display: grid; grid-template-columns: 8ch minmax(0, 1fr) auto; gap: var(--space-m); padding: var(--space-m) 0; text-decoration: none; align-items: start; transition: background-color 200ms; }
-  .archive-item__link:hover { background: linear-gradient(to right, transparent, rgba(36, 33, 29, 0.03), transparent); }
-  .archive-item__year { font-family: var(--font-display); font-size: var(--step-2); line-height: 1; font-variation-settings: 'opsz' 72; }
-  .archive-item__end { display: block; font-family: var(--font-text); font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.3rem; }
+  .archive-item__link:hover { background: var(--paper-deep); }
+  .archive-item__year { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h3); line-height: 1; }
+  .archive-item__end { display: block; font-family: var(--font-text); font-size: var(--type-micro); font-weight: 700; color: var(--fg-muted); margin-top: 0.3rem; }
   .archive-item__body { display: grid; gap: 0.4rem; }
   .archive-item__tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .archive-item__title { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.25; font-variation-settings: 'opsz' 36; }
-  .archive-item__arrow { font-size: var(--step-1); transition: transform 250ms var(--ease-out); align-self: center; }
+  .archive-item__title { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h4); line-height: 1.25; }
+  .archive-item__arrow { font-size: var(--type-lead); transition: transform var(--d-control) var(--ease-paper); align-self: center; }
   .archive-item__link:hover .archive-item__arrow { transform: translateX(4px); }
   @media (max-width: 900px) { .archive-layout { grid-template-columns: 1fr; } .archive-filters { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-m); } .archive-filters .eyebrow, .archive-filters button, .archive-filters p { grid-column: 1 / -1; } }
   @media (max-width: 560px) { .archive-item__link { grid-template-columns: 1fr; gap: 0.5rem; } .archive-item__arrow { display: none; } }

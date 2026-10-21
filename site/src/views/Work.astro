@@ -6,6 +6,7 @@ import Lightbox from '@/components/Lightbox.astro';
 import Placeholder from '@/components/Placeholder.astro';
 import SourceList from '@/components/SourceList.astro';
 import ArtworkCard from '@/components/ArtworkCard.astro';
+import Paper from '@/components/Paper.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, workPath, type Lang } from '@/i18n/routes';
 import { coverOf, type Work } from '@/lib/content';
@@ -17,91 +18,71 @@ const d = work.data;
 const title = d.title[lang];
 const cover = coverOf(work);
 const related = (await getEntries(d.related)).filter(Boolean);
-const gallery = await Promise.all(
-  d.images.map(async (img) => ({
-    ...img,
-    full: await getImage({ src: img.src, width: Math.min(2000, img.src.width), format: 'webp', quality: 82 }),
-  })),
-);
+const gallery = await Promise.all(d.images.map(async (img) => ({ ...img, full: await getImage({ src: img.src, width: Math.min(2000, img.src.width), format: 'webp', quality: 82 }) })));
+const main = gallery.find((g) => g.kind !== 'workshop') ?? gallery[0];
+const rest = gallery.filter((g) => g !== main);
 const ogImg = cover ? await getImage({ src: cover.src, width: 1200, format: 'jpg' }) : undefined;
 const desc = d.description[lang].slice(0, 160).replace(/\s+\S*$/, '…');
-
 const ld = {
-  '@context': 'https://schema.org',
-  '@type': 'VisualArtwork',
-  name: title,
-  creator: { '@type': 'Person', name: 'Felipe Linares Vargas' },
-  artform: 'Cartonería',
-  artMedium: d.materials[lang],
-  description: d.description[lang],
-  ...(d.year ? { dateCreated: String(d.year) } : {}),
-  ...(d.dimensions ? { size: d.dimensions } : {}),
-  ...(ogImg ? { image: new URL(ogImg.src, Astro.site).toString() } : {}),
-  url: new URL(workPath(work.id, lang), Astro.site).toString(),
+  '@context': 'https://schema.org', '@type': 'VisualArtwork', name: title,
+  creator: { '@type': 'Person', name: 'Felipe Linares Vargas' }, artform: 'Cartonería', artMedium: d.materials[lang], description: d.description[lang],
+  ...(d.year ? { dateCreated: String(d.year) } : {}), ...(d.dimensions ? { size: d.dimensions } : {}),
+  ...(ogImg ? { image: new URL(ogImg.src, Astro.site).toString() } : {}), url: new URL(workPath(work.id, lang), Astro.site).toString(),
 };
-const breadcrumb = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: ui.nav.home, item: new URL(route('home', lang), Astro.site).toString() },
-    { '@type': 'ListItem', position: 2, name: ui.nav.works, item: new URL(route('works', lang), Astro.site).toString() },
-    { '@type': 'ListItem', position: 3, name: title },
-  ],
-};
+const breadcrumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: ui.nav.home, item: new URL(route('home', lang), Astro.site).toString() },
+  { '@type': 'ListItem', position: 2, name: ui.nav.works, item: new URL(route('works', lang), Astro.site).toString() },
+  { '@type': 'ListItem', position: 3, name: title } ] };
 const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id)}`;
+const captionOf = (img: (typeof gallery)[number]) => [img.caption?.[lang], img.kind === 'workshop' ? ui.works.workshopNote : null].filter(Boolean).join(' · ');
 ---
 <Base lang={lang} title={title} description={desc} alternates={alternates('works', work.id)} ogImage={ogImg?.src} jsonLd={[ld, breadcrumb]}>
-  <article class="work">
-    <nav class="container work__crumbs small" aria-label="Breadcrumb">
-      <a href={route('works', lang)}>{ui.nav.works}</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
-    </nav>
-
-    <header class="work__header container">
-      <div class="work__title-block">
-        <p class="eyebrow eyebrow--accent reveal">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
-        <h1 class="reveal" style="--delay:80ms">{title}</h1>
-        {d.titleStatus === 'provisional' && <p class="small muted reveal" style="--delay:120ms"><span style="color:var(--accent-ink)">*</span> {ui.works.provisional}.</p>}
-        <p class="work__meta reveal" style="--delay:160ms">
-          {d.year && <span>{d.year}</span>}
-          {d.dimensions && <span>{d.dimensions}</span>}
-          {d.collection && <span>{d.collection}</span>}
-        </p>
-      </div>
-    </header>
+  <article class="work scene-paper">
+    <div class="container work__top">
+      <nav class="work__crumbs small" aria-label="Breadcrumb">
+        <a href={route('works', lang)} data-back-link>{ui.nav.works}</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
+      </nav>
+      <a class="work__close" href={route('works', lang)} data-back-link aria-label={ui.cta.back}><span aria-hidden="true">×</span><span class="work__close-label micro">{ui.cta.back} · Esc</span></a>
+    </div>
 
     <div class="container work__layout">
-      <div class="work__gallery" data-lb-group>
-        {gallery.length === 0 && (
-          <Placeholder lang={lang} ratio="4/5" />
+      <div class="work__media" data-lb-group>
+        <div class="work__stage">
+          <div class="work__field sheet--soft" aria-hidden="true"><Paper tone={d.categories.includes('calaveras') ? 'cobalt' : 'lime'} cut="c" fold="bl" class="work__field-paper" /></div>
+          {main ? (
+            <figure class="figure work__main">
+              <button type="button" class="work__zoom sheet--near" data-lb-open data-full={main.full.src} data-alt={main.alt[lang]} data-caption={captionOf(main)} aria-label={`${ui.works.open}: ${main.alt[lang]}`}>
+                <Image src={main.src} alt={main.alt[lang]} widths={[640, 1024, 1600, 2000]} sizes="(max-width: 1000px) 100vw, 58vw" loading="eager" fetchpriority="high" transition:name={`work-${work.id}`} />
+              </button>
+              <figcaption><span>{main.caption?.[lang] ?? `${title} — 1 ${ui.works.of} ${gallery.length}`}</span>{main.credit && <span>{ui.misc.photoCredit}: {main.credit}</span>}</figcaption>
+            </figure>
+          ) : (
+            <div class="work__main"><Placeholder lang={lang} ratio="4/5" /></div>
+          )}
+        </div>
+        {rest.length > 0 && (
+          <div class="work__thumbs">
+            {rest.map((img, i) => (
+              <figure class="figure work__thumb">
+                <button type="button" class="work__zoom sheet--soft" data-lb-open data-full={img.full.src} data-alt={img.alt[lang]} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
+                  <Image src={img.src} alt={img.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 1000px) 50vw, 20vw" loading="lazy" />
+                </button>
+                <figcaption><span>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${i + 2} ${ui.works.of} ${gallery.length}`)}</span>{img.kind === 'workshop' && img.caption?.[lang] && <span class="tag">{ui.works.workshopNote}</span>}</figcaption>
+              </figure>
+            ))}
+          </div>
         )}
-        {gallery.map((img, i) => (
-          <figure class:list={['figure', 'work__figure', { 'work__figure--hero': i === 0 }, 'reveal']} style={`--delay:${i * 60}ms`}>
-            <button type="button" class="work__zoom" data-lb-open data-full={img.full.src} data-alt={img.alt[lang]} data-caption={[img.caption?.[lang], img.kind === 'workshop' ? ui.works.workshopNote : null].filter(Boolean).join(' · ')} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
-              <div class="frame">
-                <Image src={img.src} alt={img.alt[lang]} widths={i === 0 ? [640, 1024, 1600, 2000] : [480, 800, 1200]} sizes={i === 0 ? '(max-width: 1000px) 100vw, 62vw' : '(max-width: 1000px) 50vw, 30vw'} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
-              </div>
-            </button>
-            <figcaption>
-              <span>{img.caption?.[lang] ?? (img.kind === 'workshop' ? ui.works.workshopNote : `${title} — ${i + 1} ${ui.works.of} ${gallery.length}`)}</span>
-              {img.kind === 'workshop' && img.caption?.[lang] && <span class="tag">{ui.works.workshopNote}</span>}
-              {img.credit && <span>{ui.misc.photoCredit}: {img.credit}</span>}
-            </figcaption>
-          </figure>
-        ))}
       </div>
 
       <aside class="work__aside">
         <div class="work__sticky">
-          <div class="prose reveal">
-            <p>{d.description[lang]}</p>
-          </div>
-          {d.context?.[lang] && (
-            <div class="prose reveal mt-l" style="--delay:80ms">
-              <h2 class="eyebrow">{ui.works.context}</h2>
-              <p>{d.context[lang]}</p>
-            </div>
-          )}
-          <div class="reveal mt-l" style="--delay:120ms">
+          <p class="eyebrow eyebrow--accent">{d.categories.map((c) => ui.works.categories[c]).join(' · ')}</p>
+          <h1 class="work__title">{title}</h1>
+          {d.titleStatus === 'provisional' && <p class="small muted"><span style="color:var(--coral-ink)">*</span> {ui.works.provisional}.</p>}
+          <p class="work__meta">{d.year && <span>{d.year}</span>}{d.dimensions && <span>{d.dimensions}</span>}{d.collection && <span>{d.collection}</span>}</p>
+          <div class="prose mt-l"><p>{d.description[lang]}</p></div>
+          {d.context?.[lang] && <div class="prose mt-m"><h2 class="eyebrow">{ui.works.context}</h2><p>{d.context[lang]}</p></div>}
+          <div class="mt-l">
             <h2 class="eyebrow">{ui.works.detailsHeading}</h2>
             <dl class="spec">
               <dt>{ui.works.year}</dt><dd>{d.year ?? ui.works.yearUnknown}{d.yearNote?.[lang] && <span class="muted"> · {d.yearNote[lang]}</span>}</dd>
@@ -111,25 +92,18 @@ const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id
               <dt>{ui.works.availability}</dt><dd>{ui.works.availabilityLabels[d.availability]}</dd>
             </dl>
           </div>
-          {d.provenance?.[lang] && (
-            <div class="prose reveal mt-l" style="--delay:160ms">
-              <h2 class="eyebrow">{ui.works.provenance}</h2>
-              <p class="small">{d.provenance[lang]}</p>
-            </div>
-          )}
-          <div class="reveal mt-l" style="--delay:200ms">
-            <a class="btn btn--accent" href={contactHref}>{ui.cta.inquire} <span class="arrow" aria-hidden="true">→</span></a>
-          </div>
-          <div class="reveal mt-l" style="--delay:240ms"><SourceList lang={lang} sources={d.sources} heading={ui.works.sources} /></div>
+          {d.provenance?.[lang] && <div class="prose mt-m"><h2 class="eyebrow">{ui.works.provenance}</h2><p class="small">{d.provenance[lang]}</p></div>}
+          <div class="mt-l"><a class="btn btn--ink" href={contactHref}>{ui.cta.inquire} <span class="arrow" aria-hidden="true">↗</span></a></div>
+          <div class="mt-l"><SourceList lang={lang} sources={d.sources} heading={ui.works.sources} /></div>
         </div>
       </aside>
     </div>
 
     {related.length > 0 && (
-      <section class="section section--alt" aria-labelledby="related-title">
+      <section class="scene-ink section" aria-labelledby="related-title">
         <div class="container">
           <div class="section-head"><h2 id="related-title">{ui.works.related}</h2><a class="link-arrow" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a></div>
-          <div class="related-grid">{related.map((r, i) => <ArtworkCard work={r} lang={lang} size="small" index={i} />)}</div>
+          <div class="related-grid">{related.map((r) => <ArtworkCard work={r} lang={lang} size="small" />)}</div>
         </div>
       </section>
     )}
@@ -137,21 +111,52 @@ const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id
   <Lightbox lang={lang} />
 </Base>
 
+<script>
+  import { rememberOrigin } from '@/lib/motion';
+  function initWork() {
+    const article = document.querySelector<HTMLElement>('.work');
+    if (!article || article.dataset.ready) return;
+    article.dataset.ready = '1';
+    let fromGallery = false;
+    try { fromGallery = !!sessionStorage.getItem('flv:origin'); } catch {}
+    const back = () => { if (fromGallery && history.length > 1) history.back(); else location.href = (document.querySelector<HTMLAnchorElement>('[data-back-link]')!).href; };
+    document.querySelectorAll<HTMLAnchorElement>('[data-back-link]').forEach((a) => a.addEventListener('click', (e) => { if (fromGallery && history.length > 1) { e.preventDefault(); history.back(); } }));
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (document.querySelector('dialog[open]')) return; // the image viewer handles its own Escape
+      if ((e.target as HTMLElement).closest('input, textarea, select')) return;
+      back();
+    });
+    document.querySelectorAll<HTMLAnchorElement>('[data-work-link]').forEach((a) => a.addEventListener('click', () => rememberOrigin(a.dataset.workLink!)));
+  }
+  initWork();
+  document.addEventListener('astro:page-load', initWork);
+</script>
+
 <style>
-  .work__crumbs { padding-top: var(--space-m); color: var(--fg-muted); }
-  .work__crumbs a { text-decoration: none; }
+  .work__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-m); padding-top: var(--space-m); }
+  .work__crumbs { color: var(--fg-muted); }
+  .work__crumbs a { text-decoration: none; font-weight: 600; }
   .work__crumbs a:hover { text-decoration: underline; }
-  .work__header { padding-block: var(--space-l) var(--space-xl); }
-  .work__header h1 { font-size: var(--step-4); max-width: 18ch; }
-  .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-size: var(--step-1); color: var(--fg-muted); font-variation-settings: 'opsz' 36; }
-  .work__layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; padding-bottom: var(--space-2xl); }
-  .work__gallery { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l) var(--gutter); }
-  .work__figure--hero { grid-column: 1 / -1; }
-  .work__zoom { display: block; width: 100%; cursor: zoom-in; }
-  .work__zoom .frame :global(img) { width: 100%; height: auto; }
-  .work__sticky { position: sticky; top: 100px; }
+  .work__close { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 44px; text-decoration: none; }
+  .work__close > span:first-child { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 1.5px solid var(--line-strong); border-radius: 999px; font-size: 1.4rem; line-height: 1; }
+  .work__close:hover > span:first-child { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+  .work__close-label { color: var(--fg-muted); }
+  .work__layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl) calc(var(--gutter) * 1.5); align-items: start; padding-block: var(--space-l) var(--space-2xl); }
+  .work__stage { position: relative; padding: 6% 8% 8% 0; }
+  .work__field { position: absolute; inset: 0 0 0 10%; z-index: 0; }
+  .work__field-paper { width: 100%; height: 100%; --fold: 56px; }
+  .work__main { position: relative; z-index: 1; }
+  .work__zoom { display: block; width: 100%; cursor: zoom-in; background: var(--color-paper); padding: 8px; }
+  .work__zoom :global(img) { width: 100%; height: auto; display: block; }
+  .work__main figcaption { padding-left: 8px; }
+  .work__thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: var(--space-m) var(--gutter); margin-top: var(--space-l); align-items: start; }
+  .work__thumb .work__zoom { padding: 5px; }
+  .work__sticky { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
+  .work__title { font-size: var(--type-h2); }
+  .work__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-weight: 600; font-size: var(--type-lead); color: var(--fg-muted); }
   .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
-  @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } }
-  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 540px) { .work__gallery { grid-template-columns: 1fr; } .related-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 1000px) { .work__layout { grid-template-columns: 1fr; } .work__sticky { position: static; } .work__close-label { display: none; } }
+  @media (max-width: 760px) { .related-grid { grid-template-columns: 1fr 1fr; } .work__stage { padding: 4% 0 6% 0; } .work__field { inset: 0 -4% 0 6%; } }
+  @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
 </style>

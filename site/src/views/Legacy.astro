@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import SourceList from '@/components/SourceList.astro';
+import Paper from '@/components/Paper.astro';
+import Marks from '@/components/Marks.astro';
 import { t } from '@/i18n/ui';
 import { alternates, route, archivePath, type Lang } from '@/i18n/routes';
 import { getPage, getPeople, getArchive } from '@/lib/content';
@@ -27,44 +29,45 @@ const archiveEvents: TimelineEvent[] = (await getArchive()).map((e) => ({ year: 
 const timeline = [...fixedEvents, ...archiveEvents].sort((a, b) => a.year - b.year);
 const allSources = people.flatMap((p) => p.data.sources).filter((s, i, arr) => arr.findIndex((x) => x.title === s.title) === i);
 const genLabel = (g: number) => {
-  const labels: Record<number, { es: string; en: string }> = {
-    1: { es: 'Siglos XIX–XX · antepasados', en: '19th–20th c. · ancestors' },
-    2: { es: 'Pedro Linares López', en: 'Pedro Linares López' },
-    3: { es: 'Los hijos', en: 'The sons' },
-    4: { es: 'Los nietos', en: 'The grandchildren' },
-    5: { es: 'Los bisnietos', en: 'The great-grandchildren' },
-  };
+  const labels: Record<number, { es: string; en: string }> = { 1: { es: 'Siglos XIX–XX · antepasados', en: '19th–20th c. · ancestors' }, 2: { es: 'Pedro Linares López', en: 'Pedro Linares López' }, 3: { es: 'Los hijos', en: 'The sons' }, 4: { es: 'Los nietos', en: 'The grandchildren' }, 5: { es: 'Los bisnietos', en: 'The great-grandchildren' } };
   return labels[g]?.[lang] ?? ui.legacy.generation(g);
 };
+const tones = ['deep', 'light', 'lime', 'light', 'deep', 'light'] as const;
 ---
 <Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('legacy')}>
-  <section class="legacy-hero section">
-    <div class="container">
-      <p class="eyebrow eyebrow--accent reveal">{page.data.eyebrow}</p>
-      <h1 class="reveal" style="--delay:80ms">{page.data.title}</h1>
-      <p class="lead mt-l reveal" style="--delay:160ms">{page.data.lead}</p>
+  <section class="legacy-hero scene-paper">
+    <div class="container legacy-hero__grid">
+      <div>
+        <p class="eyebrow eyebrow--accent">{page.data.eyebrow}</p>
+        <h1>{page.data.title}</h1>
+        <p class="lead mt-m">{page.data.lead}</p>
+      </div>
+      <Marks kind="antler" class="legacy-hero__mark" />
     </div>
   </section>
 
-  <!-- Story chapters: alternating editorial blocks -->
-  <section class="section section--tight chapters">
+  <!-- Chapters as archival sheets -->
+  <section class="scene-paper section--tight chapters">
     <div class="container">
-      {sections.map((s, i) => (
-        <div class:list={['chapter', 'reveal', { 'chapter--alt': i % 2 === 1 }]}>
-          <span class="chapter__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-          <div class="chapter__body">
-            <h2>{s.heading}</h2>
-            <p>{s.text}</p>
-          </div>
-          {i === 1 && <figure class="chapter__fig figure"><div class="frame aspect-3-4"><Image src={workshopImg} alt={lang === 'es' ? 'Alebrije en proceso en el taller familiar.' : 'Alebrije in progress in the family workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 30vw" loading="lazy" /></div></figure>}
-          {i === 3 && <figure class="chapter__fig figure"><div class="frame aspect-3-4"><Image src={catrinaImg} alt={lang === 'es' ? 'Catrina de cartonería con tocado de plumas en el taller.' : 'Cartonería Catrina with a feathered headdress in the workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 30vw" loading="lazy" /></div></figure>}
-        </div>
-      ))}
+      <ol class="chapters__list">
+        {sections.map((s, i) => (
+          <li class:list={['chapter', { 'chapter--alt': i % 2 === 1 }]} style={`--i:${i}`}>
+            <div class="sheet--soft"><Paper tone={tones[i % tones.length]} cut={(['a', 'b', 'c', 'd'] as const)[i % 4]} class="chapter__paper">
+              <div class="chapter__inner">
+                <span class="chapter__num" aria-hidden="true">0{i + 1}</span>
+                <div><h2>{s.heading}</h2><p>{s.text}</p></div>
+              </div>
+            </Paper></div>
+            {i === 1 && <figure class="chapter__fig figure"><div class="reveal-mask sheet--soft"><Image src={workshopImg} alt={lang === 'es' ? 'Alebrije en proceso en el taller familiar.' : 'Alebrije in progress in the family workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 60vw, 26vw" loading="lazy" /></div></figure>}
+            {i === 3 && <figure class="chapter__fig figure"><div class="reveal-mask sheet--soft"><Image src={catrinaImg} alt={lang === 'es' ? 'Catrina de cartonería con tocado de plumas en el taller.' : 'Cartonería Catrina with a feathered headdress in the workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 60vw, 26vw" loading="lazy" /></div></figure>}
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
   <!-- Family tree -->
-  <section class="section section--dark tree-section" aria-labelledby="tree-title">
+  <section class="scene-ink section tree-section" aria-labelledby="tree-title">
     <div class="container">
       <div class="section-head">
         <div><p class="eyebrow">{ui.legacy.tree}</p><h2 id="tree-title">{lang === 'es' ? 'Cinco generaciones' : 'Five generations'}</h2></div>
@@ -89,32 +92,34 @@ const genLabel = (g: number) => {
             </div>
           ))}
         </div>
-        <div id="tree-panel" class="tree__panel" aria-live="polite">
-          {people.map((p) => (
-            <article class="tree__card" data-card={p.id} hidden>
-              <p class="eyebrow">{genLabel(p.data.generation)}{p.data.parent && byId[p.data.parent.id] && <> · {lang === 'es' ? 'descendiente de' : 'descendant of'} {byId[p.data.parent.id].data.shortName}</>}</p>
-              <h3>{p.data.name}</h3>
-              <p class="small muted">{p.data.role[lang]}{p.data.datesNote?.[lang] && <> · {p.data.datesNote[lang]}</>}</p>
-              <p>{p.data.bio[lang]}</p>
-              {p.data.isFeaturedArtist && <a class="link-arrow" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>}
-              <SourceList lang={lang} sources={p.data.sources} headingLevel="h4" />
-            </article>
-          ))}
+        <div id="tree-panel" class="tree__panel sheet--soft" aria-live="polite">
+          <Paper tone="light" cut="c" fold="tr" class="tree__panel-paper">
+            {people.map((p) => (
+              <article class="tree__card" data-card={p.id} hidden>
+                <p class="eyebrow">{genLabel(p.data.generation)}{p.data.parent && byId[p.data.parent.id] && <> · {lang === 'es' ? 'descendiente de' : 'descendant of'} {byId[p.data.parent.id].data.shortName}</>}</p>
+                <h3>{p.data.name}</h3>
+                <p class="small muted">{p.data.role[lang]}{p.data.datesNote?.[lang] && <> · {p.data.datesNote[lang]}</>}</p>
+                <p>{p.data.bio[lang]}</p>
+                {p.data.isFeaturedArtist && <a class="link-arrow" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>}
+                <SourceList lang={lang} sources={p.data.sources} headingLevel="h4" />
+              </article>
+            ))}
+          </Paper>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Timeline -->
-  <section class="section" aria-labelledby="tl-title">
+  <section class="scene-paper section" aria-labelledby="tl-title">
     <div class="container">
       <div class="section-head"><div><p class="eyebrow eyebrow--accent">{ui.legacy.timeline}</p><h2 id="tl-title">{lang === 'es' ? 'De 1906 a hoy' : 'From 1906 to today'}</h2></div><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
       <ol class="timeline">
-        {timeline.map((e, i) => (
-          <li class="timeline__item reveal" style={`--delay:${(i % 3) * 60}ms`}>
+        {timeline.map((e) => (
+          <li class="timeline__item">
             <span class="timeline__year">{e.year}{e.endYear ? <span class="timeline__end">–{e.endYear}</span> : null}</span>
             <div>
-              <span class:list={['tag', { 'tag--accent': e.subject === 'artist', 'tag--turquoise': e.subject === 'tradition' }]}>{ui.archive.subjects[e.subject]}</span>
+              <span class:list={['tag', { 'tag--accent': e.subject === 'artist', 'tag--cobalt': e.subject === 'tradition' }]}>{ui.archive.subjects[e.subject]}</span>
               <p>{e.href ? <a href={e.href}>{e.text}</a> : e.text}</p>
             </div>
           </li>
@@ -123,12 +128,11 @@ const genLabel = (g: number) => {
     </div>
   </section>
 
-  <!-- What defines an alebrije -->
-  <section class="section section--alt">
+  <section class="scene-lime section">
     <div class="container grid">
-      <div class="col-7 prose reveal"><Content /></div>
-      <aside class="col-5 reveal" style="--delay:120ms">
-        <div class="define">
+      <div class="col-7 prose"><Content /></div>
+      <aside class="col-5">
+        <div class="sheet--soft"><Paper tone="light" cut="b" class="define">
           <p class="eyebrow eyebrow--accent">{lang === 'es' ? 'Lo que define un alebrije' : 'What defines an alebrije'}</p>
           <ul class="define__list">
             <li>{lang === 'es' ? 'Papel, cartón y engrudo sobre una estructura ligera' : 'Paper, cardboard and paste over a light armature'}</li>
@@ -138,14 +142,12 @@ const genLabel = (g: number) => {
             <li>{lang === 'es' ? 'Origen: Pedro Linares López, Ciudad de México, 1936' : 'Origin: Pedro Linares López, Mexico City, 1936'}</li>
             <li>{lang === 'es' ? 'Patrimonio cultural de la Ciudad de México desde 2019' : 'Cultural heritage of Mexico City since 2019'}</li>
           </ul>
-        </div>
+        </Paper></div>
       </aside>
     </div>
   </section>
 
-  <section class="section section--tight">
-    <div class="container"><SourceList lang={lang} sources={allSources} heading={ui.archive.sources} headingLevel="h2" /></div>
-  </section>
+  <section class="scene-paper section--tight"><div class="container"><SourceList lang={lang} sources={allSources} heading={ui.archive.sources} headingLevel="h2" /></div></section>
 </Base>
 
 <script>
@@ -156,11 +158,10 @@ const genLabel = (g: number) => {
     const nodes = Array.from(tree.querySelectorAll<HTMLButtonElement>('[data-person]'));
     const cards = Array.from(tree.querySelectorAll<HTMLElement>('[data-card]'));
     const panel = tree.querySelector<HTMLElement>('#tree-panel')!;
-    const select = (id: string, focusPanel = false) => {
+    const select = (id: string, scroll = false) => {
       nodes.forEach((n) => { const on = n.dataset.person === id; n.setAttribute('aria-expanded', String(on)); n.classList.toggle('is-active', on); });
       cards.forEach((c) => { c.hidden = c.dataset.card !== id; });
-      panel.classList.add('is-open');
-      if (focusPanel && window.matchMedia('(max-width: 900px)').matches) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (scroll && window.matchMedia('(max-width: 900px)').matches) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     };
     nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.person!, true)));
     const featured = nodes.find((n) => n.classList.contains('tree__node--featured')) ?? nodes[0];
@@ -171,51 +172,53 @@ const genLabel = (g: number) => {
 </script>
 
 <style>
-  .legacy-hero h1 { font-size: var(--step-5); }
-  .chapters .container { display: grid; gap: var(--space-xl); }
-  .chapter { display: grid; grid-template-columns: 6ch minmax(0, 56ch) minmax(0, 1fr); gap: var(--space-m) var(--space-l); align-items: start; }
-  .chapter--alt { grid-template-columns: minmax(0, 1fr) 6ch minmax(0, 56ch); }
-  .chapter--alt .chapter__num { grid-column: 2; }
-  .chapter--alt .chapter__body { grid-column: 3; }
+  .legacy-hero { padding-block: var(--space-xl) var(--space-l); }
+  .legacy-hero__grid { display: grid; grid-template-columns: 8fr 4fr; gap: var(--gutter); align-items: end; }
+  .legacy-hero h1 { font-size: var(--type-hero); }
+  .legacy-hero__mark { width: min(100%, 220px); justify-self: end; color: var(--coral-ink); }
+  .chapters__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-l); }
+  .chapter { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--space-l) var(--gutter); align-items: start; }
+  .chapter--alt { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
+  .chapter--alt > :first-child { grid-column: 2; }
   .chapter--alt .chapter__fig { grid-column: 1; grid-row: 1; }
-  .chapter__num { font-family: var(--font-display); font-size: var(--step-2); color: var(--accent); line-height: 1.1; font-variation-settings: 'opsz' 72; }
-  .chapter__body h2 { font-size: var(--step-2); margin-bottom: var(--space-s); }
-  .chapter__fig { max-width: 320px; justify-self: end; }
-  @media (max-width: 900px) {
-    .chapter, .chapter--alt { grid-template-columns: 5ch 1fr; }
-    .chapter--alt .chapter__num { grid-column: 1; } .chapter--alt .chapter__body { grid-column: 2; }
-    .chapter__fig, .chapter--alt .chapter__fig { grid-column: 2; grid-row: auto; justify-self: start; max-width: 260px; }
-  }
+  .chapter__paper { padding: var(--space-l) clamp(1.5rem, 4vw, 3.5rem); }
+  .chapter__inner { display: grid; grid-template-columns: 5ch 1fr; gap: var(--space-m); align-items: start; }
+  .chapter__num { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h3); color: var(--coral-ink); line-height: 1.1; }
+  .chapter__inner h2 { font-size: var(--type-h3); margin-bottom: var(--space-s); }
+  .chapter__fig { max-width: 340px; justify-self: end; }
+  .chapter__fig :global(img) { width: 100%; height: auto; }
+  @media (max-width: 900px) { .chapter, .chapter--alt { grid-template-columns: 1fr; } .chapter--alt > :first-child { grid-column: 1; } .chapter--alt .chapter__fig { grid-column: 1; grid-row: auto; } .chapter__fig { justify-self: start; max-width: 280px; } .chapter__inner { grid-template-columns: 1fr; } }
 
   .tree { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl); align-items: start; }
   .tree__gens { display: grid; gap: var(--space-m); }
-  .tree__gen { position: relative; padding-left: var(--space-m); border-left: 1px solid var(--line-strong); }
-  .tree__gen-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.5rem; }
+  .tree__gen { position: relative; padding-left: var(--space-m); border-left: 1.5px solid var(--line-strong); }
+  .tree__gen-label { font-size: var(--type-micro); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.5rem; }
   .tree__row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .tree__node { display: grid; gap: 0.15rem; text-align: left; padding: 0.7rem 1rem; border: 1px solid var(--line); border-radius: var(--radius); min-height: 56px; min-width: 150px; transition: border-color 200ms, background-color 200ms; }
+  .tree__node { display: grid; gap: 0.15rem; text-align: left; padding: 0.7rem 1rem; border: 1.5px solid var(--line); min-height: 56px; min-width: 150px; transition: border-color var(--d-control), background-color var(--d-control), color var(--d-control); }
   .tree__node:hover { border-color: var(--line-strong); }
-  .tree__node.is-active { background: var(--ivory); color: var(--charcoal); border-color: var(--ivory); }
-  .tree__node--featured { border-color: var(--ochre); }
-  .tree__name { font-family: var(--font-display); font-size: var(--step-0); font-variation-settings: 'opsz' 24; }
-  .tree__dates { font-size: 0.72rem; letter-spacing: 0.08em; opacity: 0.7; }
-  .tree__flag { font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); }
-  .tree__node.is-active .tree__flag { color: #8a6512; }
-  .tree__panel { position: sticky; top: 100px; padding: var(--space-m); border: 1px solid var(--line); min-height: 240px; }
+  .tree__node.is-active { background: var(--color-lime); color: var(--color-ink); border-color: var(--color-lime); }
+  .tree__node--featured { border-color: var(--color-lime); }
+  .tree__name { font-family: var(--font-display); font-weight: 600; font-size: var(--type-body); }
+  .tree__dates { font-size: var(--type-micro); letter-spacing: 0.08em; opacity: 0.75; }
+  .tree__flag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-coral); }
+  .tree__node.is-active .tree__flag { color: var(--coral-ink); }
+  .tree__panel { position: sticky; top: calc(var(--nav-h) + var(--space-m)); }
+  .tree__panel-paper { padding: var(--space-m) var(--space-l) var(--space-l); min-height: 240px; --fold: 48px; }
   .tree__card h3 { margin: 0.3rem 0 0.4rem; }
   .tree__card p { margin-bottom: var(--space-s); }
-  .tree__card :global(.sources a) { color: inherit; }
+  .tree-section :focus-visible { outline-color: var(--color-lime); }
   @media (max-width: 900px) { .tree { grid-template-columns: 1fr; } .tree__panel { position: static; } }
 
-  .timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .timeline { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--line-strong); }
   .timeline__item { display: grid; grid-template-columns: 10ch 1fr; gap: var(--space-m); padding: var(--space-s) 0; border-bottom: 1px solid var(--line); align-items: baseline; }
   .timeline__item p { margin: 0.4rem 0 0; }
-  .timeline__item a { text-decoration: none; }
+  .timeline__item a { text-decoration: none; font-weight: 600; }
   .timeline__item a:hover { text-decoration: underline; }
-  .timeline__year { font-family: var(--font-display); font-size: var(--step-2); font-variation-settings: 'opsz' 72; line-height: 1; }
-  .timeline__end { font-size: var(--step--1); color: var(--fg-muted); font-family: var(--font-text); }
+  .timeline__year { font-family: var(--font-display); font-weight: 600; font-size: var(--type-h3); line-height: 1; }
+  .timeline__end { font-size: var(--type-meta); color: var(--fg-muted); font-family: var(--font-text); font-weight: 600; }
   @media (max-width: 600px) { .timeline__item { grid-template-columns: 1fr; gap: 0.3rem; } }
-
-  .define { border-top: 1px solid var(--line-strong); padding-top: var(--space-m); }
-  .define__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--step--1); }
+  .define { padding: var(--space-m) var(--space-l) var(--space-l); }
+  .define__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--type-meta); font-weight: 600; }
   .define__list li { padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
+  @media (max-width: 900px) { .legacy-hero__grid { grid-template-columns: 1fr; } .legacy-hero__mark { display: none; } }
 </style>

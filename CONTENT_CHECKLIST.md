@@ -10,7 +10,8 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 - [ ] Retrato fotográfico (sustituye el marcador «Retrato del artista»).
 - [ ] Citas textuales del artista, si desea incluir alguna (el sitio no publica ninguna hoy).
 - [ ] Hitos personales para la cronología (primeras exposiciones, encargos, viajes, premios), cada uno con fecha y, si es posible, documento o enlace.
-- [ ] Confirmar que la frase de portada «El arte de dar vida a lo imposible.» le parece adecuada, o sustituirla. Es copy editorial propuesto, no una cita.
+- [ ] Confirmar que las frases editoriales del sitio («Lo extraordinario toma forma en papel.», «Ninguna criatura se parece a otra.», «Detrás de cada criatura hay una mano.», «Hay criaturas que aún no existen.») le parecen adecuadas. Son copy editorial, no citas.
+- [ ] Portada: si se desea la versión con la obra aislada del fondo, hace falta el archivo maestro del tigre alado y un recorte manual revisado por el artista (ver ASSETS.md). Mientras tanto se muestra la fotografía completa.
 
 ## 2. Obras (`site/src/content/artworks/`)
 
@@ -47,8 +48,9 @@ Cuando se confirme un título, cambia `titleStatus: provisional` por `confirmed`
 ## 4. Taller
 
 - [ ] Dirección o zona exacta que el taller desea publicar (hoy: «Colonia Merced Balbuena, Ciudad de México»).
-- [ ] Confirmar los ocho pasos del proceso y añadir detalles propios: tipo de pinturas, tiempos de secado, herramientas, materiales de la estructura.
-- [ ] Fotografía documental del taller de Felipe (manos, herramientas, pigmentos) — tres marcadores en la página.
+- [ ] Confirmar las cinco estaciones del proceso (materiales, estructura, volumen, pintura, obra terminada) y añadir detalles propios: tipo de pinturas, tiempos de secado, herramientas, materiales de la estructura.
+- [ ] Fotografías de las estaciones 01–03 (materiales sobre la mesa, armadura de una pieza, capas de papel y modelado); hoy son hojas tipográficas marcadas como pendientes.
+- [ ] Si existe, la secuencia completa de una sola pieza; el sitio indica hoy que las fotos documentan el oficio en general.
 - [ ] Video corto del proceso, si existe.
 
 ## 5. Archivo
