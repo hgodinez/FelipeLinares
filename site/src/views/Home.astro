@@ -7,7 +7,7 @@ import { t } from '@/i18n/ui';
 import { route, alternates, workPath, archivePath, type Lang } from '@/i18n/routes';
 import { getPage, getPeople, getWorks, getArchive, coverOf } from '@/lib/content';
 import site from '@/data/site.json';
-import heroImg from '@/assets/works/alebrije-astado-repisa.jpg';
+import heroImg from '@/assets/works/alebrije-cabra-gallo-estudio.jpg';
 import retratoImg from '@/assets/video/felipe-retrato-taller.webp';
 import cabezaImg from '@/assets/video/felipe-cabeza-astada.webp';
 import contraluzImg from '@/assets/video/alebrije-astado-contraluz.webp';
@@ -33,7 +33,7 @@ const byId = Object.fromEntries(people.map((p) => [p.id, p]));
 const works = (await getWorks()).filter((w) => w.data.images.length > 0);
 const archive = await getArchive();
 const tz = await getEntry('artworks', 'tzompantli-2010');
-const og = await getImage({ src: heroImg, width: 1200, format: 'jpg' });
+const og = await getImage({ src: heroImg, width: Math.min(1200, heroImg.width), format: 'jpg' });
 const fullOf = async (src: any) => (await getImage({ src, width: Math.min(1600, src.width), format: 'webp', quality: 82 })).src;
 const piezas = await Promise.all(works.map(async (w) => { const c = coverOf(w)!; return { w, cover: c, full: await fullOf(c.src) }; }));
 const detalles = [
@@ -70,8 +70,8 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
         </div>
       </div>
       <figure class="portada-imagen">
-        <div class="portada-marco"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de felino negro, astas de venado, alas rojas de murciélago y garras verdes, sobre una repisa.' : 'Cartonería alebrije with a black feline head, deer antlers, red bat wings and green claws, on a shelf.'} widths={[480, 960, 1200]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 30rem" loading="eager" fetchpriority="high" style="object-position: 55% 45%" /></div>
-        <figcaption>{es ? 'Alebrije de jaguar con astas de venado · título descriptivo, por confirmar' : 'Jaguar alebrije with deer antlers · descriptive title, pending confirmation'}</figcaption>
+        <div class="portada-marco"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de cabra y cuernos rayados, lengua roja, melena de tiras anaranjadas, cuerpo de gallo con plumas verdes, azules y rojas y patas amarillas escamadas.' : 'Cartonería alebrije with a goat head and striped horns, red tongue, a mane of orange strips, a rooster body with green, blue and red feathers and scaled yellow legs.'} widths={[480, 880]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 30rem" loading="eager" fetchpriority="high" style="aspect-ratio:880/542;object-position:50% 50%" /></div>
+        <figcaption>{es ? 'Alebrije de cabra con cuerpo de gallo · título y fotografía por confirmar' : 'Goat alebrije with a rooster body · title and photograph to be confirmed'}</figcaption>
       </figure>
     </div>
   </section>
