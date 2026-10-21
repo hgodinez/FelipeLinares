@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import { alternates, type Lang, type RouteKey } from '@/i18n/routes';
+import { getPage } from '@/lib/content';
+
+interface Props { lang: Lang; slug: string; routeKey: RouteKey }
+const { lang, slug, routeKey } = Astro.props;
+const page = await getPage(slug, lang);
+const { Content } = await render(page);
+---
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates(routeKey)}>
+  <section class="section">
+    <div class="container--narrow container">
+      <p class="eyebrow eyebrow--accent reveal">{page.data.eyebrow}</p>
+      <h1 class="reveal" style="--delay:80ms">{page.data.title}</h1>
+      <div class="prose mt-xl reveal" style="--delay:160ms"><Content /></div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,190 @@
+---
+import { t } from '@/i18n/ui';
+import { route, otherLang, type Lang, type RouteKey } from '@/i18n/routes';
+
+interface Props { lang: Lang; alternates: Record<Lang, string>; overlay?: boolean }
+const { lang, alternates, overlay = false } = Astro.props;
+const ui = t(lang);
+const other = otherLang(lang);
+const items: RouteKey[] = ['artist', 'works', 'legacy', 'workshop', 'archive', 'contact'];
+const current = Astro.url.pathname;
+const isActive = (key: RouteKey) => {
+  const p = route(key, lang);
+  return key === 'home' ? current === p : current.startsWith(p);
+};
+---
+
+<header class:list={['site-header', { 'site-header--overlay': overlay }]} data-header>
+  <div class="container site-header__inner">
+    <a class="brand" href={route('home', lang)} aria-label={ui.siteName}>
+      <span class="brand__name">Felipe Linares Vargas</span>
+      <span class="brand__sub">{ui.tagline}</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span class="nav-toggle__bar" aria-hidden="true"></span>
+      <span class="nav-toggle__label" data-label-open>{ui.nav.menu}</span>
+      <span class="nav-toggle__label" data-label-close hidden>{ui.nav.close}</span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label={ui.nav.menu} data-nav>
+      <ul class="site-nav__list">
+        {items.map((key) => (
+          <li>
+            <a href={route(key, lang)} aria-current={isActive(key) ? 'page' : undefined}>{ui.nav[key]}</a>
+          </li>
+        ))}
+      </ul>
+      <a class="lang-switch" href={alternates[other]} hreflang={other} lang={other} aria-label={ui.lang.label}>
+        <span aria-hidden="true">{lang.toUpperCase()}</span>
+        <span class="lang-switch__sep" aria-hidden="true">/</span>
+        <span>{other.toUpperCase()}</span>
+        <span class="visually-hidden">— {ui.lang.switch}</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function initNav() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+    const nav = document.querySelector<HTMLElement>('[data-nav]');
+    const header = document.querySelector<HTMLElement>('[data-header]');
+    if (!toggle || !nav || !header) return;
+    const open = toggle.querySelector<HTMLElement>('[data-label-open]')!;
+    const close = toggle.querySelector<HTMLElement>('[data-label-close]')!;
+    const set = (on: boolean) => {
+      toggle.setAttribute('aria-expanded', String(on));
+      header.classList.toggle('is-open', on);
+      document.body.classList.toggle('nav-open', on);
+      open.hidden = on;
+      close.hidden = !on;
+    };
+    toggle.addEventListener('click', () => set(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
+
+    // Solid header once the hero scrolls away.
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+  initNav();
+  document.addEventListener('astro:after-swap', initNav);
+</script>
+
+<style>
+  /* The blurred paper background lives on a pseudo-element so the header itself never
+     becomes a containing block for the fixed mobile navigation (backdrop-filter would). */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    transition: color 300ms;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--ivory) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: background-color 300ms, border-color 300ms, opacity 300ms;
+  }
+  .site-header.is-scrolled::before { border-bottom-color: var(--line); }
+  .site-header--overlay { position: fixed; inset-inline: 0; color: var(--ivory); }
+  .site-header--overlay::before { opacity: 0; }
+  .site-header--overlay.is-scrolled, .site-header--overlay.is-open { color: var(--charcoal); }
+  .site-header--overlay.is-scrolled::before, .site-header--overlay.is-open::before { opacity: 1; background: color-mix(in srgb, var(--ivory) 92%, transparent); }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    min-height: 76px;
+  }
+  .brand { text-decoration: none; display: grid; line-height: 1.1; }
+  .brand__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.01em;
+    font-variation-settings: 'opsz' 24, 'SOFT' 30;
+  }
+  .brand__sub { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.7; margin-top: 0.25rem; }
+
+  .site-nav { display: flex; align-items: center; gap: var(--space-m); }
+  .site-nav__list { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(1rem, 0.5rem + 1.2vw, 2rem); }
+  .site-nav__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    position: relative;
+  }
+  .site-nav__list a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 8px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms var(--ease-out);
+  }
+  .site-nav__list a:hover::after, .site-nav__list a[aria-current='page']::after { transform: scaleX(1); }
+  .site-nav__list a[aria-current='page'] { font-weight: 600; }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    min-height: 44px;
+    padding: 0 0.9em;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .lang-switch > span:first-child { font-weight: 700; }
+  .lang-switch__sep { opacity: 0.5; }
+
+  .nav-toggle { display: none; align-items: center; gap: 0.6em; min-height: 44px; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav-toggle__bar { width: 22px; height: 1px; background: currentColor; position: relative; display: block; }
+  .nav-toggle__bar::before, .nav-toggle__bar::after { content: ''; position: absolute; left: 0; width: 100%; height: 1px; background: currentColor; transition: transform 250ms var(--ease-out); }
+  .nav-toggle__bar::before { top: -6px; }
+  .nav-toggle__bar::after { top: 6px; }
+  .is-open .nav-toggle__bar { background: transparent; }
+  .is-open .nav-toggle__bar::before { transform: translateY(6px) rotate(45deg); }
+  .is-open .nav-toggle__bar::after { transform: translateY(-6px) rotate(-45deg); }
+
+  @media (max-width: 960px) {
+    .nav-toggle { display: inline-flex; }
+    .site-nav {
+      position: fixed;
+      inset: 76px 0 0 0;
+      background: var(--ivory);
+      color: var(--charcoal);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: var(--space-l) var(--gutter);
+      gap: var(--space-l);
+      transform: translateY(-8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 250ms var(--ease-out), transform 250ms var(--ease-out), visibility 0s linear 250ms;
+      overflow-y: auto;
+    }
+    .is-open .site-nav { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+    .site-nav__list { flex-direction: column; gap: 0.25rem; }
+    .site-nav__list a { font-family: var(--font-display); font-size: var(--step-3); text-transform: none; letter-spacing: -0.01em; min-height: 56px; font-variation-settings: 'opsz' 72, 'SOFT' 30; }
+    .site-nav__list a::after { bottom: 10px; }
+    :global(body.nav-open) { overflow: hidden; }
+  }
+</style>

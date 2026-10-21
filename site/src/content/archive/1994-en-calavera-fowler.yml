@@ -1,0 +1,29 @@
+title:
+  es: "«En Calavera: The Papier-Mâché Art of the Linares Family», Fowler Museum (UCLA)"
+  en: "\"En Calavera: The Papier-Mâché Art of the Linares Family\", Fowler Museum (UCLA)"
+type: exhibition
+subject: family
+year: 1994
+endYear: 1995
+dateLabel:
+  es: Noviembre de 1994 – noviembre de 1995
+  en: November 1994 – November 1995
+institution: Fowler Museum of Cultural History, UCLA
+city: Los Ángeles, California
+order: 13
+summary:
+  es: Exposición y catálogo (Susan N. Masuoka) dedicados a tres generaciones de cartoneros de la familia Linares, con énfasis en las calaveras y los alebrijes.
+  en: Exhibition and catalogue (Susan N. Masuoka) devoted to three generations of Linares family cartoneros, with emphasis on skeletons and alebrijes.
+body:
+  es: >-
+    El catálogo sigue siendo la referencia bibliográfica más completa sobre la familia en inglés. La
+    participación específica de Felipe Linares Vargas en esta exposición no está verificada en las fuentes
+    consultadas.
+  en: >-
+    The catalogue remains the most complete bibliographic reference on the family in English. The specific
+    participation of Felipe Linares Vargas in this exhibition is not verified in the sources consulted.
+people: [pedro-linares-lopez, felipe-linares-mendoza]
+sources:
+  - title: "En Calavera: The Papier-Mâché Art of the Linares Family (Susan N. Masuoka, 1994)"
+    url: https://kohaopac.franzmayer.org.mx//bib/10412
+    publisher: Fowler Museum of Cultural History / Catálogo Biblioteca Franz Mayer

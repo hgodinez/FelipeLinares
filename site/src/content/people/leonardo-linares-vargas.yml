@@ -1,0 +1,33 @@
+name: Leonardo Linares Vargas
+shortName: Leonardo Linares Vargas
+generation: 4
+parent: felipe-linares-mendoza
+order: 31
+role:
+  es: Cartonero · nieto de Pedro Linares López
+  en: Cartonero · grandson of Pedro Linares López
+bio:
+  es: >-
+    Hijo de Felipe Linares Mendoza. Mantiene su propio taller en la Ciudad de México y es una de las voces
+    públicas de la familia: en 2019 anunció la declaratoria de los alebrijes como patrimonio cultural de la
+    Ciudad de México y ha sido entrevistado por medios como Siempre!, National Geographic y La Jornada. Describe
+    a la familia como la quinta generación dedicada al papel y el cartón. Una calavera suya de 1992 forma
+    parte de la colección del Museo Nacional de Culturas Populares.
+  en: >-
+    Son of Felipe Linares Mendoza. He keeps his own workshop in Mexico City and is one of the family's public
+    voices: in 2019 he announced the declaration of the alebrijes as cultural heritage of Mexico City, and he
+    has been interviewed by outlets such as Siempre!, National Geographic and La Jornada. He describes the
+    family as the fifth generation devoted to paper and cardboard. A 1992 skull of his is in the collection of
+    the Museo Nacional de Culturas Populares.
+sources:
+  - title: "Magia en papel y cartón"
+    url: https://www.siempre.mx/2020/03/magia-en-papel-y-carton/
+    publisher: Siempre!
+    date: "2020-03"
+  - title: "Mexican papier-mâché means a party on Day of the Dead and beyond"
+    url: https://www.nationalgeographic.com/travel/article/in-mexico-papier-mache-means-a-party-on-day-of-the-dead-and-beyond
+    publisher: National Geographic
+  - title: "Leonardo Linares, heredero de la tradición cartonera para la quema de los judas"
+    url: https://www.jornada.com.mx/2026/04/04/cultura/a03n1cul
+    publisher: La Jornada
+    date: "2026-04-04"

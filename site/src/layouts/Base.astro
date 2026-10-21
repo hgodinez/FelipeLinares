@@ -1,0 +1,94 @@
+---
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { t } from '@/i18n/ui';
+import { LANGS, LOCALE_TAG, withBase, type Lang } from '@/i18n/routes';
+import site from '@/data/site.json';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+  alternates: Record<Lang, string>;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  bodyClass?: string;
+  /** Header sits over the hero (transparent, light text) */
+  overlayHeader?: boolean;
+}
+
+const { lang, title, description, alternates, ogImage, jsonLd, bodyClass = '', overlayHeader = false } = Astro.props;
+const ui = t(lang);
+const siteUrl = Astro.site ?? new URL('http://localhost/');
+const canonical = new URL(alternates[lang], siteUrl).toString();
+const fullTitle = title === site.artistName ? `${site.artistName} · ${ui.tagline}` : `${title} · ${site.artistName}`;
+const desc = description ?? site.defaultDescription[lang];
+const og = new URL(ogImage ?? withBase('/og-default.jpg'), siteUrl).toString();
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.artistName,
+  url: siteUrl.toString(),
+  inLanguage: LANGS.map((l) => LOCALE_TAG[l]),
+};
+const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [])];
+---
+
+<!doctype html>
+<html lang={LOCALE_TAG[lang]} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    {LANGS.map((l) => <link rel="alternate" hreflang={LOCALE_TAG[l]} href={new URL(alternates[l], siteUrl).toString()} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.es, siteUrl).toString()} />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <meta name="theme-color" content="#f2e8d5" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.artistName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+    <ClientRouter fallback="none" />
+  </head>
+  <body class={bodyClass} data-overlay-header={overlayHeader ? 'true' : undefined}>
+    <a class="skip" href="#main">{ui.skip}</a>
+    <Header lang={lang} alternates={alternates} overlay={overlayHeader} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <script>
+      import { initReveal } from '@/lib/reveal';
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip {
+    position: absolute;
+    left: var(--gutter);
+    top: -4rem;
+    z-index: 100;
+    background: var(--charcoal);
+    color: var(--ivory);
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    transition: top 150ms;
+  }
+  .skip:focus { top: var(--space-s); }
+  main:focus { outline: none; }
+</style>

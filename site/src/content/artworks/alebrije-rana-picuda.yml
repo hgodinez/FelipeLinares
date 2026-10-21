@@ -1,0 +1,45 @@
+title:
+  es: Alebrije de rana con pico de ave
+  en: Frog alebrije with bird beak
+titleStatus: provisional
+categories: [alebrijes]
+featured: true
+order: 3
+materials:
+  es: "Cartonería tradicional: papel y cartón modelados, engrudo y pintura. Detalles técnicos por confirmar con el artista."
+  en: "Traditional cartonería: modeled paper and cardboard, paste and paint. Technical details to be confirmed with the artist."
+description:
+  es: >-
+    Un cuerpo de rana, verde y punteado, se agazapa sobre cuatro patas de dedos amarillos. La cabeza, sin
+    embargo, es la de un ave: pico largo y negro, ojos brillantes, un cuello escamado en azul y oro, y dos
+    grandes orejas rosadas que se abren como pétalos. La cola, fina y rayada como la de una cebra, cierra la
+    composición.
+  en: >-
+    A green, dotted frog body crouches on four yellow-toed legs. The head, however, belongs to a bird: a long
+    black beak, bright eyes, a neck scaled in blue and gold, and two large pink ears that open like petals.
+    A thin tail, striped like a zebra's, closes the composition.
+context:
+  es: >-
+    La superficie está resuelta con una pintura de puntos y escamas de distintos tamaños, un recurso
+    característico de la cartonería de la familia Linares para dar textura a volúmenes lisos de papel.
+  en: >-
+    The surface is resolved with dot-and-scale painting at several scales, a recurring device in the
+    Linares family's cartonería for giving texture to smooth paper volumes.
+availability: unknown
+images:
+  - src: ../../assets/works/alebrije-rana-frente.jpg
+    alt:
+      es: Alebrije con cuerpo verde de rana, patas amarillas, cabeza con pico negro de ave y grandes orejas rosadas, visto de frente sobre piso de madera.
+      en: Alebrije with a green frog body, yellow legs, a bird head with a black beak and large pink ears, seen from the front on a wooden floor.
+    kind: final
+  - src: ../../assets/works/alebrije-rana-cenital.jpg
+    alt:
+      es: "Vista cenital del alebrije de rana: el lomo verde punteado, las orejas extendidas y la cola rayada."
+      en: "Overhead view of the frog alebrije: dotted green back, spread ears and striped tail."
+    kind: detail
+related: [alebrije-tigre-alado, alebrije-jaguar-astado]
+toConfirm:
+  - Título oficial, año y dimensiones.
+  - Materiales y acabados exactos.
+  - Disponibilidad y procedencia.
+  - Crédito de las fotografías.

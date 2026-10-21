@@ -1,0 +1,22 @@
+title:
+  es: KUNM documenta la exposición de Albuquerque
+  en: KUNM covers the Albuquerque exhibition
+type: press
+subject: artist
+year: 2026
+dateLabel:
+  es: 4 de mayo de 2026
+  en: May 4, 2026
+institution: KUNM (radio pública de Nuevo México)
+city: Albuquerque, Nuevo México
+order: 3
+summary:
+  es: "Reportaje sobre «Alebrijes: A Linares Family Tradition» que fotografía y acredita un alebrije de gallo de Felipe Linares Vargas."
+  en: "\"Report on \\\"Alebrijes: A Linares Family Tradition\\\" that photographs and credits a rooster alebrije by Felipe Linares Vargas.\""
+people: [felipe-linares-vargas, leonardo-linares-vargas]
+artworks: [gallo-alebrije-moifa]
+sources:
+  - title: "New exhibit showcases fantastical creatures in Mexican folk art"
+    url: https://www.kunm.org/local-news/2026-05-04/new-exhibit-showcases-fantastical-creatures-in-mexican-folk-art
+    publisher: KUNM
+    date: "2026-05-04"

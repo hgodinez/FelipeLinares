@@ -1,0 +1,41 @@
+title:
+  es: Catrina con tocado de plumas
+  en: Catrina with feathered headdress
+titleStatus: provisional
+categories: [calaveras]
+featured: false
+order: 5
+materials:
+  es: "Cartonería tradicional: papel y cartón modelados, engrudo y pintura sobre base de madera. Detalles técnicos por confirmar con el artista."
+  en: "Traditional cartonería: modeled paper and cardboard, paste and paint on a wooden base. Technical details to be confirmed with the artist."
+description:
+  es: >-
+    Una calavera elegante, de pie sobre una base roja, viste un traje blanco de líneas verticales y un chal de
+    plumas en rosa, azul, amarillo y verde. Sobre el sombrero negro de ala ancha, coronado de rosas, se
+    levantan dos grandes plumas o alas azul cielo. Las manos, de dedos óseos y uñas pintadas, se extienden
+    hacia el espectador.
+  en: >-
+    An elegant skeleton, standing on a red base, wears a white vertically striped dress and a feather shawl in
+    pink, blue, yellow and green. Above the broad black hat crowned with roses rise two large sky-blue plumes or
+    wings. The hands, bony-fingered with painted nails, reach toward the viewer.
+context:
+  es: >-
+    La figura dialoga con la Catrina de José Guadalupe Posada, una de las fuentes que la familia Linares ha
+    reinterpretado en cartonería desde la época de Pedro Linares López. Fotografía tomada en el taller; la
+    pieza aparece terminada y montada en su base.
+  en: >-
+    The figure converses with José Guadalupe Posada's Catrina, one of the sources the Linares family has
+    reinterpreted in cartonería since the time of Pedro Linares López. Photographed in the workshop; the piece
+    appears finished and mounted on its base.
+availability: unknown
+images:
+  - src: ../../assets/works/catrina-emplumada-taller.jpg
+    alt:
+      es: Catrina de cartonería con sombrero negro coronado de rosas, dos grandes plumas azules, chal de plumas de colores y vestido blanco, de pie sobre una base roja en el taller.
+      en: Cartonería Catrina with a black hat crowned with roses, two large blue plumes, a multicolored feather shawl and a white dress, standing on a red base in the workshop.
+    kind: final
+related: [calavera-alada-sobre-alebrije, tzompantli-2010]
+toConfirm:
+  - Título oficial, año y dimensiones.
+  - Disponibilidad y procedencia.
+  - Crédito de la fotografía.

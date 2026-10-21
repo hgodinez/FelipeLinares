@@ -1,0 +1,207 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import ArtworkCard from '@/components/ArtworkCard.astro';
+import { t } from '@/i18n/ui';
+import { route, alternates, workPath, type Lang } from '@/i18n/routes';
+import { getPage, getWorks, coverOf } from '@/lib/content';
+import site from '@/data/site.json';
+import heroImg from '@/assets/works/alebrije-astado-repisa.jpg';
+import handImg from '@/assets/works/alebrije-astado-mano.jpg';
+import workshopImg from '@/assets/works/alebrije-astado-frente-taller.jpg';
+import workshopImg2 from '@/assets/works/jinete-calavera-taller.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const page = await getPage('inicio', lang);
+const sections = page.data.sections ?? [];
+const works = (await getWorks()).filter((w) => w.data.featured && w.data.images.length > 0).slice(0, 4);
+const [s1, s2, s3, s4, s5] = sections;
+const og = await getImage({ src: heroImg, width: 1200, format: 'jpg' });
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Felipe Linares Vargas',
+  jobTitle: lang === 'es' ? 'Cartonero' : 'Cartonería artist',
+  description: site.defaultDescription[lang],
+  url: new URL(route('home', lang), Astro.site).toString(),
+  address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' },
+  knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'],
+};
+---
+<Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd} overlayHeader>
+  <!-- HERO: one magnificent work, full bleed -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__media">
+      <Image src={heroImg} alt={lang === 'es' ? 'Alebrije de cartonería con cabeza de felino negro, astas de venado y alas rojas, obra de Felipe Linares Vargas.' : 'Cartonería alebrije with a black feline head, deer antlers and red wings, by Felipe Linares Vargas.'} widths={[640, 1024, 1600, 2400]} sizes="100vw" loading="eager" fetchpriority="high" decoding="sync" />
+    </div>
+    <div class="hero__content container">
+      <p class="eyebrow hero__eyebrow reveal">{page.data.eyebrow}</p>
+      <h1 id="hero-title" class="hero__title reveal" style="--delay:80ms">Felipe Linares Vargas</h1>
+      <p class="hero__statement reveal" style="--delay:160ms">{site.heroStatement[lang]}</p>
+      <div class="hero__actions cluster reveal" style="--delay:240ms">
+        <a class="btn btn--solid" href={route('works', lang)}>{ui.cta.works} <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn hero__btn-ghost" href={route('artist', lang)}>{ui.cta.artist}</a>
+      </div>
+    </div>
+    <p class="hero__scroll" aria-hidden="true"><span></span></p>
+  </section>
+
+  <!-- INTRO -->
+  <section class="section intro">
+    <div class="container grid">
+      <div class="col-7">
+        <p class="lead reveal">{page.data.lead}</p>
+      </div>
+      <div class="col-5 intro__aside reveal" style="--delay:120ms">
+        <p class="small muted">{s2.text}</p>
+        <a class="link-arrow" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTED WORKS: editorial, asymmetric -->
+  <section class="section section--tight works-preview" aria-labelledby="works-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow eyebrow--accent">{ui.works.eyebrow}</p>
+          <h2 id="works-title">{s1.heading}</h2>
+        </div>
+        <p class="muted small works-preview__intro">{s1.text}</p>
+      </div>
+      <div class="works-preview__grid">
+        {works.map((w, i) => (
+          <div class:list={['works-preview__item', `works-preview__item--${i + 1}`]}>
+            <ArtworkCard work={w} lang={lang} size={i === 0 ? 'large' : 'medium'} index={i} />
+          </div>
+        ))}
+      </div>
+      <div class="text-center mt-l">
+        <a class="btn" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTIST: dark room -->
+  <section class="section section--dark artist-band" aria-labelledby="artist-title">
+    <div class="container grid">
+      <div class="col-5 artist-band__media reveal">
+        <div class="frame aspect-3-4">
+          <Image src={handImg} alt={lang === 'es' ? 'Una mano sostiene un alebrije de cabeza negra y astas; muestra la escala íntima de la pieza.' : 'A hand holds a black-headed, antlered alebrije; it shows the intimate scale of the piece.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" />
+        </div>
+      </div>
+      <div class="col-7 artist-band__text">
+        <p class="eyebrow reveal">{ui.nav.artist}</p>
+        <h2 class="reveal" style="--delay:80ms">{s2.heading}</h2>
+        <p class="reveal mt-l" style="--delay:160ms">{s2.text}</p>
+        <a class="btn reveal" style="--delay:240ms" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGACY: typographic -->
+  <section class="section legacy-band" aria-labelledby="legacy-title">
+    <div class="container">
+      <div class="legacy-band__inner">
+        <p class="eyebrow eyebrow--accent reveal">{ui.nav.legacy}</p>
+        <h2 id="legacy-title" class="legacy-band__title reveal" style="--delay:80ms">{s3.heading}</h2>
+        <p class="lead reveal" style="--delay:160ms">{s3.text}</p>
+        <div class="legacy-band__years reveal" style="--delay:240ms" aria-hidden="true">
+          <span>1906</span><span>1936</span><span>1990</span><span>2010</span><span>2026</span>
+        </div>
+        <a class="btn btn--accent reveal" style="--delay:300ms" href={route('legacy', lang)}>{ui.cta.legacy} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKSHOP: two documentary images -->
+  <section class="section section--alt workshop-band" aria-labelledby="workshop-title">
+    <div class="container grid">
+      <div class="col-4 workshop-band__text">
+        <p class="eyebrow reveal">{ui.nav.workshop}</p>
+        <h2 id="workshop-title" class="reveal" style="--delay:80ms">{s4.heading}</h2>
+        <p class="reveal mt-l" style="--delay:160ms">{s4.text}</p>
+        <a class="link-arrow reveal" style="--delay:240ms" href={route('workshop', lang)}>{ui.cta.readMore} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="col-8 workshop-band__media">
+        <figure class="figure reveal" style="--delay:120ms">
+          <div class="frame aspect-3-4"><Image src={workshopImg} alt={lang === 'es' ? 'Alebrije en proceso sobre la mesa del taller, rodeado de pinceles, frascos y otras piezas.' : 'Alebrije in progress on the workshop table, surrounded by brushes, jars and other pieces.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 35vw" loading="lazy" /></div>
+        </figure>
+        <figure class="figure reveal" style="--delay:240ms">
+          <div class="frame aspect-3-4"><Image src={workshopImg2} alt={lang === 'es' ? 'Esqueleto con alas de mariposa sobre una criatura anaranjada, en proceso en el taller.' : 'Skeleton with butterfly wings on an orange creature, in progress in the workshop.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 35vw" loading="lazy" /></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVITATION -->
+  <section class="section invite" aria-labelledby="invite-title">
+    <div class="container--narrow container text-center">
+      <p class="eyebrow reveal">{ui.nav.contact}</p>
+      <h2 id="invite-title" class="reveal" style="--delay:80ms">{s5.heading}</h2>
+      <p class="reveal mt-l invite__text" style="--delay:160ms">{s5.text}</p>
+      <a class="btn btn--solid reveal" style="--delay:240ms" href={route('contact', lang)}>{ui.cta.contact} <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: end; color: var(--ivory); isolation: isolate; }
+  .hero__media { position: absolute; inset: 0; z-index: -1; background: var(--charcoal); }
+  .hero__media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 72% 42%; }
+  .hero__media::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(20, 18, 15, 0.82) 0%, rgba(20, 18, 15, 0.35) 40%, rgba(20, 18, 15, 0.12) 70%, rgba(20, 18, 15, 0.3) 100%);
+  }
+  .hero__content { padding-block: var(--space-xl) calc(var(--space-xl) + 2rem); }
+  .hero__eyebrow { color: rgba(242, 232, 213, 0.75); }
+  .hero__title { font-size: var(--step-5); max-width: 12ch; }
+  .hero__statement { font-family: var(--font-display); font-style: italic; font-size: var(--step-2); margin-top: var(--space-m); max-width: 28ch; font-variation-settings: 'opsz' 72, 'SOFT' 60; }
+  .hero__actions { margin-top: var(--space-l); }
+  .hero__btn-ghost { color: var(--ivory); border-color: rgba(242, 232, 213, 0.6); }
+  .hero__btn-ghost:hover { background: var(--ivory); color: var(--charcoal); }
+  .hero :global(.btn--solid) { background: var(--ivory); color: var(--charcoal); border-color: var(--ivory); }
+  .hero :global(.btn--solid:hover) { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .hero__scroll { position: absolute; right: var(--gutter); bottom: var(--space-l); margin: 0; width: 1px; height: 64px; overflow: hidden; }
+  .hero__scroll span { display: block; width: 1px; height: 100%; background: rgba(242, 232, 213, 0.6); animation: scroll-line 2.4s var(--ease-out) infinite; transform-origin: top; }
+  @keyframes scroll-line { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+  @media (prefers-reduced-motion: reduce) { .hero__scroll { display: none; } }
+
+  .intro__aside { align-self: end; display: grid; gap: var(--space-s); }
+
+  .works-preview__intro { max-width: 38ch; }
+  .works-preview__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-xl) var(--gutter); align-items: start; }
+  .works-preview__item--1 { grid-column: 1 / 8; }
+  .works-preview__item--2 { grid-column: 9 / 13; margin-top: clamp(2rem, 10vw, 10rem); }
+  .works-preview__item--3 { grid-column: 2 / 6; }
+  .works-preview__item--4 { grid-column: 7 / 12; margin-top: clamp(1rem, 6vw, 6rem); }
+  @media (max-width: 900px) {
+    .works-preview__grid { gap: var(--space-l) var(--gutter); }
+    .works-preview__item--1 { grid-column: 1 / 13; }
+    .works-preview__item--2 { grid-column: 1 / 7; margin-top: 0; }
+    .works-preview__item--3 { grid-column: 7 / 13; margin-top: var(--space-xl); }
+    .works-preview__item--4 { grid-column: 2 / 12; margin-top: 0; }
+  }
+  @media (max-width: 560px) {
+    .works-preview__item--2, .works-preview__item--3, .works-preview__item--4 { grid-column: 1 / 13; margin-top: 0; }
+  }
+
+  .artist-band__text { align-self: center; }
+  .artist-band__text .btn { margin-top: var(--space-l); }
+
+  .legacy-band__inner { max-width: 60ch; margin-inline: auto; text-align: center; display: grid; justify-items: center; gap: var(--space-m); }
+  .legacy-band__title { font-size: var(--step-4); }
+  .legacy-band__years { display: flex; gap: clamp(1rem, 4vw, 3rem); font-family: var(--font-display); font-size: var(--step-1); color: var(--fg-muted); font-variation-settings: 'opsz' 36; }
+
+  .workshop-band__media { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
+  .workshop-band__media figure:last-child { margin-top: var(--space-xl); }
+  .workshop-band__text { align-self: center; }
+  @media (max-width: 600px) { .workshop-band__media { grid-template-columns: 1fr; } .workshop-band__media figure:last-child { margin-top: 0; } }
+
+  .invite__text { margin-inline: auto; }
+  .invite .btn { margin-top: var(--space-l); }
+</style>

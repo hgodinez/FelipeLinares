@@ -1,0 +1,26 @@
+name: Generaciones anteriores de cartoneros
+shortName: Antepasados cartoneros
+generation: 1
+order: 1
+role:
+  es: Cartoneros de oficio, Ciudad de México
+  en: Cartonería craftsmen, Mexico City
+bio:
+  es: >-
+    Antes de Pedro Linares López, la familia ya se dedicaba a la cartonería. Las fuentes consultadas sitúan el
+    origen del oficio familiar en generaciones anteriores (el padre y el abuelo de Pedro Linares trabajaban el
+    cartón), y la familia misma cuenta su historia como la de cinco generaciones consecutivas. Los nombres y
+    fechas de estos antepasados no están documentados en las fuentes públicas consultadas.
+  en: >-
+    Before Pedro Linares López the family already practiced cartonería. The sources consulted place the
+    origin of the family craft in earlier generations (Pedro Linares's father and grandfather worked in
+    cardboard), and the family itself tells its story as five consecutive generations. The names and dates
+    of these ancestors are not documented in the public sources consulted.
+sources:
+  - title: "Linares family (alebrijes and cartonería)"
+    url: https://en.wikipedia.org/wiki/Linares_family_(alebrijes_and_cartoner%C3%ADa)
+    publisher: Wikipedia
+  - title: "Magia en papel y cartón (entrevista con Leonardo Linares Vargas)"
+    url: https://www.siempre.mx/2020/03/magia-en-papel-y-carton/
+    publisher: Siempre!
+    date: "2020-03"

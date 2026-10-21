@@ -1,0 +1,10 @@
+---
+import View from '@/views/Work.astro';
+import { getWorks } from '@/lib/content';
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return works.map((work) => ({ params: { slug: work.id }, props: { work } }));
+}
+const { work } = Astro.props;
+---
+<View lang="en" work={work} />

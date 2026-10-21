@@ -1,0 +1,21 @@
+{
+  "artistName": "Felipe Linares Vargas",
+  "city": "Ciudad de México",
+  "workshopArea": { "es": "Colonia Merced Balbuena, Ciudad de México", "en": "Merced Balbuena neighborhood, Mexico City" },
+  "contactEmail": "",
+  "whatsappNumber": "",
+  "formEndpoint": "",
+  "social": { "instagram": "", "facebook": "" },
+  "heroStatement": {
+    "es": "El arte de dar vida a lo imposible.",
+    "en": "The art of giving life to the impossible."
+  },
+  "heroStatementNote": {
+    "es": "Frase editorial propuesta, no una cita del artista.",
+    "en": "Proposed editorial line, not a quotation from the artist."
+  },
+  "defaultDescription": {
+    "es": "Sitio oficial de Felipe Linares Vargas, cartonero de la Ciudad de México y nieto de Pedro Linares López, creador de los alebrijes. Obras, legado familiar, taller y archivo.",
+    "en": "Official site of Felipe Linares Vargas, Mexico City cartonería artist and grandson of Pedro Linares López, creator of the alebrijes. Works, family legacy, workshop and archive."
+  }
+}

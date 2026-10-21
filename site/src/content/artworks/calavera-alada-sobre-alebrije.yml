@@ -1,0 +1,54 @@
+title:
+  es: Calavera con alas de mariposa montada en alebrije
+  en: Skeleton with butterfly wings riding an alebrije
+titleStatus: provisional
+categories: [calaveras, alebrijes]
+featured: true
+order: 4
+materials:
+  es: "Cartonería tradicional: papel y cartón modelados, engrudo, alambre y pintura. Detalles técnicos por confirmar con el artista."
+  en: "Traditional cartonería: modeled paper and cardboard, paste, wire and paint. Technical details to be confirmed with the artist."
+description:
+  es: >-
+    Un esqueleto con cuernos y alas de mariposa monarca cabalga sobre una criatura de cuernos morados y piel
+    anaranjada salpicada de puntos. Sujeta las riendas de alambre con ambas manos y sonríe con la dentadura
+    completa, como las calaveras de la tradición cartonera. Las alas, pintadas en naranja, negro y violeta,
+    recuerdan a la mariposa que llega a México cada otoño, en las fechas del Día de Muertos.
+  en: >-
+    A horned skeleton with monarch-butterfly wings rides a purple-horned creature whose orange skin is
+    speckled with dots. It holds wire reins in both hands and smiles with a full set of teeth, like the
+    skeletons of the cartonería tradition. The wings, painted orange, black and violet, recall the butterfly
+    that reaches Mexico each autumn, around the Day of the Dead.
+context:
+  es: >-
+    Las calaveras animadas son una de las especialidades históricas de la familia Linares, documentada por el
+    Fowler Museum (UCLA) en la exposición y catálogo «En Calavera» (1994). Esta pieza une esa tradición con
+    la del alebrije en una sola composición. Se incluye una fotografía de taller de la pieza antes del acabado
+    y del montaje de las riendas.
+  en: >-
+    Animated skeletons are one of the Linares family's historic specialties, documented by the Fowler Museum
+    (UCLA) in the exhibition and catalogue "En Calavera" (1994). This piece joins that tradition with the
+    alebrije in a single composition. A workshop photograph of the piece before its finish and the fitting of
+    the reins is included.
+availability: unknown
+images:
+  - src: ../../assets/works/jinete-calavera-mesa.jpg
+    alt:
+      es: Esqueleto de cartonería con cuernos y alas de mariposa monarca, montado sobre una criatura anaranjada de cuernos morados, con riendas de alambre, sobre una mesa.
+      en: Cartonería skeleton with horns and monarch-butterfly wings, riding an orange creature with purple horns and wire reins, on a table.
+    kind: final
+  - src: ../../assets/works/jinete-calavera-taller.jpg
+    alt:
+      es: "La misma composición en el taller, antes del acabado: el esqueleto alado sentado sobre la criatura anaranjada, sin riendas, entre frascos y herramientas."
+      en: "The same composition in the workshop before finishing: the winged skeleton seated on the orange creature, without reins, among jars and tools."
+    kind: workshop
+related: [catrina-con-tocado-de-plumas, alebrije-jaguar-astado]
+sources:
+  - title: "En Calavera: The Papier-Mâché Art of the Linares Family (Susan N. Masuoka, catálogo de exposición)"
+    publisher: Fowler Museum of Cultural History, UCLA
+    date: "1994"
+toConfirm:
+  - Título oficial, año y dimensiones.
+  - Si la fotografía de taller corresponde a la misma pieza.
+  - Disponibilidad y procedencia.
+  - Crédito de las fotografías.

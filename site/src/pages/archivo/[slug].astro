@@ -1,0 +1,10 @@
+---
+import View from '@/views/ArchiveEntry.astro';
+import { getArchive } from '@/lib/content';
+export async function getStaticPaths() {
+  const items = await getArchive();
+  return items.map((item) => ({ params: { slug: item.id }, props: { item } }));
+}
+const { item } = Astro.props;
+---
+<View lang="es" item={item} />

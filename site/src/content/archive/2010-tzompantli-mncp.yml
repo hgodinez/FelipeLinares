@@ -1,0 +1,30 @@
+title:
+  es: "«Tzompantli» ingresa a la colección del Museo Nacional de Culturas Populares"
+  en: "\"Tzompantli\" in the collection of the Museo Nacional de Culturas Populares"
+type: collection
+subject: artist
+year: 2010
+institution: Museo Nacional de Culturas Populares
+city: Ciudad de México
+order: 1
+summary:
+  es: Obra de Felipe Linares Vargas (cartón moldeado, modelado y policromado con pinturas vinílicas, 122 × 104 × 20 cm) con ficha pública en la colección del museo.
+  en: Work by Felipe Linares Vargas (molded, modeled and polychromed cardboard with vinyl paints, 122 × 104 × 20 cm) with a public record in the museum's collection.
+body:
+  es: >-
+    La ficha museográfica, publicada por el museo en Google Arts & Culture, fecha la obra en 2010 y la incluye
+    en el relato digital «La fiesta de la muerte en México». Es la referencia institucional más precisa sobre
+    la obra del artista disponible en fuentes públicas.
+  en: >-
+    The museum record, published on Google Arts & Culture, dates the work to 2010 and includes it in the
+    digital story "The Festival of Death in Mexico". It is the most precise institutional reference to the
+    artist's work available in public sources.
+people: [felipe-linares-vargas]
+artworks: [tzompantli-2010]
+sources:
+  - title: "Tzompantli – Felipe Linares Vargas"
+    url: https://artsandculture.google.com/asset/tzompantli-felipe-linares-vargas/6QF5pI323yT3ww
+    publisher: Museo Nacional de Culturas Populares / Google Arts & Culture
+  - title: "The Festival of Death in Mexico"
+    url: https://artsandculture.google.com/story/DQWhlmkiAM3GKw
+    publisher: Museo Nacional de Culturas Populares / Google Arts & Culture

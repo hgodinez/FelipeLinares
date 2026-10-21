@@ -1,0 +1,187 @@
+# Decap CMS configuration — edits are committed to the repository.
+# Set `backend.repo` to the GitHub repository and configure an OAuth provider (see README).
+backend:
+  name: github
+  repo: hgodinez/FelipeLinares
+  branch: main
+  base_url: https://api.netlify.com # replace with your OAuth gateway if not using Netlify
+  commit_messages:
+    create: 'content: crear {{collection}} “{{slug}}”'
+    update: 'content: actualizar {{collection}} “{{slug}}”'
+    delete: 'content: eliminar {{collection}} “{{slug}}”'
+    uploadMedia: 'content: subir {{path}}'
+    deleteMedia: 'content: eliminar {{path}}'
+
+locale: es
+site_url: https://felipelinaresvargas.example
+display_url: https://felipelinaresvargas.example
+media_folder: site/src/assets/works
+public_folder: ../../assets/works
+slug: { encoding: unicode, clean_accents: true, sanitize_replacement: '-' }
+
+# Reusable field definitions ---------------------------------------------------
+# (Decap has no YAML anchors across collections in all hosts; definitions are repeated inline.)
+
+collections:
+  - name: artworks
+    label: Obras
+    label_singular: Obra
+    folder: site/src/content/artworks
+    create: true
+    extension: yml
+    format: yml
+    identifier_field: title.es
+    summary: '{{title.es}} ({{year}})'
+    sortable_fields: [order, year, title.es]
+    fields:
+      - { label: Título, name: title, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+      - { label: Estado del título, name: titleStatus, widget: select, options: [ { label: 'Confirmado por el artista', value: confirmed }, { label: 'Descriptivo, por confirmar', value: provisional } ], default: provisional }
+      - { label: Año, name: year, widget: number, value_type: int, required: false }
+      - { label: Nota sobre el año, name: yearNote, widget: object, required: false, fields: [ { label: Español, name: es, widget: string, required: false }, { label: English, name: en, widget: string, required: false } ] }
+      - { label: Categorías, name: categories, widget: select, multiple: true, options: [ { label: Alebrijes, value: alebrijes }, { label: 'Calaveras y esqueletos', value: calaveras }, { label: 'Judas y figuras tradicionales', value: judas }, { label: Máscaras, value: mascaras }, { label: 'Obras en colecciones', value: colecciones }, { label: 'Encargos y colaboraciones', value: encargos } ] }
+      - { label: Materiales y técnica, name: materials, widget: object, fields: [ { label: Español, name: es, widget: text }, { label: English, name: en, widget: text } ] }
+      - { label: Dimensiones, name: dimensions, widget: string, required: false, hint: 'Ej. 122 × 104 × 20 cm' }
+      - { label: Descripción, name: description, widget: object, fields: [ { label: Español, name: es, widget: text }, { label: English, name: en, widget: text } ] }
+      - { label: Contexto, name: context, widget: object, required: false, fields: [ { label: Español, name: es, widget: text, required: false }, { label: English, name: en, widget: text, required: false } ] }
+      - { label: Procedencia y exposiciones, name: provenance, widget: object, required: false, fields: [ { label: Español, name: es, widget: text, required: false }, { label: English, name: en, widget: text, required: false } ] }
+      - { label: Colección, name: collection, widget: string, required: false }
+      - { label: Disponibilidad, name: availability, widget: select, options: [ { label: 'Consultar al taller', value: inquire }, { label: 'Colección institucional', value: collection }, { label: 'Colección particular', value: private }, { label: 'Por confirmar', value: unknown } ], default: unknown }
+      - { label: Destacada en inicio, name: featured, widget: boolean, default: false }
+      - { label: Orden, name: order, widget: number, value_type: int, default: 100 }
+      - label: Imágenes
+        name: images
+        widget: list
+        required: false
+        fields:
+          - { label: Archivo, name: src, widget: image }
+          - { label: Texto alternativo, name: alt, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+          - { label: Pie de foto, name: caption, widget: object, required: false, fields: [ { label: Español, name: es, widget: string, required: false }, { label: English, name: en, widget: string, required: false } ] }
+          - { label: Crédito fotográfico, name: credit, widget: string, required: false }
+          - { label: Tipo, name: kind, widget: select, options: [ { label: 'Obra terminada', value: final }, { label: Detalle, value: detail }, { label: 'Fotografía de taller (en proceso)', value: workshop }, { label: Contexto, value: context } ], default: final }
+      - { label: Obras relacionadas, name: related, widget: relation, collection: artworks, search_fields: ['title.es'], value_field: '{{slug}}', display_fields: ['title.es'], multiple: true, required: false }
+      - label: Fuentes
+        name: sources
+        widget: list
+        required: false
+        fields:
+          - { label: Título, name: title, widget: string }
+          - { label: URL, name: url, widget: string, required: false }
+          - { label: Editor / institución, name: publisher, widget: string, required: false }
+          - { label: Fecha, name: date, widget: string, required: false }
+      - { label: Pendiente de confirmar (interno), name: toConfirm, widget: list, required: false, field: { label: Punto, name: item, widget: string } }
+
+  - name: people
+    label: Familia Linares
+    label_singular: Integrante
+    folder: site/src/content/people
+    create: true
+    extension: yml
+    format: yml
+    identifier_field: name
+    summary: '{{name}} · generación {{generation}}'
+    fields:
+      - { label: Nombre completo, name: name, widget: string }
+      - { label: Nombre corto, name: shortName, widget: string }
+      - { label: Año de nacimiento, name: born, widget: number, value_type: int, required: false }
+      - { label: Año de fallecimiento, name: died, widget: number, value_type: int, required: false }
+      - { label: Nota sobre fechas, name: datesNote, widget: object, required: false, fields: [ { label: Español, name: es, widget: string, required: false }, { label: English, name: en, widget: string, required: false } ] }
+      - { label: Generación, name: generation, widget: number, value_type: int, hint: '1 = antepasados · 2 = Pedro Linares López · 3 = hijos · 4 = nietos · 5 = bisnietos' }
+      - { label: Padre / madre, name: parent, widget: relation, collection: people, search_fields: [name], value_field: '{{slug}}', display_fields: [name], required: false }
+      - { label: Relación confirmada, name: parentConfirmed, widget: boolean, default: true }
+      - { label: Rol, name: role, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+      - { label: Semblanza, name: bio, widget: object, fields: [ { label: Español, name: es, widget: text }, { label: English, name: en, widget: text } ] }
+      - { label: Es el artista del sitio, name: isFeaturedArtist, widget: boolean, default: false }
+      - { label: Orden, name: order, widget: number, value_type: int, default: 100 }
+      - label: Fuentes
+        name: sources
+        widget: list
+        required: false
+        fields:
+          - { label: Título, name: title, widget: string }
+          - { label: URL, name: url, widget: string, required: false }
+          - { label: Editor / institución, name: publisher, widget: string, required: false }
+          - { label: Fecha, name: date, widget: string, required: false }
+
+  - name: archive
+    label: Archivo
+    label_singular: Registro
+    folder: site/src/content/archive
+    create: true
+    extension: yml
+    format: yml
+    identifier_field: title.es
+    summary: '{{year}} · {{title.es}}'
+    sortable_fields: [year, order]
+    fields:
+      - { label: Título, name: title, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+      - { label: Tipo, name: type, widget: select, options: [ { label: Exposición, value: exhibition }, { label: Colección, value: collection }, { label: Prensa, value: press }, { label: Publicación, value: publication }, { label: Reconocimiento, value: recognition }, { label: Evento, value: event }, { label: Documental, value: film } ] }
+      - { label: Sujeto, name: subject, widget: select, options: [ { label: 'Felipe Linares Vargas', value: artist }, { label: 'Familia Linares', value: family }, { label: 'La tradición', value: tradition } ] }
+      - { label: Año, name: year, widget: number, value_type: int }
+      - { label: Año final, name: endYear, widget: number, value_type: int, required: false }
+      - { label: Fecha (texto), name: dateLabel, widget: object, required: false, fields: [ { label: Español, name: es, widget: string, required: false }, { label: English, name: en, widget: string, required: false } ] }
+      - { label: Institución, name: institution, widget: string, required: false }
+      - { label: Ciudad, name: city, widget: string, required: false }
+      - { label: Resumen, name: summary, widget: object, fields: [ { label: Español, name: es, widget: text }, { label: English, name: en, widget: text } ] }
+      - { label: Texto ampliado, name: body, widget: object, required: false, fields: [ { label: Español, name: es, widget: text, required: false }, { label: English, name: en, widget: text, required: false } ] }
+      - { label: Personas, name: people, widget: relation, collection: people, search_fields: [name], value_field: '{{slug}}', display_fields: [name], multiple: true, required: false }
+      - { label: Obras, name: artworks, widget: relation, collection: artworks, search_fields: ['title.es'], value_field: '{{slug}}', display_fields: ['title.es'], multiple: true, required: false }
+      - { label: Imagen, name: image, widget: image, required: false }
+      - { label: Texto alternativo, name: imageAlt, widget: object, required: false, fields: [ { label: Español, name: es, widget: string, required: false }, { label: English, name: en, widget: string, required: false } ] }
+      - { label: Orden, name: order, widget: number, value_type: int, default: 100 }
+      - label: Fuentes
+        name: sources
+        widget: list
+        required: false
+        fields:
+          - { label: Título, name: title, widget: string }
+          - { label: URL, name: url, widget: string, required: false }
+          - { label: Editor / institución, name: publisher, widget: string, required: false }
+          - { label: Fecha, name: date, widget: string, required: false }
+
+  - name: pages_es
+    label: Páginas (español)
+    folder: site/src/content/pages/es
+    create: false
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Título, name: title, widget: string }
+      - { label: Antetítulo, name: eyebrow, widget: string, required: false }
+      - { label: Entrada, name: lead, widget: text, required: false }
+      - { label: Título SEO, name: seoTitle, widget: string, required: false }
+      - { label: Descripción SEO, name: seoDescription, widget: text, required: false }
+      - { label: Secciones, name: sections, widget: list, required: false, fields: [ { label: Encabezado, name: heading, widget: string }, { label: Texto, name: text, widget: text }, { label: Nota, name: note, widget: text, required: false } ] }
+      - { label: Cuerpo, name: body, widget: markdown, required: false }
+
+  - name: pages_en
+    label: Pages (English)
+    folder: site/src/content/pages/en
+    create: false
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+      - { label: Lead, name: lead, widget: text, required: false }
+      - { label: SEO title, name: seoTitle, widget: string, required: false }
+      - { label: SEO description, name: seoDescription, widget: text, required: false }
+      - { label: Sections, name: sections, widget: list, required: false, fields: [ { label: Heading, name: heading, widget: string }, { label: Text, name: text, widget: text }, { label: Note, name: note, widget: text, required: false } ] }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  - name: settings
+    label: Configuración
+    files:
+      - name: site
+        label: Datos del sitio y contacto
+        file: site/src/data/site.json
+        fields:
+          - { label: Nombre del artista, name: artistName, widget: string }
+          - { label: Ciudad, name: city, widget: string }
+          - { label: Zona del taller, name: workshopArea, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+          - { label: Correo de contacto (público), name: contactEmail, widget: string, required: false, hint: 'Se publica en la página de contacto. Dejar vacío hasta que el taller lo autorice.' }
+          - { label: WhatsApp (con código de país), name: whatsappNumber, widget: string, required: false, hint: 'Ej. +52 55 1234 5678. Solo con autorización del artista.' }
+          - { label: Endpoint del formulario, name: formEndpoint, widget: string, required: false, hint: 'URL de un servicio de formularios (Formspree, Netlify Forms, etc.). Si está vacío, el formulario usa el correo o copia el mensaje.' }
+          - { label: Redes, name: social, widget: object, fields: [ { label: Instagram, name: instagram, widget: string, required: false }, { label: Facebook, name: facebook, widget: string, required: false } ] }
+          - { label: Frase de portada, name: heroStatement, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+          - { label: Nota sobre la frase, name: heroStatementNote, widget: object, fields: [ { label: Español, name: es, widget: string }, { label: English, name: en, widget: string } ] }
+          - { label: Descripción por defecto, name: defaultDescription, widget: object, fields: [ { label: Español, name: es, widget: text }, { label: English, name: en, widget: text } ] }

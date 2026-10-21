@@ -1,0 +1,43 @@
+title:
+  es: "«Alebrijes: A Linares Family Tradition», exposición itinerante"
+  en: "\"Alebrijes: A Linares Family Tradition\", traveling exhibition"
+type: exhibition
+subject: artist
+year: 2026
+endYear: 2028
+dateLabel:
+  es: 5 de mayo de 2026 – 28 de febrero de 2028
+  en: May 5, 2026 – February 28, 2028
+institution: Museum of International Folk Art
+city: Albuquerque / Santa Fe, Nuevo México
+order: 2
+summary:
+  es: Exposición bilingüe itinerante con obras de tres generaciones de la familia Linares, inaugurada en el Consulado de México en Albuquerque. Incluye un alebrije de gallo de Felipe Linares Vargas.
+  en: Bilingual traveling exhibition with works by three generations of the Linares family, opened at the Consulate of Mexico in Albuquerque. Includes a rooster alebrije by Felipe Linares Vargas.
+body:
+  es: >-
+    Adaptación de la exposición «La Cartonería Mexicana / The Mexican Art of Paper and Paste» del Museum of
+    International Folk Art (Santa Fe). Curaduría de Nora Dolan (MOIFA) y Marta Turok. Se inauguró el 5 de mayo
+    de 2026 en el Consulado de México en Albuquerque y recorrerá comunidades de Nuevo México y el suroeste de
+    Estados Unidos hasta 2028. La cobertura de KUNM documenta un alebrije de gallo de Felipe Linares Vargas y
+    un alebrije de gato de Leonardo Linares Vargas.
+  en: >-
+    An adaptation of the Museum of International Folk Art's exhibition "La Cartonería Mexicana / The Mexican
+    Art of Paper and Paste" (Santa Fe). Curated by Nora Dolan (MOIFA) and Marta Turok. It opened on May 5, 2026
+    at the Consulate of Mexico in Albuquerque and will travel to communities across New Mexico and the
+    Southwest through 2028. KUNM's coverage documents a rooster alebrije by Felipe Linares Vargas and a cat
+    alebrije by Leonardo Linares Vargas.
+people: [felipe-linares-vargas, leonardo-linares-vargas]
+artworks: [gallo-alebrije-moifa]
+sources:
+  - title: "Alebrijes: A Linares Family Tradition"
+    url: https://www.moifa.org/exhibition/7194/alebrijes-a-linares-family-tradition
+    publisher: Museum of International Folk Art
+  - title: "New exhibit showcases fantastical creatures in Mexican folk art"
+    url: https://www.kunm.org/local-news/2026-05-04/new-exhibit-showcases-fantastical-creatures-in-mexican-folk-art
+    publisher: KUNM
+    date: "2026-05-04"
+  - title: "Traveling Alebrijes showcase opens at Mexican Consulate in Albuquerque"
+    url: https://www.krqe.com/news/albuquerque-metro/traveling-alebrijes-showcase-opens-at-mexican-consulate-in-albuquerque/
+    publisher: KRQE
+    date: "2026-05"

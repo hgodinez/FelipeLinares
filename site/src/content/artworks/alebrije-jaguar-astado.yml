@@ -1,0 +1,71 @@
+title:
+  es: Alebrije de jaguar con astas de venado
+  en: Jaguar alebrije with deer antlers
+titleStatus: provisional
+categories: [alebrijes]
+featured: true
+order: 1
+materials:
+  es: "Cartonería tradicional: papel y cartón modelados sobre estructura, engrudo, pintura y acabado brillante. Detalles técnicos por confirmar con el artista."
+  en: "Traditional cartonería: paper and cardboard modeled over an armature, paste, paint and gloss finish. Technical details to be confirmed with the artist."
+description:
+  es: >-
+    Un felino de cabeza negra con orejas rojas y colmillos curvos, coronado por una cornamenta de venado que se
+    abre como las ramas de un árbol. El cuerpo, moteado de jaguar en ocre y negro, se prolonga en alas de
+    murciélago pintadas en rojo con nervaduras blancas; las garras, verdes y escamosas, terminan en uñas de
+    marfil. La lengua, larga y vermellón, asoma entre colmillos y responde a la tradición de los alebrijes
+    de la familia Linares: criaturas que reúnen en un solo cuerpo partes de varios animales.
+  en: >-
+    A black-headed feline with red ears and curved tusks, crowned by deer antlers that open like the
+    branches of a tree. The jaguar-spotted body in ochre and black extends into bat wings painted red with
+    white veins; the green, scaled claws end in ivory nails. A long vermilion tongue emerges between the
+    fangs, in the tradition of the Linares family's alebrijes: creatures that gather parts of several
+    animals in a single body.
+context:
+  es: >-
+    La pieza muestra el modo en que la cartonería de la Ciudad de México combina modelado volumétrico con una
+    pintura meticulosa de patrones: manchas, escamas, nervaduras y pelaje se resuelven a pincel sobre la
+    superficie de papel. Se incluyen fotografías tomadas en el taller de una pieza de este mismo diseño antes
+    del acabado final, útiles para apreciar el proceso.
+  en: >-
+    The piece shows how Mexico City cartonería combines volumetric modeling with meticulous pattern painting:
+    spots, scales, veins and fur are all resolved by brush on the paper surface. Workshop photographs of a
+    piece of this same design before its final finish are included to help appreciate the process.
+availability: unknown
+images:
+  - src: ../../assets/works/alebrije-astado-repisa.jpg
+    alt:
+      es: Alebrije de cartonería con cabeza de felino negro, astas de venado, alas rojas de murciélago y garras verdes, visto de tres cuartos sobre una repisa de madera.
+      en: Cartonería alebrije with a black feline head, deer antlers, red bat wings and green claws, seen in three-quarter view on a wooden shelf.
+    kind: final
+  - src: ../../assets/works/alebrije-astado-mano.jpg
+    alt:
+      es: Una mano sostiene al alebrije de frente; se aprecian los ojos ámbar, el hocico rosado, los colmillos amarillos y la lengua roja.
+      en: A hand holds the alebrije from the front; the amber eyes, pink muzzle, yellow tusks and red tongue are visible.
+    caption:
+      es: Escala de la pieza en la mano.
+      en: Scale of the piece in the hand.
+    kind: detail
+  - src: ../../assets/works/alebrije-astado-frente-taller.jpg
+    alt:
+      es: Vista frontal en el taller de un alebrije del mismo diseño, con colmillos blancos y astas en tono café, rodeado de otras piezas en proceso.
+      en: Front view in the workshop of an alebrije of the same design, with white tusks and brown antlers, surrounded by other pieces in progress.
+    kind: workshop
+  - src: ../../assets/works/alebrije-astado-cenital-taller.jpg
+    alt:
+      es: "Vista cenital en el taller: el cuerpo moteado de jaguar, las alas rojas de murciélago extendidas y las patas verdes con garras."
+      en: "Overhead view in the workshop: the jaguar-spotted body, red bat wings spread open and green legs with claws."
+    kind: workshop
+  - src: ../../assets/works/alebrije-astado-perfil-taller.jpg
+    alt:
+      es: "Vista lateral en el taller: la cola enroscada en rojo y blanco, el ala de murciélago y las patas traseras con dedos anaranjados."
+      en: "Side view in the workshop: the coiled tail in red and white, the bat wing and the hind legs with orange toes."
+    kind: workshop
+related: [alebrije-tigre-alado, alebrije-rana-picuda]
+toConfirm:
+  - Título oficial de la obra y año de realización.
+  - Dimensiones (alto × ancho × profundidad).
+  - Materiales y acabados exactos (tipo de pintura, barniz).
+  - Si las fotografías de taller corresponden a la misma pieza o a otra del mismo diseño.
+  - Disponibilidad y procedencia (colección particular, en venta, etc.).
+  - Crédito de las fotografías.

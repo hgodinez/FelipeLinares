@@ -1,0 +1,22 @@
+---
+import Base from '@/layouts/Base.astro';
+import { t } from '@/i18n/ui';
+import { alternates, route, type Lang } from '@/i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+---
+<Base lang={lang} title={ui.misc.notFound} alternates={alternates('home')}>
+  <section class="section nf">
+    <div class="container--narrow container text-center">
+      <p class="eyebrow eyebrow--accent">404</p>
+      <h1>{ui.misc.notFound}</h1>
+      <p class="lead mt-l" style="margin-inline:auto">{ui.misc.notFoundText}</p>
+      <div class="cluster mt-xl" style="justify-content:center">
+        <a class="btn btn--solid" href={route('home', lang)}>{ui.nav.home}</a>
+        <a class="btn" href={route('works', lang)}>{ui.cta.works}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>.nf { min-height: 60vh; display: grid; align-items: center; }</style>

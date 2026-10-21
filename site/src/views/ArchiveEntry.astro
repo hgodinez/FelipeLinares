@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+import { getEntries } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import SourceList from '@/components/SourceList.astro';
+import ArtworkCard from '@/components/ArtworkCard.astro';
+import { t } from '@/i18n/ui';
+import { alternates, route, archivePath, type Lang } from '@/i18n/routes';
+import type { ArchiveItem } from '@/lib/content';
+
+interface Props { lang: Lang; item: ArchiveItem }
+const { lang, item } = Astro.props;
+const ui = t(lang);
+const d = item.data;
+const people = await getEntries(d.people);
+const artworks = await getEntries(d.artworks);
+const title = d.title[lang];
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': d.type === 'exhibition' ? 'ExhibitionEvent' : 'CreativeWork',
+  name: title,
+  description: d.summary[lang],
+  ...(d.type === 'exhibition' ? { startDate: String(d.year), ...(d.endYear ? { endDate: String(d.endYear) } : {}), location: { '@type': 'Place', name: [d.institution, d.city].filter(Boolean).join(', ') } } : { datePublished: String(d.year) }),
+  url: new URL(archivePath(item.id, lang), Astro.site).toString(),
+};
+---
+<Base lang={lang} title={title} description={d.summary[lang]} alternates={alternates('archive', item.id)} jsonLd={ld}>
+  <article class="entry">
+    <nav class="container small entry__crumbs" aria-label="Breadcrumb"><a href={route('archive', lang)}>{ui.nav.archive}</a> <span aria-hidden="true">/</span> <span aria-current="page">{d.year}</span></nav>
+    <header class="container entry__head">
+      <div class="cluster reveal">
+        <span class:list={['tag', { 'tag--accent': d.subject === 'artist', 'tag--turquoise': d.subject === 'tradition' }]}>{ui.archive.subjects[d.subject]}</span>
+        <span class="tag">{ui.archive.types[d.type]}</span>
+      </div>
+      <h1 class="reveal" style="--delay:80ms">{title}</h1>
+      <p class="entry__meta reveal" style="--delay:140ms">
+        <span>{d.dateLabel?.[lang] ?? (d.endYear ? `${d.year}–${d.endYear}` : d.year)}</span>
+        {d.institution && <span>{d.institution}</span>}
+        {d.city && <span>{d.city}</span>}
+      </p>
+    </header>
+    <div class="container grid entry__body">
+      <div class="col-7 prose reveal">
+        <p class="lead">{d.summary[lang]}</p>
+        {d.body?.[lang] && <p class="mt-l">{d.body[lang]}</p>}
+        {d.image && <figure class="figure mt-l"><div class="frame"><Image src={d.image} alt={d.imageAlt?.[lang] ?? ''} widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 60vw" /></div></figure>}
+      </div>
+      <aside class="col-5 reveal" style="--delay:120ms">
+        {people.length > 0 && (
+          <div class="entry__block">
+            <h2 class="eyebrow">{ui.archive.people}</h2>
+            <ul class="entry__people">{people.map((p) => <li><a href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#tree-title`}>{p.data.name}</a><span class="small muted"> · {p.data.role[lang]}</span></li>)}</ul>
+          </div>
+        )}
+        <div class="entry__block"><SourceList lang={lang} sources={d.sources} heading={ui.archive.sources} headingLevel="h2" /></div>
+      </aside>
+    </div>
+    {artworks.length > 0 && (
+      <section class="section section--alt">
+        <div class="container">
+          <h2 class="mb-l">{ui.archive.artworks}</h2>
+          <div class="entry__works">{artworks.map((w, i) => <ArtworkCard work={w} lang={lang} size="small" index={i} />)}</div>
+        </div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<style>
+  .entry__crumbs { padding-top: var(--space-m); color: var(--fg-muted); }
+  .entry__crumbs a { text-decoration: none; }
+  .entry__head { padding-block: var(--space-l) var(--space-xl); }
+  .entry__head h1 { margin-top: var(--space-s); max-width: 22ch; }
+  .entry__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: var(--space-s); font-family: var(--font-display); font-size: var(--step-1); color: var(--fg-muted); font-variation-settings: 'opsz' 36; }
+  .entry__body { padding-bottom: var(--space-2xl); }
+  .entry__block + .entry__block { margin-top: var(--space-l); }
+  .entry__people { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; }
+  .entry__works { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
+  @media (max-width: 760px) { .entry__works { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .entry__works { grid-template-columns: 1fr; } }
+</style>

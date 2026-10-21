@@ -1,0 +1,227 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import SourceList from '@/components/SourceList.astro';
+import { t } from '@/i18n/ui';
+import { alternates, route, archivePath, type Lang } from '@/i18n/routes';
+import { getPage, getPeople, getArchive } from '@/lib/content';
+import workshopImg from '@/assets/works/alebrije-astado-perfil-taller.jpg';
+import catrinaImg from '@/assets/works/catrina-emplumada-taller.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const page = await getPage('legado', lang);
+const { Content } = await render(page);
+const sections = page.data.sections ?? [];
+const people = await getPeople();
+const generations = Array.from(new Set(people.map((p) => p.data.generation))).sort();
+const byId = Object.fromEntries(people.map((p) => [p.id, p]));
+const timeline = (await getArchive()).sort((a, b) => a.data.year - b.data.year);
+const allSources = people.flatMap((p) => p.data.sources).filter((s, i, arr) => arr.findIndex((x) => x.title === s.title) === i);
+const genLabel = (g: number) => {
+  const labels: Record<number, { es: string; en: string }> = {
+    1: { es: 'Siglos XIX–XX · antepasados', en: '19th–20th c. · ancestors' },
+    2: { es: 'Pedro Linares López', en: 'Pedro Linares López' },
+    3: { es: 'Los hijos', en: 'The sons' },
+    4: { es: 'Los nietos', en: 'The grandchildren' },
+    5: { es: 'Los bisnietos', en: 'The great-grandchildren' },
+  };
+  return labels[g]?.[lang] ?? ui.legacy.generation(g);
+};
+---
+<Base lang={lang} title={page.data.title} description={page.data.seoDescription} alternates={alternates('legacy')}>
+  <section class="legacy-hero section">
+    <div class="container">
+      <p class="eyebrow eyebrow--accent reveal">{page.data.eyebrow}</p>
+      <h1 class="reveal" style="--delay:80ms">{page.data.title}</h1>
+      <p class="lead mt-l reveal" style="--delay:160ms">{page.data.lead}</p>
+    </div>
+  </section>
+
+  <!-- Story chapters: alternating editorial blocks -->
+  <section class="section section--tight chapters">
+    <div class="container">
+      {sections.map((s, i) => (
+        <div class:list={['chapter', 'reveal', { 'chapter--alt': i % 2 === 1 }]}>
+          <span class="chapter__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="chapter__body">
+            <h2>{s.heading}</h2>
+            <p>{s.text}</p>
+          </div>
+          {i === 1 && <figure class="chapter__fig figure"><div class="frame aspect-3-4"><Image src={workshopImg} alt={lang === 'es' ? 'Alebrije en proceso en el taller familiar.' : 'Alebrije in progress in the family workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 30vw" loading="lazy" /></div></figure>}
+          {i === 3 && <figure class="chapter__fig figure"><div class="frame aspect-3-4"><Image src={catrinaImg} alt={lang === 'es' ? 'Catrina de cartonería con tocado de plumas en el taller.' : 'Cartonería Catrina with a feathered headdress in the workshop.'} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 30vw" loading="lazy" /></div></figure>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Family tree -->
+  <section class="section section--dark tree-section" aria-labelledby="tree-title">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">{ui.legacy.tree}</p><h2 id="tree-title">{lang === 'es' ? 'Cinco generaciones' : 'Five generations'}</h2></div>
+        <p class="small muted" style="max-width:40ch">{ui.legacy.treeHint}</p>
+      </div>
+      <div class="tree" data-tree>
+        <div class="tree__gens">
+          {generations.map((g) => (
+            <div class="tree__gen">
+              <p class="tree__gen-label">{genLabel(g)}</p>
+              <ul class="tree__row">
+                {people.filter((p) => p.data.generation === g).map((p) => (
+                  <li>
+                    <button type="button" class:list={['tree__node', { 'tree__node--featured': p.data.isFeaturedArtist }]} data-person={p.id} aria-expanded="false" aria-controls="tree-panel">
+                      <span class="tree__name">{p.data.shortName}</span>
+                      <span class="tree__dates">{p.data.born ? `${p.data.born}${p.data.died ? `–${p.data.died}` : ''}` : ''}</span>
+                      {p.data.parent && !p.data.parentConfirmed && <span class="tree__flag">{ui.legacy.relationUnconfirmed}</span>}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div id="tree-panel" class="tree__panel" aria-live="polite">
+          {people.map((p) => (
+            <article class="tree__card" data-card={p.id} hidden>
+              <p class="eyebrow">{genLabel(p.data.generation)}{p.data.parent && byId[p.data.parent.id] && <> · {lang === 'es' ? 'descendiente de' : 'descendant of'} {byId[p.data.parent.id].data.shortName}</>}</p>
+              <h3>{p.data.name}</h3>
+              <p class="small muted">{p.data.role[lang]}{p.data.datesNote?.[lang] && <> · {p.data.datesNote[lang]}</>}</p>
+              <p>{p.data.bio[lang]}</p>
+              {p.data.isFeaturedArtist && <a class="link-arrow" href={route('artist', lang)}>{ui.cta.artist} <span class="arrow" aria-hidden="true">→</span></a>}
+              <SourceList lang={lang} sources={p.data.sources} headingLevel="h4" />
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section" aria-labelledby="tl-title">
+    <div class="container">
+      <div class="section-head"><div><p class="eyebrow eyebrow--accent">{ui.legacy.timeline}</p><h2 id="tl-title">{lang === 'es' ? 'De 1906 a hoy' : 'From 1906 to today'}</h2></div><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
+      <ol class="timeline">
+        <li class="timeline__item reveal"><span class="timeline__year">1906</span><div><span class="tag">{ui.archive.subjects.family}</span><p>{lang === 'es' ? 'Nace Pedro Linares López en la Ciudad de México (29 de junio).' : 'Pedro Linares López is born in Mexico City (June 29).'}</p></div></li>
+        {timeline.map((e, i) => (
+          <li class="timeline__item reveal" style={`--delay:${(i % 3) * 60}ms`}>
+            <span class="timeline__year">{e.data.year}{e.data.endYear ? <span class="timeline__end">–{e.data.endYear}</span> : null}</span>
+            <div>
+              <span class:list={['tag', { 'tag--accent': e.data.subject === 'artist', 'tag--turquoise': e.data.subject === 'tradition' }]}>{ui.archive.subjects[e.data.subject]}</span>
+              <p><a href={archivePath(e.id, lang)}>{e.data.title[lang]}</a></p>
+            </div>
+          </li>
+        ))}
+        <li class="timeline__item reveal"><span class="timeline__year">1992</span><div><span class="tag">{ui.archive.subjects.family}</span><p>{lang === 'es' ? 'Muere Pedro Linares López en enero; sus hijos y nietos continúan el oficio.' : 'Pedro Linares López dies in January; his sons and grandsons continue the craft.'}</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Cartonería vs wood -->
+  <section class="section section--alt">
+    <div class="container grid">
+      <div class="col-7 prose reveal"><Content /></div>
+      <aside class="col-5 reveal" style="--delay:120ms">
+        <div class="compare">
+          <div class="compare__col">
+            <p class="eyebrow eyebrow--accent">{lang === 'es' ? 'Ciudad de México' : 'Mexico City'}</p>
+            <ul class="compare__list">
+              <li>{lang === 'es' ? 'Papel, cartón y engrudo' : 'Paper, cardboard and paste'}</li>
+              <li>{lang === 'es' ? 'Modelado sobre estructura; pieza hueca y ligera' : 'Modeled over an armature; hollow, light piece'}</li>
+              <li>{lang === 'es' ? 'Origen: Pedro Linares López, 1936' : 'Origin: Pedro Linares López, 1936'}</li>
+              <li>{lang === 'es' ? 'Tradición urbana de judas, calaveras y piñatas' : 'Urban tradition of Judas figures, skulls and piñatas'}</li>
+            </ul>
+          </div>
+          <div class="compare__col">
+            <p class="eyebrow" style="color:var(--turquoise-ink)">Oaxaca</p>
+            <ul class="compare__list">
+              <li>{lang === 'es' ? 'Madera de copal tallada' : 'Carved copal wood'}</li>
+              <li>{lang === 'es' ? 'Pieza maciza; talla y pintura miniaturista' : 'Solid piece; carving and miniature painting'}</li>
+              <li>{lang === 'es' ? 'Tradición de talla previa; colores vivos desde los años sesenta' : 'Prior carving tradition; vivid colors from the 1960s'}</li>
+              <li>{lang === 'es' ? 'San Antonio Arrazola, San Martín Tilcajete' : 'San Antonio Arrazola, San Martín Tilcajete'}</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container"><SourceList lang={lang} sources={allSources} heading={ui.archive.sources} headingLevel="h2" /></div>
+  </section>
+</Base>
+
+<script>
+  function initTree() {
+    const tree = document.querySelector<HTMLElement>('[data-tree]');
+    if (!tree || tree.dataset.ready) return;
+    tree.dataset.ready = '1';
+    const nodes = Array.from(tree.querySelectorAll<HTMLButtonElement>('[data-person]'));
+    const cards = Array.from(tree.querySelectorAll<HTMLElement>('[data-card]'));
+    const panel = tree.querySelector<HTMLElement>('#tree-panel')!;
+    const select = (id: string, focusPanel = false) => {
+      nodes.forEach((n) => { const on = n.dataset.person === id; n.setAttribute('aria-expanded', String(on)); n.classList.toggle('is-active', on); });
+      cards.forEach((c) => { c.hidden = c.dataset.card !== id; });
+      panel.classList.add('is-open');
+      if (focusPanel && window.matchMedia('(max-width: 900px)').matches) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+    nodes.forEach((n) => n.addEventListener('click', () => select(n.dataset.person!, true)));
+    const featured = nodes.find((n) => n.classList.contains('tree__node--featured')) ?? nodes[0];
+    if (featured) select(featured.dataset.person!);
+  }
+  initTree();
+  document.addEventListener('astro:page-load', initTree);
+</script>
+
+<style>
+  .legacy-hero h1 { font-size: var(--step-5); }
+  .chapters .container { display: grid; gap: var(--space-xl); }
+  .chapter { display: grid; grid-template-columns: 6ch minmax(0, 56ch) minmax(0, 1fr); gap: var(--space-m) var(--space-l); align-items: start; }
+  .chapter--alt { grid-template-columns: minmax(0, 1fr) 6ch minmax(0, 56ch); }
+  .chapter--alt .chapter__num { grid-column: 2; }
+  .chapter--alt .chapter__body { grid-column: 3; }
+  .chapter--alt .chapter__fig { grid-column: 1; grid-row: 1; }
+  .chapter__num { font-family: var(--font-display); font-size: var(--step-2); color: var(--accent); line-height: 1.1; font-variation-settings: 'opsz' 72; }
+  .chapter__body h2 { font-size: var(--step-2); margin-bottom: var(--space-s); }
+  .chapter__fig { max-width: 320px; justify-self: end; }
+  @media (max-width: 900px) {
+    .chapter, .chapter--alt { grid-template-columns: 5ch 1fr; }
+    .chapter--alt .chapter__num { grid-column: 1; } .chapter--alt .chapter__body { grid-column: 2; }
+    .chapter__fig, .chapter--alt .chapter__fig { grid-column: 2; grid-row: auto; justify-self: start; max-width: 260px; }
+  }
+
+  .tree { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl); align-items: start; }
+  .tree__gens { display: grid; gap: var(--space-m); }
+  .tree__gen { position: relative; padding-left: var(--space-m); border-left: 1px solid var(--line-strong); }
+  .tree__gen-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.5rem; }
+  .tree__row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tree__node { display: grid; gap: 0.15rem; text-align: left; padding: 0.7rem 1rem; border: 1px solid var(--line); border-radius: var(--radius); min-height: 56px; min-width: 150px; transition: border-color 200ms, background-color 200ms; }
+  .tree__node:hover { border-color: var(--line-strong); }
+  .tree__node.is-active { background: var(--ivory); color: var(--charcoal); border-color: var(--ivory); }
+  .tree__node--featured { border-color: var(--ochre); }
+  .tree__name { font-family: var(--font-display); font-size: var(--step-0); font-variation-settings: 'opsz' 24; }
+  .tree__dates { font-size: 0.72rem; letter-spacing: 0.08em; opacity: 0.7; }
+  .tree__flag { font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); }
+  .tree__node.is-active .tree__flag { color: #8a6512; }
+  .tree__panel { position: sticky; top: 100px; padding: var(--space-m); border: 1px solid var(--line); min-height: 240px; }
+  .tree__card h3 { margin: 0.3rem 0 0.4rem; }
+  .tree__card p { margin-bottom: var(--space-s); }
+  .tree__card :global(.sources a) { color: inherit; }
+  @media (max-width: 900px) { .tree { grid-template-columns: 1fr; } .tree__panel { position: static; } }
+
+  .timeline { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .timeline__item { display: grid; grid-template-columns: 10ch 1fr; gap: var(--space-m); padding: var(--space-s) 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .timeline__item p { margin: 0.4rem 0 0; }
+  .timeline__item a { text-decoration: none; }
+  .timeline__item a:hover { text-decoration: underline; }
+  .timeline__year { font-family: var(--font-display); font-size: var(--step-2); font-variation-settings: 'opsz' 72; line-height: 1; }
+  .timeline__end { font-size: var(--step--1); color: var(--fg-muted); font-family: var(--font-text); }
+  @media (max-width: 600px) { .timeline__item { grid-template-columns: 1fr; gap: 0.3rem; } }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); border-top: 1px solid var(--line-strong); padding-top: var(--space-m); }
+  .compare__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; font-size: var(--step--1); }
+  .compare__list li { padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); }
+  @media (max-width: 520px) { .compare { grid-template-columns: 1fr; } }
+</style>

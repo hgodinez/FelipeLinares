@@ -1,0 +1,47 @@
+---
+import { t } from '@/i18n/ui';
+import { route, type Lang, type RouteKey } from '@/i18n/routes';
+import site from '@/data/site.json';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const explore: RouteKey[] = ['artist', 'works', 'legacy', 'workshop', 'archive', 'contact'];
+const legal: RouteKey[] = ['privacy', 'credits', 'accessibility'];
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer section--dark">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <p class="site-footer__name">Felipe Linares Vargas</p>
+        <p class="muted small">{ui.tagline}</p>
+        <p class="muted small">{site.workshopArea[lang]}</p>
+      </div>
+      <nav aria-label={ui.footer.explore}>
+        <p class="eyebrow">{ui.footer.explore}</p>
+        <ul>{explore.map((k) => <li><a href={route(k, lang)}>{ui.nav[k]}</a></li>)}</ul>
+      </nav>
+      <nav aria-label={ui.footer.legal}>
+        <p class="eyebrow">{ui.footer.legal}</p>
+        <ul>{legal.map((k) => <li><a href={route(k, lang)}>{ui.nav[k]}</a></li>)}</ul>
+      </nav>
+    </div>
+    <hr class="rule" />
+    <div class="site-footer__bottom small muted">
+      <span>© {year} Felipe Linares Vargas · {ui.footer.madeIn}</span>
+      <span>{ui.footer.rights}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding-block: var(--space-xl) var(--space-l); }
+  .site-footer__top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-l); margin-bottom: var(--space-l); }
+  .site-footer__name { font-family: var(--font-display); font-size: var(--step-2); margin-bottom: 0.3rem; font-variation-settings: 'opsz' 72, 'SOFT' 30; }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
+  .site-footer li a { text-decoration: none; display: inline-flex; min-height: 40px; align-items: center; }
+  .site-footer li a:hover { text-decoration: underline; }
+  .site-footer__bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-s); padding-top: var(--space-m); }
+  @media (max-width: 760px) { .site-footer__top { grid-template-columns: 1fr 1fr; } .site-footer__brand { grid-column: 1 / -1; } }
+</style>

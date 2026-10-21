@@ -1,0 +1,81 @@
+---
+import { t } from '@/i18n/ui';
+import type { Lang } from '@/i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+---
+<dialog class="lightbox" data-lightbox aria-label={ui.works.gallery}>
+  <div class="lightbox__bar">
+    <span class="lightbox__counter" data-lb-counter data-of={ui.works.of} aria-live="polite"></span>
+    <div class="lightbox__controls">
+      <button type="button" class="lightbox__btn" data-lb-zoom aria-pressed="false" aria-label={ui.lightbox.zoom}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
+      </button>
+      <button type="button" class="lightbox__btn" data-lb-close aria-label={ui.lightbox.close}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+  <button type="button" class="lightbox__nav lightbox__nav--prev" data-lb-prev aria-label={ui.lightbox.prev}>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="lightbox__stage" data-lb-stage>
+    <img class="lightbox__img" data-lb-img alt="" draggable="false" />
+  </div>
+  <button type="button" class="lightbox__nav lightbox__nav--next" data-lb-next aria-label={ui.lightbox.next}>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <p class="lightbox__caption" data-lb-caption></p>
+  <p class="lightbox__hint" aria-hidden="true">{ui.lightbox.hint}</p>
+</dialog>
+
+<script>
+  import { initLightbox } from '@/lib/lightbox';
+  initLightbox();
+  document.addEventListener('astro:page-load', initLightbox);
+</script>
+
+<style is:global>
+  .lightbox {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    background: var(--charcoal);
+    color: var(--ivory);
+    display: none;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'bar bar bar' 'prev stage next' 'cap cap cap' 'hint hint hint';
+    overflow: hidden;
+  }
+  .lightbox[open] { display: grid; }
+  .lightbox::backdrop { background: rgba(0, 0, 0, 0.6); }
+  .lightbox__bar { grid-area: bar; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem var(--gutter); font-size: 0.8rem; letter-spacing: 0.08em; }
+  .lightbox__controls { display: flex; gap: 0.25rem; }
+  .lightbox__btn, .lightbox__nav { color: inherit; display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; transition: background-color 200ms; }
+  .lightbox__btn:hover, .lightbox__nav:hover { background: rgba(255, 255, 255, 0.1); }
+  .lightbox__btn[aria-pressed='true'] { background: var(--ivory); color: var(--charcoal); }
+  .lightbox__nav { align-self: center; margin: 0 0.5rem; }
+  .lightbox__nav--prev { grid-area: prev; }
+  .lightbox__nav--next { grid-area: next; }
+  .lightbox__stage { grid-area: stage; position: relative; overflow: hidden; min-height: 0; min-width: 0; display: grid; place-items: center; touch-action: none; cursor: zoom-in; padding: 0 0.5rem; }
+  .lightbox__stage.is-zoomed { cursor: grab; }
+  .lightbox__stage.is-dragging { cursor: grabbing; }
+  .lightbox__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; margin: 0; user-select: none; transform-origin: center; will-change: transform; transition: opacity 200ms, transform 220ms var(--ease-out); }
+  .lightbox__stage.is-dragging .lightbox__img { transition: none; }
+  .lightbox__caption { grid-area: cap; margin: 0; padding: 0.5rem var(--gutter); font-size: var(--step--1); color: rgba(242, 232, 213, 0.8); text-align: center; max-width: none; }
+  .lightbox__hint { grid-area: hint; margin: 0; padding: 0 var(--gutter) 0.75rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(242, 232, 213, 0.45); text-align: center; max-width: none; }
+  @media (max-width: 700px) {
+    .lightbox { grid-template-columns: 1fr; grid-template-areas: 'bar' 'stage' 'cap' 'hint'; }
+    .lightbox__nav { position: absolute; bottom: 4.2rem; z-index: 2; background: rgba(0,0,0,0.35); }
+    .lightbox__nav--prev { left: 0.5rem; }
+    .lightbox__nav--next { right: 0.5rem; }
+    .lightbox__hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lightbox__img { transition: none; } }
+</style>

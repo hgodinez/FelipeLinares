@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import SourceList from '@/components/SourceList.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import ArtworkCard from '@/components/ArtworkCard.astro';
+import { t } from '@/i18n/ui';
+import { route, alternates, type Lang } from '@/i18n/routes';
+import { getPage, getWorks, getPeople, getArchive } from '@/lib/content';
+import handImg from '@/assets/works/alebrije-astado-mano.jpg';
+import detailImg from '@/assets/works/alebrije-tigre-cenital.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+const page = await getPage('maestro', lang);
+const { Content } = await render(page);
+const people = await getPeople();
+const felipe = people.find((p) => p.data.isFeaturedArtist)!;
+const archive = (await getArchive()).filter((a) => a.data.subject === 'artist');
+const works = (await getWorks()).filter((w) => w.data.images.length > 0).slice(0, 3);
+
+const milestones = [
+  { year: '—', label: lang === 'es' ? 'Nacimiento y primeros años en la Ciudad de México' : 'Birth and early years in Mexico City', status: 'pending' as const },
+  { year: '—', label: lang === 'es' ? 'Aprendizaje en el taller de su padre, Felipe Linares Mendoza' : 'Apprenticeship in the workshop of his father, Felipe Linares Mendoza', status: 'pending' as const },
+  ...archive
+    .sort((a, b) => a.data.year - b.data.year)
+    .map((a) => ({ year: String(a.data.year) + (a.data.endYear ? `–${a.data.endYear}` : ''), label: a.data.title[lang], status: 'verified' as const })),
+];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: felipe.data.name,
+  description: felipe.data.bio[lang],
+  url: new URL(route('artist', lang), Astro.site).toString(),
+  jobTitle: lang === 'es' ? 'Cartonero' : 'Cartonería artist',
+  address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' },
+};
+---
+<Base lang={lang} title={page.data.title === 'Felipe Linares Vargas' ? ui.nav.artist : page.data.title} description={page.data.seoDescription} alternates={alternates('artist')} jsonLd={personLd}>
+  <section class="artist-hero section">
+    <div class="container grid">
+      <div class="col-6 artist-hero__text">
+        <p class="eyebrow eyebrow--accent reveal">{page.data.eyebrow}</p>
+        <h1 class="reveal" style="--delay:80ms">{page.data.title}</h1>
+        <p class="lead mt-l reveal" style="--delay:160ms">{page.data.lead}</p>
+        <p class="small muted reveal mt-l" style="--delay:220ms">{felipe.data.role[lang]}</p>
+      </div>
+      <div class="col-6 artist-hero__portrait reveal" style="--delay:120ms">
+        <Placeholder lang={lang} ratio="4/5" title={lang === 'es' ? 'Retrato del artista' : 'Portrait of the artist'} text={lang === 'es' ? 'Fotografía documental de Felipe Linares Vargas, por incorporar.' : 'Documentary photograph of Felipe Linares Vargas, to be added.'} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container grid">
+      <div class="col-7 prose reveal artist-body">
+        <Content />
+      </div>
+      <aside class="col-5 artist-aside">
+        <figure class="figure reveal" style="--delay:100ms">
+          <div class="frame aspect-4-5"><Image src={handImg} alt={lang === 'es' ? 'La mano del coleccionista sostiene un alebrije de cabeza negra y astas de venado.' : 'A hand holds an alebrije with a black head and deer antlers.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div>
+          <figcaption><span>{lang === 'es' ? 'Alebrije de jaguar con astas de venado, detalle de escala.' : 'Jaguar alebrije with deer antlers, scale detail.'}</span></figcaption>
+        </figure>
+        <figure class="figure reveal mt-l" style="--delay:200ms">
+          <div class="frame aspect-4-5"><Image src={detailImg} alt={lang === 'es' ? 'Vista cenital del alebrije de tigre alado: alas negras y cola de serpiente.' : 'Overhead view of the winged tiger alebrije: black wings and serpent tail.'} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /></div>
+          <figcaption><span>{lang === 'es' ? 'Alebrije de tigre alado, vista cenital.' : 'Winged tiger alebrije, overhead view.'}</span></figcaption>
+        </figure>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--dark" aria-labelledby="timeline-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{ui.legacy.timeline}</p>
+          <h2 id="timeline-title">{lang === 'es' ? 'Hitos documentados' : 'Documented milestones'}</h2>
+        </div>
+        <p class="small muted" style="max-width:40ch">{lang === 'es' ? 'Solo se incluyen fechas verificadas en fuentes públicas. Los hitos personales se añadirán con la confirmación del artista.' : 'Only dates verified in public sources are included. Personal milestones will be added with the artist’s confirmation.'}</p>
+      </div>
+      <ol class="milestones">
+        {milestones.map((m, i) => (
+          <li class:list={['milestone', 'reveal', { 'milestone--pending': m.status === 'pending' }]} style={`--delay:${i * 60}ms`}>
+            <span class="milestone__year">{m.year}</span>
+            <span class="milestone__label">{m.label}{m.status === 'pending' && <span class="tag tag--ochre">{ui.misc.toConfirm}</span>}</span>
+          </li>
+        ))}
+      </ol>
+      <div class="mt-l"><a class="link-arrow" href={route('archive', lang)}>{ui.nav.archive} <span class="arrow" aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow eyebrow--accent">{ui.works.eyebrow}</p><h2>{lang === 'es' ? 'Obras seleccionadas' : 'Selected works'}</h2></div>
+        <a class="link-arrow" href={route('works', lang)}>{ui.cta.allWorks} <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="works-row">{works.map((w, i) => <ArtworkCard work={w} lang={lang} size="small" index={i} />)}</div>
+      <div class="mt-xl"><SourceList lang={lang} sources={felipe.data.sources} /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .artist-hero { padding-top: var(--space-xl); }
+  .artist-hero__text { align-self: end; }
+  .artist-hero h1 { font-size: var(--step-5); }
+  .artist-aside { display: grid; align-content: start; }
+  .milestones { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .milestone { display: grid; grid-template-columns: 9ch 1fr; gap: var(--space-m); padding: var(--space-s) 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .milestone__year { font-family: var(--font-display); font-size: var(--step-1); font-variation-settings: 'opsz' 36; }
+  .milestone__label { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+  .milestone--pending .milestone__label { color: var(--fg-muted); }
+  .works-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
+  @media (max-width: 760px) { .works-row { grid-template-columns: 1fr 1fr; } .milestone { grid-template-columns: 1fr; gap: 0.2rem; } }
+  @media (max-width: 480px) { .works-row { grid-template-columns: 1fr; } }
+</style>

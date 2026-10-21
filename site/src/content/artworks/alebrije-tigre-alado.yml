@@ -1,0 +1,48 @@
+title:
+  es: Alebrije de tigre alado con cola de serpiente
+  en: Winged tiger alebrije with serpent tail
+titleStatus: provisional
+categories: [alebrijes]
+featured: true
+order: 2
+materials:
+  es: "Cartonería tradicional: papel y cartón modelados, engrudo y pintura. Detalles técnicos por confirmar con el artista."
+  en: "Traditional cartonería: modeled paper and cardboard, paste and paint. Technical details to be confirmed with the artist."
+description:
+  es: >-
+    Una cabeza de tigre, rayada en naranja y negro, se abre en un rugido que deja ver la lengua y los colmillos.
+    El cuerpo, sin embargo, lleva las manchas del jaguar; las patas delanteras están cubiertas de escamas
+    rosadas y las alas, negras y rojizas, se pliegan como las de un ave de presa. La cola se enrosca y termina
+    en una cabeza de serpiente de ojos amarillos: un animal que vigila en ambas direcciones.
+  en: >-
+    A tiger head striped in orange and black opens in a roar that reveals tongue and fangs. The body,
+    however, carries the jaguar's spots; the forelegs are covered in pink scales and the wings, black and
+    reddish, fold like those of a bird of prey. The tail coils and ends in a yellow-eyed serpent head: an
+    animal that keeps watch in both directions.
+context:
+  es: >-
+    El alebrije reúne tres órdenes de animales —felino, ave y reptil— en un mismo cuerpo, siguiendo el
+    principio que Pedro Linares López describió a partir de su sueño de 1936. Fotografiado junto a un segundo
+    alebrije de cuerpo de rana.
+  en: >-
+    The alebrije gathers three orders of animals (feline, bird and reptile) into one body, following the
+    principle Pedro Linares López described from his 1936 dream. Photographed alongside a second,
+    frog-bodied alebrije.
+availability: unknown
+images:
+  - src: ../../assets/works/alebrije-tigre-frente.jpg
+    alt:
+      es: Alebrije con cabeza de tigre rugiendo, cuerpo moteado de jaguar, alas negras extendidas y patas escamosas rosadas, sobre piso de madera.
+      en: Alebrije with a roaring tiger head, jaguar-spotted body, spread black wings and pink scaled legs, on a wooden floor.
+    kind: final
+  - src: ../../assets/works/alebrije-tigre-cenital.jpg
+    alt:
+      es: "Vista cenital del alebrije de tigre: las alas negras abiertas y la cola enroscada que termina en cabeza de serpiente."
+      en: "Overhead view of the tiger alebrije: open black wings and the coiled tail ending in a serpent head."
+    kind: detail
+related: [alebrije-rana-picuda, alebrije-jaguar-astado]
+toConfirm:
+  - Título oficial, año y dimensiones.
+  - Materiales y acabados exactos.
+  - Disponibilidad y procedencia.
+  - Crédito de las fotografías.

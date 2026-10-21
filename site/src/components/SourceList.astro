@@ -1,0 +1,23 @@
+---
+import { t } from '@/i18n/ui';
+import type { Lang } from '@/i18n/routes';
+interface Source { title: string; url?: string; publisher?: string; date?: string }
+interface Props { lang: Lang; sources: Source[]; heading?: string; headingLevel?: 'h2' | 'h3' | 'h4' }
+const { lang, sources, heading, headingLevel = 'h3' } = Astro.props;
+const ui = t(lang);
+const Tag = headingLevel;
+---
+{sources.length > 0 && (
+  <div class="source-block">
+    <Tag class="eyebrow">{heading ?? ui.misc.sources}</Tag>
+    <ol class="sources">
+      {sources.map((s) => (
+        <li>
+          {s.url ? <a href={s.url} rel="noopener noreferrer" target="_blank">{s.title}</a> : s.title}
+          {s.publisher && <span>, {s.publisher}</span>}
+          {s.date && <span> ({s.date})</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
