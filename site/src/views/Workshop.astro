@@ -13,6 +13,9 @@ import img3 from '@/assets/works/jinete-calavera-taller.jpg';
 import img4 from '@/assets/works/alebrije-astado-perfil-taller.jpg';
 import img5 from '@/assets/works/catrina-emplumada-taller.jpg';
 import done from '@/assets/works/jinete-calavera-mesa.jpg';
+import pintandoImg from '@/assets/video/felipe-pintando.webp';
+import cabezaImg from '@/assets/video/felipe-cabeza-astada.webp';
+import contraluzImg from '@/assets/video/alebrije-astado-contraluz.webp';
 import mEscamas from '@/assets/macro/jaguar-escamas.jpg';
 import mAlas from '@/assets/macro/jaguar-alas.jpg';
 import mColmillos from '@/assets/macro/jaguar-colmillos.jpg';
@@ -36,6 +39,8 @@ const fotos = [
   { src: img4, alt: { es: 'Vista lateral del alebrije de jaguar con astas: cola enroscada, ala y patas verdes.', en: 'Side view of the antlered jaguar alebrije: coiled tail, wing and green legs.' } },
   { src: img5, alt: { es: 'Catrina con tocado de plumas sobre base roja, rodeada de piezas terminadas y en proceso.', en: 'Catrina with feathered headdress on a red base, surrounded by finished and in-progress pieces.' } },
   { src: done, alt: { es: 'Esqueleto alado sobre alebrije, terminado y con riendas, sobre una mesa.', en: 'Winged skeleton on an alebrije, finished and with reins, on a table.' } },
+  { src: cabezaImg, alt: { es: 'Felipe Linares Vargas observa de cerca una cabeza de alebrije en proceso: cuernos grises y melena de tiras anaranjadas. Fotograma de video.', en: 'Felipe Linares Vargas looks closely at an alebrije head in progress: grey horns and a mane of orange strips. Video still.' } },
+  { src: contraluzImg, alt: { es: 'Alebrije con cabeza de cabra y cuernos rayados, a contraluz en el taller; su sombra se proyecta en la pared. Fotograma de video.', en: 'Alebrije with a goat head and striped horns, against the light in the workshop; its shadow falls on the wall. Video still.' } },
 ];
 const fotosFull = await Promise.all(fotos.map(async (f) => ({ ...f, full: (await getImage({ src: f.src, width: Math.min(1600, f.src.width), format: 'webp', quality: 82 })).src })));
 const detalles = [
@@ -60,8 +65,8 @@ const detalles = [
         <div class="botones"><a class="boton boton-principal" href="#pasos">{es ? 'Ver los pasos' : 'See the steps'}</a><a class="boton boton-secundario" href={route('works', lang)}>{ui.cta.works}</a></div>
       </div>
       <figure class="portada-imagen">
-        <div class="portada-marco"><Image src={img1} alt={fotos[0].alt[lang]} widths={[480, 960]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" /></div>
-        <figcaption>{es ? 'Una pieza a medio terminar en el taller familiar.' : 'A half-finished piece in the family workshop.'}</figcaption>
+        <div class="portada-marco"><Image src={pintandoImg} alt={es ? 'Felipe Linares Vargas pinta con un pincel fino en la mesa del taller; a su lado, un alebrije con cuernos y melena multicolor.' : 'Felipe Linares Vargas paints with a fine brush at the workshop table; beside him, a horned alebrije with a multicolored mane.'} widths={[480, 960, 1400]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="aspect-ratio:4/3;object-position:60% 50%" /></div>
+        <figcaption>{es ? 'Felipe pintando en el taller familiar · fotograma de video' : 'Felipe painting in the family workshop · video still'}</figcaption>
       </figure>
     </div>
   </section>

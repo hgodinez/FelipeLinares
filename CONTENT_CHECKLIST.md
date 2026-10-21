@@ -9,7 +9,11 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 - [ ] Especialidades y técnicas propias; qué animales prefiere combinar.
 - [ ] Retrato fotográfico (sustituye el marcador «Retrato del artista»).
 - [x] Citas textuales del artista: tomadas de los testimonios en video (Felipe, Leonardo y Felipe Linares Mendoza). Pendiente: título, productor y fecha de los videos para el crédito.
-- [ ] Fotogramas del video (Felipe pintando; Felipe con su padre en el taller): enviar como archivos para usarlos como retrato y foto de taller, con autorización.
+- [x] Fotogramas del video recibidos e integrados: retrato de Felipe (Felipe y Taller en Inicio), Felipe pintando (portada de Proceso), cabeza astada en proceso, alebrije astado a contraluz y Pedro Linares con un gallo (Legado).
+- [ ] Confirmar que el fotograma del hombre con el gallo es Pedro Linares López, y la fecha/origen de ese video.
+- [x] Recibidas e integradas (Felipe y Legado): Felipe pintando junto a su padre en la mesa del taller; Felipe con Felipe Mendoza frente a las calaveras de tamaño natural (confirmar lugar, fecha y autoría de las calaveras).
+- [ ] Fotografía de archivo de Pedro Linares pintando (archivo recibido como «images.jpg», 551 px, posible descarga de internet): confirmar autoría y derechos de reproducción; sustituir por una copia de mayor resolución si la familia la tiene.
+- [ ] Autorización explícita de Felipe para publicar su retrato y los fotogramas.
 - [ ] Hitos personales para la cronología (primeras exposiciones, encargos, viajes, premios), cada uno con fecha y, si es posible, documento o enlace.
 - [ ] Confirmar que las frases editoriales del sitio («Lo extraordinario toma forma en papel.», «Ninguna criatura se parece a otra.», «Detrás de cada criatura hay una mano.», «Hay criaturas que aún no existen.») le parecen adecuadas. Son copy editorial, no citas.
 - [ ] Portada: si se desea la versión con la obra aislada del fondo, hace falta el archivo maestro del tigre alado y un recorte manual revisado por el artista (ver ASSETS.md). Mientras tanto se muestra la fotografía completa.
