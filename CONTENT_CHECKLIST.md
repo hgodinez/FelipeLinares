@@ -14,6 +14,7 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 - [x] Recibidas e integradas (Felipe y Legado): Felipe pintando junto a su padre en la mesa del taller; Felipe con Felipe Mendoza frente a las calaveras de tamaño natural (confirmar lugar, fecha y autoría de las calaveras).
 - [ ] Fotografía de archivo de Pedro Linares pintando (archivo recibido como «images.jpg», 551 px, posible descarga de internet): confirmar autoría y derechos de reproducción; sustituir por una copia de mayor resolución si la familia la tiene.
 - [ ] Autorización explícita de Felipe para publicar su retrato y los fotogramas.
+- [ ] Foto de las tres generaciones (portada de Legado e Inicio): confirmar que el hombre de lentes es Leonardo Linares Vargas, y la autoría y fecha de la foto.
 - [ ] Recortes sobre fondo de madera (rana, tigre): no quedan fieles; solo se usan recortes de fotos sobre fondo liso. Recorte del tigre alado: el fondo de madera es demasiado parecido al naranja de la pieza y el recorte automático no es fiel; se descartó. Si la familia tiene una foto del tigre sobre fondo liso, se puede recortar.
 - [ ] Portada de Inicio: foto de estudio del alebrije de cabra con cuerpo de gallo (880 px; se usa una ampliación 2× por superresolución EDSR). Confirmar fotógrafo, título y si es la pieza de la exposición del MOIFA; pedir el archivo en alta resolución.
 - [ ] Hitos personales para la cronología (primeras exposiciones, encargos, viajes, premios), cada uno con fecha y, si es posible, documento o enlace.

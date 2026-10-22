@@ -11,7 +11,7 @@ import pedroPintando from '@/assets/archivo/pedro-linares-pintando.jpg';
 import mesaImg from '@/assets/video/felipe-y-su-padre-mesa.webp';
 import calaverasImg from '@/assets/works/familia-calaveras-tamano-natural.webp';
 import catrinaImg from '@/assets/works/catrina-emplumada-taller.jpg';
-import tigreImg from '@/assets/works/alebrije-tigre-frente.jpg';
+import familiaImg from '@/assets/video/familia-tres-generaciones.webp';
 import famAlado from '@/assets/works/familia-alebrije-alado-rayado.jpg';
 import famRana from '@/assets/works/familia-alebrije-rana-mariposa.jpg';
 
@@ -46,9 +46,9 @@ const genLabel = (g: number) => ({ 1: es ? 'Antepasados' : 'Ancestors', 2: 'Pedr
         <p class="entrada">{page.data.lead}</p>
         <div class="botones"><a class="boton boton-principal" href="#historia">{es ? 'Leer la historia' : 'Read the story'}</a><a class="boton boton-secundario" href="#arbol">{ui.legacy.tree}</a></div>
       </div>
-      <figure class="portada-imagen" data-reveal="zoom" style="--i:1">
-        <div class="portada-marco"><Image src={tigreImg} alt={es ? 'Alebrije de tigre alado con cuerpo de jaguar, de frente.' : 'Winged tiger alebrije with a jaguar body, facing the viewer.'} widths={[480, 960]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="object-position:55% 40%" /></div>
-        <figcaption>{es ? 'Alebrije de tigre alado, obra de Felipe Linares Vargas.' : 'Winged tiger alebrije by Felipe Linares Vargas.'}</figcaption>
+      <figure class="portada-imagen" data-reveal="zoom" style="--i:1;--proporcion:16/10;--ancho-portada:40rem">
+        <div class="portada-marco"><Image src={familiaImg} alt={es ? 'Tres hombres sonríen al atardecer frente al taller: a la izquierda uno con lentes, al centro Felipe Linares Mendoza y a la derecha Felipe Linares Vargas con gorra; sostienen un retrato en sepia de Pedro Linares López con un alebrije.' : 'Three men smile at dusk outside the workshop: on the left one with glasses, in the centre Felipe Linares Mendoza and on the right Felipe Linares Vargas in a cap; they hold a sepia portrait of Pedro Linares López with an alebrije.'} widths={[520, 900, 1300]} sizes="(max-width: 440px) 92vw, (max-width: 760px) 28rem, (max-width: 1160px) 46vw, 40rem" loading="eager" fetchpriority="high" style="object-position:50% 40%" /></div>
+        <figcaption>{es ? 'De izquierda a derecha: Leonardo Linares Vargas (por confirmar), Felipe Linares Mendoza y Felipe Linares Vargas, con un retrato de Pedro Linares López · fotografía proporcionada por la familia.' : 'Left to right: Leonardo Linares Vargas (to be confirmed), Felipe Linares Mendoza and Felipe Linares Vargas, with a portrait of Pedro Linares López · photograph provided by the family.'}</figcaption>
       </figure>
     </div>
   </section>

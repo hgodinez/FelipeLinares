@@ -16,6 +16,7 @@ La información histórica de este sitio procede de fuentes públicas verificabl
 
 - Testimonios en video de Felipe Linares Mendoza, Felipe Linares Vargas y Leonardo Linares Vargas (transcripción proporcionada por la familia, 2026). Las citas del sitio provienen de ahí.
 - Fotogramas de video (retrato de Felipe, Felipe pintando, Felipe con su padre en la mesa, piezas en el taller y Pedro Linares López con el gallo Barbas): proporcionados por la familia; título, realización y fecha del video por confirmar.
+- Fotografía de las tres generaciones (Leonardo —por confirmar—, Felipe Linares Mendoza y Felipe Linares Vargas con un retrato de Pedro Linares López): proporcionada por la familia; autoría y fecha por confirmar.
 - Fotografía de Felipe Linares Vargas y Felipe Linares Mendoza con calaveras de tamaño natural: proporcionada por la familia; lugar y fecha por confirmar.
 - Fotografía de estudio del alebrije de cabra con cuerpo de gallo (portada de Inicio): proporcionada por la familia; fotógrafo, fecha y título de la pieza por confirmar. En la portada se muestra un recorte digital de esa fotografía (fondo eliminado y ampliación 2×); la pieza no ha sido alterada.
 - Fotografía de archivo de Pedro Linares López pintando un alebrije: proporcionada por la familia; autoría, fecha y derechos por confirmar antes de su uso definitivo.
