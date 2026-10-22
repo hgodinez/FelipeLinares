@@ -83,11 +83,12 @@ em { font-style: italic; }
 .texto-suave { color: var(--tinta-suave); }
 
 /* ---------- Movimiento ---------- */
-.js [data-reveal] { opacity: 0; transform: translateY(28px) scale(0.985); transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: calc(var(--i, 0) * 90ms); }
-.js [data-reveal].visible { opacity: 1; transform: none; }
-.js [data-reveal="izq"] { transform: translateX(-40px); }
-.js [data-reveal="der"] { transform: translateX(40px); }
-.js [data-reveal="zoom"] { transform: scale(0.9); }
+@keyframes revelar { from { opacity: 0; transform: translate(var(--dx, 0px), var(--dy, 28px)) scale(var(--ds, 0.985)); } to { opacity: 1; transform: translate(0, 0) scale(1); } }
+.js [data-reveal] { opacity: 0; }
+.js [data-reveal].visible { opacity: 1; animation: revelar 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+[data-reveal="izq"] { --dx: -40px; --dy: 0px; }
+[data-reveal="der"] { --dx: 40px; --dy: 0px; }
+[data-reveal="zoom"] { --dy: 0px; --ds: 0.9; }
 [data-tilt] { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s ease, box-shadow 0.25s ease; transform-style: preserve-3d; will-change: transform; }
 [data-tilt]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.22), transparent 55%); opacity: 0; transition: opacity 0.25s ease; }
 [data-tilt]:hover::after { opacity: 1; }
@@ -549,3 +550,31 @@ ul.tira:focus-visible { outline-offset: -3px; }
 
 /* ---------- Barra de progreso ---------- */
 .progreso { position: fixed; left: 0; top: 0; z-index: 90; height: 5px; width: var(--progreso, 0%); background: var(--franjas); background-size: 216px 100%; pointer-events: none; transition: width 0.1s linear; }
+
+/* ---------- Salas de la galería como tiras ---------- */
+.pagina-oscura .tira-controles { margin-bottom: 0.75rem; }
+ul.muro.tira-galeria { column-width: auto; column-gap: 0; display: grid; grid-auto-flow: column; grid-auto-columns: clamp(17rem, 30vw, 24rem); gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--margen); padding: 0.5rem calc((100vw - min(100vw - 2 * var(--margen), var(--ancho))) / 2) 1.25rem; margin-inline: calc(-1 * (100vw - min(100vw - 2 * var(--margen), var(--ancho))) / 2); width: 100vw; scrollbar-width: none; }
+ul.muro.tira-galeria::-webkit-scrollbar { display: none; }
+ul.muro.tira-galeria > li { scroll-snap-align: start; margin: 0; }
+ul.muro.tira-galeria > li[hidden] { display: none; }
+.tira-galeria .muro-pieza a:not(.visually-hidden) { aspect-ratio: 4 / 5; }
+.tira-galeria .muro-pieza a:not(.visually-hidden) img { width: 100%; height: 100%; object-fit: cover; }
+.tira-galeria .muro-pieza a.marcador { display: grid; }
+.tira-galeria .muro-pieza a[data-title]::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(10, 1, 22, 0.85)); opacity: 0; transition: opacity 0.35s ease; }
+.tira-galeria .muro-pieza a[data-title]::after { content: attr(data-title); position: absolute; left: 1rem; right: 1rem; bottom: 1rem; font-family: var(--fuente-titulos); font-weight: 800; font-size: 1.25rem; line-height: 1.1; color: var(--crema-texto); transform: translateY(14px); opacity: 0; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.35s ease; }
+.tira-galeria .muro-pieza a[data-title]:hover::before, .tira-galeria .muro-pieza a[data-title]:focus-visible::before { opacity: 1; }
+.tira-galeria .muro-pieza a[data-title]:hover::after, .tira-galeria .muro-pieza a[data-title]:focus-visible::after { opacity: 1; transform: none; }
+.tira-galeria .muro-vistas { z-index: 1; }
+@media (max-width: 560px) { ul.muro.tira-galeria { grid-auto-columns: 72vw; } }
+
+/* ---------- Intro de primera visita ---------- */
+@keyframes caer { from { transform: translateY(-120%) rotate(-8deg); opacity: 0; } 60% { transform: translateY(6%) rotate(3deg); opacity: 1; } to { transform: translateY(0) rotate(-3deg); opacity: 1; } }
+@keyframes subir { from { transform: translateY(70px) scale(0.92); opacity: 0; filter: blur(6px); } to { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); } }
+@keyframes aparecer { from { opacity: 0; } to { opacity: 0.85; } }
+.intro .picado li { animation: caer 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both, mecer 4.6s ease-in-out infinite; animation-delay: calc(var(--n, 0) * 55ms), calc(0.9s + var(--d, 0s)); }
+.intro .portada-recorte .portada-marco { animation: subir 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s both; }
+.intro .portada-recorte .portada-marco::before { animation: latir 6s ease-in-out 1.4s infinite, aparecer 0.8s ease 1.4s both; }
+.intro .portada-recorte .portada-marco::after { animation: girar 60s linear 1.4s infinite, aparecer 0.8s ease 1.6s both; }
+.js.intro .portada [data-reveal].visible { animation-delay: calc(1.2s + var(--i, 0) * 130ms); }
+.intro .marquesina { animation: entrar-arriba 0.8s ease 1.9s both; }
+@media (prefers-reduced-motion: reduce) { .intro .picado li, .intro .portada-recorte .portada-marco, .intro .marquesina { animation: none !important; opacity: 1; } .js.intro .portada [data-reveal].visible { animation-delay: 0s; } }

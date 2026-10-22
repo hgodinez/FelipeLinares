@@ -17,7 +17,8 @@ The historical information on this site comes from verifiable public sources. Ev
 - Video testimonies of Felipe Linares Mendoza, Felipe Linares Vargas and Leonardo Linares Vargas (transcript provided by the family, 2026). The site's quotations come from there.
 - Video stills (Felipe's portrait, Felipe painting, Felipe with his father at the table, pieces in the workshop and Pedro Linares López with the rooster Barbas): provided by the family; the video's title, producer and date are to be confirmed.
 - Photograph of Felipe Linares Vargas and Felipe Linares Mendoza with life-size skeletons: provided by the family; place and date to be confirmed.
-- Studio photograph of the goat alebrije with a rooster body (home page hero): provided by the family; photographer, date and title of the piece to be confirmed.
+- Studio photograph of the goat alebrije with a rooster body (home page hero): provided by the family; photographer, date and title of the piece to be confirmed. The hero shows a digital cutout of that photograph (background removed, 2× enlargement); the piece itself is unaltered.
+- Legacy hero: digital cutout of the photograph of the frog alebrije with a bird’s beak (background removed); the piece itself is unaltered.
 - Archival photograph of Pedro Linares López painting an alebrije: provided by the family; author, date and rights to be confirmed before definitive use.
 - Museo Nacional de Culturas Populares (Ministry of Culture), object records and stories published on Google Arts & Culture.
 - Ministry of Culture of the Government of Mexico, press release on the tribute to Pedro Linares (June 2025).

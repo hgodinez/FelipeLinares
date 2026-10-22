@@ -61,7 +61,8 @@ const enriched = await Promise.all(salas.map(async (s) => ({ ...s, items: await 
           <div><span class="sala-numero">{es ? 'Sala' : 'Room'} {si + 1}</span><h2 id={`titulo-sala-${s.id}`}>{ui.works.categories[s.id]}</h2></div>
           <p class="sala-texto">{salaTexto[s.id]?.[lang]}</p>
         </div>
-        <ul class="muro" data-lb-group>
+        <div class="tira-controles" aria-hidden="true"><button type="button" class="tira-boton" data-tira-prev>←</button><button type="button" class="tira-boton" data-tira-next>→</button></div>
+        <ul class="muro tira-galeria" data-lb-group data-tira tabindex="0" aria-label={es ? `${ui.works.categories[s.id]}: desplazamiento horizontal` : `${ui.works.categories[s.id]}: horizontal scroll`}>
           {s.items.map(({ w, imgs }) => {
             const main = imgs.find((i) => i.kind !== 'workshop') ?? imgs[0];
             return (

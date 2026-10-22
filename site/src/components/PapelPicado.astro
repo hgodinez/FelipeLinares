@@ -3,13 +3,13 @@
 interface Props { n?: number; clase?: string }
 const { n = 18, clase = '' } = Astro.props;
 const colores = ['var(--bermellon)', 'var(--cempasuchil)', 'var(--turquesa)', 'var(--verde)', 'var(--morado)', 'var(--blanco-puro)'];
-const banderines = Array.from({ length: n }, (_, i) => ({ c: colores[i % colores.length], d: (i % 5) * 0.37, m: i % 3 }));
+const banderines = Array.from({ length: n }, (_, i) => ({ c: colores[i % colores.length], d: (i % 5) * 0.37, m: i % 3, n: i }));
 ---
 <div class={`picado ${clase}`} aria-hidden="true">
   <div class="picado-hilo"></div>
   <ul>
     {banderines.map((b) => (
-      <li style={`--c:${b.c};--d:${b.d}s`}>
+      <li style={`--c:${b.c};--d:${b.d}s;--n:${b.n}`}>
         <svg viewBox="0 0 60 80" preserveAspectRatio="none">
           <defs><mask id={`m${b.m}`}><rect width="60" height="80" fill="#fff"/>
             {b.m === 0 && <><circle cx="30" cy="22" r="7" fill="#000"/><circle cx="16" cy="44" r="5" fill="#000"/><circle cx="44" cy="44" r="5" fill="#000"/><path d="M30 52l8 12h-16z" fill="#000"/></>}

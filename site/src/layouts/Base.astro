@@ -62,7 +62,7 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-    <script is:inline data-astro-rerun>document.documentElement.classList.remove('no-js');try{var p=localStorage.getItem('flv:paleta');if(p&&p!=='taller')document.documentElement.setAttribute('data-paleta',p);}catch(e){}</script>
+    <script is:inline data-astro-rerun>document.documentElement.classList.remove('no-js');try{var p=localStorage.getItem('flv:paleta');if(p&&p!=='taller')document.documentElement.setAttribute('data-paleta',p);}catch(e){}try{if(!sessionStorage.getItem('flv:visto')){document.documentElement.classList.add('intro');sessionStorage.setItem('flv:visto','1');}else{document.documentElement.classList.remove('intro');}}catch(e){}</script>
     <ClientRouter fallback="none" />
   </head>
   <body class={bodyClass}>

@@ -14,7 +14,8 @@ Todo lo marcado aquí aparece en el sitio como «por confirmar» o como marcador
 - [x] Recibidas e integradas (Felipe y Legado): Felipe pintando junto a su padre en la mesa del taller; Felipe con Felipe Mendoza frente a las calaveras de tamaño natural (confirmar lugar, fecha y autoría de las calaveras).
 - [ ] Fotografía de archivo de Pedro Linares pintando (archivo recibido como «images.jpg», 551 px, posible descarga de internet): confirmar autoría y derechos de reproducción; sustituir por una copia de mayor resolución si la familia la tiene.
 - [ ] Autorización explícita de Felipe para publicar su retrato y los fotogramas.
-- [ ] Portada de Inicio: foto de estudio del alebrije de cabra con cuerpo de gallo (880 px). Confirmar fotógrafo, título y si es la pieza de la exposición del MOIFA; pedir el archivo en alta resolución.
+- [ ] Recorte del tigre alado: el fondo de madera es demasiado parecido al naranja de la pieza y el recorte automático no es fiel; se descartó. Si la familia tiene una foto del tigre sobre fondo liso, se puede recortar.
+- [ ] Portada de Inicio: foto de estudio del alebrije de cabra con cuerpo de gallo (880 px; se usa una ampliación 2× por superresolución EDSR). Confirmar fotógrafo, título y si es la pieza de la exposición del MOIFA; pedir el archivo en alta resolución.
 - [ ] Hitos personales para la cronología (primeras exposiciones, encargos, viajes, premios), cada uno con fecha y, si es posible, documento o enlace.
 - [ ] Confirmar que las frases editoriales del sitio («Lo extraordinario toma forma en papel.», «Ninguna criatura se parece a otra.», «Detrás de cada criatura hay una mano.», «Hay criaturas que aún no existen.») le parecen adecuadas. Son copy editorial, no citas.
 - [ ] Portada: si se desea la versión con la obra aislada del fondo, hace falta el archivo maestro del tigre alado y un recorte manual revisado por el artista (ver ASSETS.md). Mientras tanto se muestra la fotografía completa.
