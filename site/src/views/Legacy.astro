@@ -11,7 +11,7 @@ import pedroPintando from '@/assets/archivo/pedro-linares-pintando.jpg';
 import mesaImg from '@/assets/video/felipe-y-su-padre-mesa.webp';
 import calaverasImg from '@/assets/works/familia-calaveras-tamano-natural.webp';
 import catrinaImg from '@/assets/works/catrina-emplumada-taller.jpg';
-import ranaCut from '@/assets/works/alebrije-rana-recorte.png';
+import tigreImg from '@/assets/works/alebrije-tigre-frente.jpg';
 import famAlado from '@/assets/works/familia-alebrije-alado-rayado.jpg';
 import famRana from '@/assets/works/familia-alebrije-rana-mariposa.jpg';
 
@@ -46,9 +46,9 @@ const genLabel = (g: number) => ({ 1: es ? 'Antepasados' : 'Ancestors', 2: 'Pedr
         <p class="entrada">{page.data.lead}</p>
         <div class="botones"><a class="boton boton-principal" href="#historia">{es ? 'Leer la historia' : 'Read the story'}</a><a class="boton boton-secundario" href="#arbol">{ui.legacy.tree}</a></div>
       </div>
-      <figure class="portada-imagen portada-recorte" data-reveal="zoom" style="--i:1;--ancho-portada:38rem">
-        <div class="portada-marco"><Image src={ranaCut} alt={es ? 'Alebrije de rana con pico de ave: cuerpo verde azulado con puntos, orejas rosadas, cabeza negra con manchas doradas, pico largo y patas amarillas.' : 'Frog alebrije with a bird’s beak: blue-green dotted body, pink ears, black head with gold spots, long beak and yellow feet.'} widths={[520, 900, 1300]} sizes="(max-width: 440px) 92vw, (max-width: 760px) 28rem, (max-width: 1160px) 46vw, 38rem" loading="eager" fetchpriority="high" /></div>
-        <figcaption>{es ? 'Alebrije de rana con pico de ave, obra de Felipe Linares Vargas · título por confirmar' : 'Frog alebrije with a bird’s beak, by Felipe Linares Vargas · title to be confirmed'}</figcaption>
+      <figure class="portada-imagen" data-reveal="zoom" style="--i:1">
+        <div class="portada-marco"><Image src={tigreImg} alt={es ? 'Alebrije de tigre alado con cuerpo de jaguar, de frente.' : 'Winged tiger alebrije with a jaguar body, facing the viewer.'} widths={[480, 960]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="object-position:55% 40%" /></div>
+        <figcaption>{es ? 'Alebrije de tigre alado, obra de Felipe Linares Vargas.' : 'Winged tiger alebrije by Felipe Linares Vargas.'}</figcaption>
       </figure>
     </div>
   </section>

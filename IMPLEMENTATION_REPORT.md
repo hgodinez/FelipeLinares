@@ -65,5 +65,5 @@ A petición del revisor, se reemplazó el lenguaje visual de la v2 (demasiado ce
 
 - Galería: cada sala es ahora una tira horizontal con desplazamiento por tramos, botones y flechas; al pasar el puntero, el título de la pieza aparece sobre la imagen.
 - Intro de primera visita (por sesión): los banderines de papel picado caen uno a uno, la criatura sube a su lugar, después el halo, el anillo, el texto y la marquesina.
-- Recortes: la rana con pico de ave flota en la portada de Legado. El tigre alado se descartó (el fondo de madera comparte color con la pieza y el recorte no era fiel) y el jinete calavera no tiene un fondo uniforme. La portada de Inicio usa una ampliación 2× por superresolución (EDSR) de la foto de estudio combinada con la máscara del recorte.
+- Recortes: se probó la rana con pico de ave en la portada de Legado, pero el revisor la rechazó por el recorte y se volvió a la foto enmarcada. El tigre alado se descartó (el fondo de madera comparte color con la pieza y el recorte no era fiel) y el jinete calavera no tiene un fondo uniforme. La portada de Inicio usa una ampliación 2× por superresolución (EDSR) de la foto de estudio combinada con la máscara del recorte.
 - Corrección: los revelados ya no saltan en la primera pintura (se fuerza el cálculo de estilos antes de observar).

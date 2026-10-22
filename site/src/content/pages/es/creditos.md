@@ -18,7 +18,6 @@ La información histórica de este sitio procede de fuentes públicas verificabl
 - Fotogramas de video (retrato de Felipe, Felipe pintando, Felipe con su padre en la mesa, piezas en el taller y Pedro Linares López con el gallo Barbas): proporcionados por la familia; título, realización y fecha del video por confirmar.
 - Fotografía de Felipe Linares Vargas y Felipe Linares Mendoza con calaveras de tamaño natural: proporcionada por la familia; lugar y fecha por confirmar.
 - Fotografía de estudio del alebrije de cabra con cuerpo de gallo (portada de Inicio): proporcionada por la familia; fotógrafo, fecha y título de la pieza por confirmar. En la portada se muestra un recorte digital de esa fotografía (fondo eliminado y ampliación 2×); la pieza no ha sido alterada.
-- Portada de Legado: recorte digital de la fotografía del alebrije de rana con pico de ave (fondo eliminado); la pieza no ha sido alterada.
 - Fotografía de archivo de Pedro Linares López pintando un alebrije: proporcionada por la familia; autoría, fecha y derechos por confirmar antes de su uso definitivo.
 - Museo Nacional de Culturas Populares (Secretaría de Cultura), fichas de obra y relatos publicados en Google Arts & Culture.
 - Secretaría de Cultura del Gobierno de México, comunicado sobre el homenaje a Pedro Linares (junio de 2025).
