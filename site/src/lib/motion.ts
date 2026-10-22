@@ -1,44 +1,93 @@
 /**
- * Motion gestures (progressive enhancement).
- * - `.unfold` / `.reveal-mask` get `.is-in` once they enter the viewport (DESPLEGAR / REVELAR).
- * - Elements already in view on load are shown immediately so nothing ever waits for scroll.
- * - Reduced motion: CSS renders final states; the class is still added for consistency.
- *
- * Visibility is measured with getBoundingClientRect on a rAF-throttled scroll listener rather
- * than IntersectionObserver: Chromium treats an element hidden by clip-path as non-intersecting,
- * which would make a clipped sheet wait forever for its own reveal.
+ * Movimiento (mejora progresiva).
+ * - [data-reveal]      aparece al entrar en el viewport (clase .visible); los hijos con --i se escalonan.
+ * - [data-tilt]        se inclina levemente hacia el puntero (solo con puntero fino).
+ * - [data-parallax]    se desplaza con el puntero según su factor (p. ej. 0.03).
+ * - [data-contar]      cuenta de 0 al número que contiene.
+ * Con prefers-reduced-motion todo se muestra en su estado final y no se anima.
  */
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = () => window.matchMedia('(pointer: fine)').matches;
 
-let pending: HTMLElement[] = [];
-let scheduled = false;
-let bound = false;
-
-function check() {
-  scheduled = false;
-  const vh = window.innerHeight;
-  pending = pending.filter((el) => {
-    const r = el.getBoundingClientRect();
-    if (r.top < vh * 0.92 && r.bottom > 0) { el.classList.add('is-in'); return false; }
-    return true;
-  });
-  if (!pending.length) unbind();
+function initReveal() {
+  const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]:not(.visible)'));
+  if (!els.length) return;
+  if (reduce() || !('IntersectionObserver' in window)) { els.forEach((el) => el.classList.add('visible')); return; }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { (e.target as HTMLElement).classList.add('visible'); io.unobserve(e.target); }
+    }
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach((el) => io.observe(el));
 }
-function schedule() { if (!scheduled) { scheduled = true; requestAnimationFrame(check); } }
-function bind() { if (bound) return; bound = true; window.addEventListener('scroll', schedule, { passive: true }); window.addEventListener('resize', schedule); }
-function unbind() { if (!bound) return; bound = false; window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule); }
+
+function initTilt() {
+  if (reduce() || !finePointer()) return;
+  document.querySelectorAll<HTMLElement>('[data-tilt]:not([data-tilt-ready])').forEach((el) => {
+    el.dataset.tiltReady = '1';
+    const max = Number(el.dataset.tilt) || 6;
+    let raf = 0;
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.style.setProperty('--rx', `${(-y * max).toFixed(2)}deg`);
+        el.style.setProperty('--ry', `${(x * max).toFixed(2)}deg`);
+        el.style.setProperty('--gx', `${((x + 0.5) * 100).toFixed(1)}%`);
+        el.style.setProperty('--gy', `${((y + 0.5) * 100).toFixed(1)}%`);
+      });
+    });
+    el.addEventListener('pointerleave', () => { cancelAnimationFrame(raf); el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+  });
+}
+
+function initParallax() {
+  if (reduce() || !finePointer()) return;
+  const scene = document.querySelector<HTMLElement>('[data-escena]');
+  if (!scene || scene.dataset.ready) return;
+  scene.dataset.ready = '1';
+  const layers = Array.from(scene.querySelectorAll<HTMLElement>('[data-parallax]'));
+  let raf = 0;
+  scene.addEventListener('pointermove', (e) => {
+    const r = scene.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      for (const l of layers) {
+        const f = Number(l.dataset.parallax) || 0.02;
+        l.style.setProperty('--px', `${(x * f * 100).toFixed(2)}px`);
+        l.style.setProperty('--py', `${(y * f * 100).toFixed(2)}px`);
+      }
+    });
+  });
+  scene.addEventListener('pointerleave', () => { cancelAnimationFrame(raf); layers.forEach((l) => { l.style.setProperty('--px', '0px'); l.style.setProperty('--py', '0px'); }); });
+}
+
+function initContadores() {
+  const els = Array.from(document.querySelectorAll<HTMLElement>('[data-contar]:not([data-contado])'));
+  if (!els.length) return;
+  const run = (el: HTMLElement) => {
+    el.dataset.contado = '1';
+    const fin = Number(el.dataset.contar);
+    if (!Number.isFinite(fin) || reduce()) { el.textContent = String(fin); return; }
+    const t0 = performance.now(); const dur = 900;
+    const tick = (t: number) => { const p = Math.min(1, (t - t0) / dur); const e = 1 - Math.pow(1 - p, 3); el.textContent = String(Math.round(fin * e)); if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  };
+  if (!('IntersectionObserver' in window)) { els.forEach(run); return; }
+  const io = new IntersectionObserver((entries) => { for (const e of entries) if (e.isIntersecting) { run(e.target as HTMLElement); io.unobserve(e.target); } }, { threshold: 0.4 });
+  els.forEach((el) => io.observe(el));
+}
 
 export function initMotion() {
   document.documentElement.classList.add('js');
-  const els = Array.from(document.querySelectorAll<HTMLElement>('.unfold:not(.is-in), .reveal-mask:not(.is-in), .zoom-in:not(.is-in), .rise:not(.is-in), .wipe:not(.is-in)'));
-  if (!els.length) return;
-  if (reduce()) { els.forEach((el) => el.classList.add('is-in')); return; }
-  pending = els;
-  bind();
-  check();
+  initReveal(); initTilt(); initParallax(); initContadores();
 }
 
-/** Remember which artwork was opened from a gallery so the detail page can return focus to it. */
+/** Recuerda qué obra se abrió desde una galería para devolverle el foco al volver. */
 export function rememberOrigin(slug: string) {
   try { sessionStorage.setItem('flv:origin', slug); } catch {}
 }

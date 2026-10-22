@@ -1,0 +1,24 @@
+---
+/** Hilera de papel picado: banderines de colores que se mecen. Decorativo. */
+interface Props { n?: number; clase?: string }
+const { n = 18, clase = '' } = Astro.props;
+const colores = ['var(--bermellon)', 'var(--cempasuchil)', 'var(--turquesa)', 'var(--verde)', 'var(--morado)', 'var(--blanco-puro)'];
+const banderines = Array.from({ length: n }, (_, i) => ({ c: colores[i % colores.length], d: (i % 5) * 0.37, m: i % 3 }));
+---
+<div class={`picado ${clase}`} aria-hidden="true">
+  <div class="picado-hilo"></div>
+  <ul>
+    {banderines.map((b) => (
+      <li style={`--c:${b.c};--d:${b.d}s`}>
+        <svg viewBox="0 0 60 80" preserveAspectRatio="none">
+          <defs><mask id={`m${b.m}`}><rect width="60" height="80" fill="#fff"/>
+            {b.m === 0 && <><circle cx="30" cy="22" r="7" fill="#000"/><circle cx="16" cy="44" r="5" fill="#000"/><circle cx="44" cy="44" r="5" fill="#000"/><path d="M30 52l8 12h-16z" fill="#000"/></>}
+            {b.m === 1 && <><path d="M30 12l10 14-10 14-10-14z" fill="#000"/><circle cx="14" cy="50" r="4" fill="#000"/><circle cx="46" cy="50" r="4" fill="#000"/><circle cx="30" cy="58" r="5" fill="#000"/></>}
+            {b.m === 2 && <><circle cx="20" cy="20" r="5" fill="#000"/><circle cx="40" cy="20" r="5" fill="#000"/><path d="M30 30c8 0 12 8 12 14s-12 16-12 16-12-10-12-16 4-14 12-14z" fill="#000"/></>}
+          </mask></defs>
+          <path d="M0 0h60v66l-6 6-6-6-6 6-6-6-6 6-6-6-6 6-6-6-6 6-6-6z" fill="var(--c)" mask={`url(#m${b.m})`}/>
+        </svg>
+      </li>
+    ))}
+  </ul>
+</div>

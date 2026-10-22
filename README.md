@@ -99,3 +99,10 @@ Objetivo WCAG 2.2 AA: navegación por teclado, foco visible de 3 px (lima sobre 
 ## Fuentes documentales
 
 Ver `/creditos/` en el sitio y los campos `sources` de cada entrada de contenido.
+
+## Versiones del diseño
+
+- **v3 «Noche de alebrijes»** (actual, en `main`): fondo violeta profundo, paneles de magenta, cempasúchil y turquesa, tipografía Bricolage Grotesque, papel picado, marquesina, revelados al hacer scroll, inclinación 3D en las tarjetas. Las paletas del selector siguen funcionando; la paleta «Papel» reproduce los colores de la v2 sobre esta estructura.
+- **v2 «Papel»** (etiqueta `v2-papel`): diseño de papel crema y franjas, con tipografía Fraunces. Para volver a ella: `git checkout v2-papel -- site/` y confirmar, o `git revert` de los commits posteriores a la etiqueta.
+
+Los colores viven en `site/src/data/paletas.json`; `npm run paletas` regenera `site/src/styles/paletas.css` (también se ejecuta en cada `npm run build`).

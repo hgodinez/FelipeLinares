@@ -53,13 +53,20 @@ const reconocimientos = [
 ];
 const prensa = archive.filter((a) => a.data.type === 'press' || a.data.type === 'publication');
 const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'Felipe Linares Vargas', jobTitle: es ? 'Cartonero' : 'Cartonería artist', description: site.defaultDescription[lang], url: new URL(route('home', lang), Astro.site).toString(), address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' }, knowsAbout: ['Cartonería', 'Alebrijes', 'Arte popular mexicano'] };
+const marquesina = es ? ['Alebrijes', 'Cartonería', 'Ciudad de México', 'Papel y cartón', 'Tres generaciones', 'Pintado a mano', 'Merced Balbuena'] : ['Alebrijes', 'Cartonería', 'Mexico City', 'Paper and cardboard', 'Three generations', 'Hand-painted', 'Merced Balbuena'];
+const marquesina2 = es ? ['Papel', 'Engrudo', 'Volumen', 'Blanqueado', 'Pintura', 'Obra terminada'] : ['Paper', 'Paste', 'Volume', 'Whitening', 'Paint', 'Finished work'];
+const chispasColores = ['var(--cempasuchil)', 'var(--bermellon)', 'var(--turquesa)', 'var(--verde)', 'var(--morado)'];
+const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), y: 30 + ((i * 53) % 60), c: chispasColores[i % 5], t: 4 + (i % 4), d: (i * 0.7) % 5 }));
 ---
 <Base lang={lang} title={site.artistName} description={page.data.seoDescription} alternates={alternates('home')} ogImage={og.src} jsonLd={personLd}>
 
   <!-- PORTADA -->
-  <section class="portada" id="inicio" aria-labelledby="titulo-portada">
+  <section class="portada" id="inicio" aria-labelledby="titulo-portada" data-escena>
+    <div class="chispas" aria-hidden="true">
+      {chispas.map((c) => <i style={`--x:${c.x}%;--y:${c.y}%;--c:${c.c};--t:${c.t}s;--d:${c.d}s`}></i>)}
+    </div>
     <div class="contenedor">
-      <div>
+      <div data-reveal>
         <p class="antetitulo">{page.data.eyebrow}</p>
         <h1 id="titulo-portada">Felipe Linares <em>Vargas</em></h1>
         <p class="lema">{site.heroStatement[lang]}</p>
@@ -69,20 +76,23 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
           <a class="boton boton-secundario" href="#obras">{ui.cta.works}</a>
         </div>
       </div>
-      <figure class="portada-imagen">
-        <div class="portada-marco"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de cabra y cuernos rayados, lengua roja, melena de tiras anaranjadas, cuerpo de gallo con plumas verdes, azules y rojas y patas amarillas escamadas.' : 'Cartonería alebrije with a goat head and striped horns, red tongue, a mane of orange strips, a rooster body with green, blue and red feathers and scaled yellow legs.'} widths={[480, 880]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 30rem" loading="eager" fetchpriority="high" style="aspect-ratio:880/542;object-position:50% 50%" /></div>
+      <figure class="portada-imagen" data-reveal="zoom" style="--i:2;--proporcion:1.08;--ancho-portada:36rem">
+        <span class="sello" data-parallax="-0.06">{es ? 'Papel y cartón' : 'Paper and cardboard'}<small>{es ? 'Ciudad de México' : 'Mexico City'}</small></span>
+        <div class="portada-marco" data-parallax="0.025"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de cabra y cuernos rayados, lengua roja, melena de tiras anaranjadas, cuerpo de gallo con plumas verdes, azules y rojas y patas amarillas escamadas.' : 'Cartonería alebrije with a goat head and striped horns, red tongue, a mane of orange strips, a rooster body with green, blue and red feathers and scaled yellow legs.'} widths={[480, 880]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 32rem" loading="eager" fetchpriority="high" style="object-position:30% 50%" /></div>
         <figcaption>{es ? 'Alebrije de cabra con cuerpo de gallo · título y fotografía por confirmar' : 'Goat alebrije with a rooster body · title and photograph to be confirmed'}</figcaption>
       </figure>
     </div>
   </section>
 
+  <div class="marquesina" aria-hidden="true"><ul>{[...marquesina, ...marquesina].map((m) => <li>{m}</li>)}</ul></div>
+
   <!-- EL MAESTRO -->
-  <section class="seccion seccion-crema" id="maestro" aria-labelledby="titulo-maestro">
+  <section class="seccion panel panel-rosa zigzag" id="maestro" aria-labelledby="titulo-maestro" style="--zig:var(--oscuro)">
     <div class="contenedor dos-columnas">
-      <div>
+      <div data-reveal="izq">
         <p class="antetitulo">{ui.nav.artist}</p>
-        <h2 id="titulo-maestro">{S[0].heading}</h2>
-        <p>{S[0].text}</p>
+        <h2 id="titulo-maestro" class="titulo-gigante">{S[0].heading}</h2>
+        <p style="font-size:1.15rem">{S[0].text}</p>
         <h3 class="subtitulo-seccion" style="margin-top:1.5rem">{S[1].heading}</h3>
         <p>{S[1].text}</p>
         <ul class="linaje">
@@ -90,16 +100,15 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
           <li><span>{es ? 'Padre' : 'Father'}</span><strong><a href={`${route('legacy', lang)}#arbol`}>Felipe Linares Mendoza</a></strong></li>
           <li class="actual"><span>{es ? 'Cartonero' : 'Cartonero'}</span><strong>Felipe Linares Vargas</strong></li>
         </ul>
-        <div class="botones"><a class="boton boton-secundario" href={route('artist', lang)}>{ui.cta.artist}</a></div>
+        <div class="botones"><a class="boton boton-principal" href={route('artist', lang)}>{ui.cta.artist}</a></div>
       </div>
-      <div class="foto-lado">
-        <figure class="cita-grande" style="margin-bottom:1.5rem"><blockquote><p style="font-size:clamp(1.5rem,3vw,2.1rem)">{es ? '«Me atrajo más estar aquí con mi papá porque aquí expresaba mi creatividad».' : '“I was more drawn to being here with my dad, because here I expressed my creativity.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
-        <figure class="foto"><Image src={retratoImg} alt={es ? 'Felipe Linares Vargas sonríe sentado en su taller, entre dos alebrijes de cartonería: uno con melena anaranjada y otro rojo con escamas y ojos de pavorreal.' : 'Felipe Linares Vargas smiles seated in his workshop, between two cartonería alebrijes: one with an orange mane and one red with scales and peacock eyes.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 40rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;object-position:50% 45%" /><figcaption>{es ? 'Felipe en el taller familiar · fotograma de video.' : 'Felipe in the family workshop · video still.'}</figcaption></figure>
+      <div class="foto-lado" data-reveal="der" style="--i:1">
+        <figure class="foto" data-tilt="5" style="position:relative;border-radius:var(--radio)"><Image src={retratoImg} alt={es ? 'Felipe Linares Vargas sonríe sentado en su taller, entre dos alebrijes de cartonería: uno con melena anaranjada y otro rojo con escamas y ojos de pavorreal.' : 'Felipe Linares Vargas smiles seated in his workshop, between two cartonería alebrijes: one with an orange mane and one red with scales and peacock eyes.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 40rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover;object-position:50% 45%" /><figcaption>{es ? 'Felipe en el taller familiar · fotograma de video.' : 'Felipe in the family workshop · video still.'}</figcaption></figure>
+        <figure class="cita-grande" style="margin:1rem 0 0"><blockquote><p style="font-size:clamp(1.5rem,3vw,2.2rem)">{es ? '«Me atrajo más estar aquí con mi papá porque aquí expresaba mi creatividad».' : '“I was more drawn to being here with my dad, because here I expressed my creativity.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
         <ul class="datos">
           <li><strong>{es ? 'Ciudad' : 'City'}</strong>{es ? 'Merced Balbuena, Ciudad de México' : 'Merced Balbuena, Mexico City'}</li>
           <li><strong>{es ? 'Técnica' : 'Technique'}</strong>{es ? 'Cartonería: papel y cartón modelados y pintados a mano' : 'Cartonería: paper and cardboard modeled and painted by hand'}</li>
           <li><strong>{es ? 'Piezas' : 'Pieces'}</strong>{es ? 'Alebrijes, calaveras, judas y figuras de temporada' : 'Alebrijes, skeletons, Judas figures and seasonal pieces'}</li>
-          <li><strong>{es ? 'Familia' : 'Family'}</strong>{es ? 'Nieto de Pedro Linares López, creador de los alebrijes' : 'Grandson of Pedro Linares López, creator of the alebrijes'}</li>
         </ul>
       </div>
     </div>
@@ -108,57 +117,59 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
   <!-- LOS ALEBRIJES -->
   <section class="seccion seccion-oscura" id="alebrijes" aria-labelledby="titulo-alebrijes">
     <div class="contenedor">
-      <div class="dos-columnas">
-        <div>
+      <div class="dos-columnas" style="align-items:center">
+        <figure class="foto foto-brillo" data-reveal="izq" data-tilt="4" style="position:relative;border-radius:var(--radio)"><Image src={contraluzImg} alt={es ? 'Alebrije con cabeza de cabra, cuernos rayados, lengua roja y melena de tiras multicolores, iluminado por luz de atardecer que proyecta su sombra en la pared.' : 'Alebrije with a goat head, striped horns, red tongue and a mane of multicolored strips, lit by evening light that casts its shadow on the wall.'} widths={[480, 800, 940]} sizes="(max-width: 820px) 100vw, 36rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover" /><figcaption>{es ? 'Alebrije astado en el taller, a contraluz · fotograma de video.' : 'Horned alebrije in the workshop, against the light · video still.'}</figcaption></figure>
+        <div data-reveal="der" style="--i:1">
           <p class="antetitulo">{es ? 'Tradición de la Ciudad de México' : 'A Mexico City tradition'}</p>
-          <h2 id="titulo-alebrijes">{S[2].heading}</h2>
+          <h2 id="titulo-alebrijes" class="titulo-gigante">{S[2].heading}</h2>
           <p class="texto-suave" style="font-size:1.15rem">{S[2].text}</p>
-          <h3 class="subtitulo-seccion">{S[3].heading}</h3>
+          <h3 class="subtitulo-seccion" style="margin-top:1.5rem">{S[3].heading}</h3>
           <p class="texto-suave">{S[3].text}</p>
         </div>
-        <figure class="foto"><Image src={contraluzImg} alt={es ? 'Alebrije con cabeza de cabra, cuernos rayados, lengua roja y melena de tiras multicolores, iluminado por luz de atardecer que proyecta su sombra en la pared.' : 'Alebrije with a goat head, striped horns, red tongue and a mane of multicolored strips, lit by evening light that casts its shadow on the wall.'} widths={[480, 800, 940]} sizes="(max-width: 820px) 100vw, 36rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover" /><figcaption>{es ? 'Alebrije astado en el taller, a contraluz · fotograma de video.' : 'Horned alebrije in the workshop, against the light · video still.'}</figcaption></figure>
       </div>
-      <div class="nota-oscura">
+      <div class="nota-oscura" data-reveal>
         <p class="nota-titulo">{es ? 'Los alebrijes son de cartonería' : 'Alebrijes are cartonería'}</p>
         <p>{es ? 'El nombre, el concepto y la técnica —el sueño, el papel y el cartón— pertenecen a la Ciudad de México y a la familia Linares. Desde 2019 son patrimonio cultural de la ciudad.' : 'The name, the concept and the technique (the dream, the paper and the cardboard) belong to Mexico City and to the Linares family. Since 2019 they are cultural heritage of the city.'}</p>
       </div>
     </div>
   </section>
 
+  <div class="marquesina marquesina-turquesa marquesina-recta" aria-hidden="true"><ul>{[...marquesina2, ...marquesina2].map((m) => <li>{m}</li>)}</ul></div>
+
   <!-- LA TÉCNICA -->
-  <section class="seccion" id="tecnica" aria-labelledby="titulo-tecnica">
+  <section class="seccion panel panel-turquesa zigzag" id="tecnica" aria-labelledby="titulo-tecnica" style="--zig:var(--oscuro)">
     <div class="contenedor">
-      <div class="encabezado-seccion">
+      <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'La técnica' : 'The technique'}</p>
-        <h2 id="titulo-tecnica">{S[4].heading}</h2>
+        <h2 id="titulo-tecnica" class="titulo-gigante">{S[4].heading}</h2>
         <p class="texto-suave">{S[4].text}</p>
       </div>
-      <h3 class="subtitulo-seccion" style="margin-top:0">{es ? 'Del papel a la criatura' : 'From paper to creature'}</h3>
-      <p>{es ? 'Así se construye una pieza de cartonería, según las fuentes consultadas y las fotografías de taller de este sitio. Los detalles propios del método de Felipe se incorporarán con su confirmación.' : 'This is how a cartonería piece is built, according to the sources consulted and the workshop photographs on this site. The specifics of Felipe’s own method will be added with his confirmation.'}</p>
+      <h3 class="subtitulo-seccion" style="margin-top:0" data-reveal>{es ? 'Del papel a la criatura' : 'From paper to creature'}</h3>
+      <p data-reveal>{es ? 'Así se construye una pieza de cartonería, según las fuentes consultadas y las fotografías de taller de este sitio. Los detalles propios del método de Felipe se incorporarán con su confirmación.' : 'This is how a cartonería piece is built, according to the sources consulted and the workshop photographs on this site. The specifics of Felipe’s own method will be added with his confirmation.'}</p>
       <ol class="pasos">
-        {pasos.map((p) => <li><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}
+        {pasos.map((p, i) => <li data-reveal style={`--i:${i}`}><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}
       </ol>
-      <div class="nota"><p><strong>{es ? '¿Cuánto tarda una pieza?' : 'How long does a piece take?'}</strong> {es ? 'Cada capa de papel se seca antes de la siguiente, a veces durante días. Las piezas grandes requieren semanas de secado y pintura.' : 'Each layer of paper dries before the next, sometimes for days. Large pieces need weeks of drying and painting.'}</p></div>
-      <h3 class="subtitulo-seccion">{es ? 'En detalle' : 'In detail'}</h3>
-      <p>{es ? 'Acercamientos a la pintura y el modelado de las piezas.' : 'Close-ups of the painting and modeling of the pieces.'}</p>
+      <div class="nota" data-reveal><p><strong>{es ? '¿Cuánto tarda una pieza?' : 'How long does a piece take?'}</strong> {es ? 'Cada capa de papel se seca antes de la siguiente, a veces durante días. Las piezas grandes requieren semanas de secado y pintura.' : 'Each layer of paper dries before the next, sometimes for days. Large pieces need weeks of drying and painting.'}</p></div>
+      <h3 class="subtitulo-seccion" data-reveal>{es ? 'En detalle' : 'In detail'}</h3>
+      <p data-reveal>{es ? 'Acercamientos a la pintura y el modelado de las piezas.' : 'Close-ups of the painting and modeling of the pieces.'}</p>
       <ul class="detalles">
-        {detalles.map((d) => <li><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}
+        {detalles.map((d, i) => <li data-reveal="zoom" style={`--i:${i % 4}`}><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}
       </ul>
-      <div class="botones"><a class="boton boton-secundario" href={route('workshop', lang)}>{ui.cta.process}</a></div>
+      <div class="botones" data-reveal><a class="boton boton-principal" href={route('workshop', lang)}>{ui.cta.process}</a></div>
     </div>
   </section>
 
   <!-- LAS OBRAS -->
   <section class="seccion seccion-oscura" id="obras" aria-labelledby="titulo-obras">
     <div class="contenedor">
-      <div class="encabezado-seccion">
+      <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'Su obra' : 'His work'}</p>
-        <h2 id="titulo-obras">{S[5].heading}</h2>
+        <h2 id="titulo-obras" class="titulo-gigante">{S[5].heading}</h2>
         <p class="texto-suave">{S[5].text}</p>
       </div>
       <ul class="piezas" data-lb-group>
         {piezas.map(({ w, cover, full }, i) => (
-          <li class="pieza">
+          <li class="pieza" data-reveal data-tilt="7" style={`--i:${i % 3}`}>
             <a class="pieza-imagen" href={workPath(w.id, lang)} data-lb-open data-full={full} data-alt={cover.alt[lang]} data-title={w.data.title[lang]} data-caption={w.data.description[lang].slice(0, 180) + '…'}>
               <Image src={cover.src} alt={cover.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 560px) 45vw, (max-width: 1160px) 30vw, 22rem" loading="lazy" />
             </a>
@@ -167,41 +178,43 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
         ))}
       </ul>
       <p class="texto-suave" style="margin-top:1.25rem;font-size:0.92rem">* {ui.works.provisional}.</p>
-      <div class="botones"><a class="boton boton-principal" href={route('works', lang)}>{ui.cta.allWorks}</a></div>
+      <div class="botones" data-reveal><a class="boton boton-principal" href={route('works', lang)}>{ui.cta.allWorks}</a></div>
     </div>
   </section>
 
   <!-- RECONOCIMIENTOS -->
-  <section class="seccion seccion-crema" id="reconocimientos" aria-labelledby="titulo-reconocimientos">
+  <section class="seccion panel panel-amarillo zigzag" id="reconocimientos" aria-labelledby="titulo-reconocimientos" style="--zig:var(--oscuro)">
     <div class="contenedor">
-      <div class="encabezado-seccion">
+      <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'Reconocimientos' : 'Recognition'}</p>
-        <h2 id="titulo-reconocimientos">{S[6].heading}</h2>
+        <h2 id="titulo-reconocimientos" class="titulo-gigante">{S[6].heading}</h2>
         <p class="texto-suave">{S[6].text}</p>
       </div>
       <div class="tarjetas">
-        {reconocimientos.map((r) => <article class="tarjeta"><p class="etiqueta">{r.etiqueta}</p><h3>{r.titulo}</h3><p>{r.texto}</p>{r.links.map(([t, h]) => <a href={h} target={h.startsWith('http') ? '_blank' : undefined} rel={h.startsWith('http') ? 'noopener noreferrer' : undefined}>{t}</a>)}</article>)}
+        {reconocimientos.map((r, i) => <article class="tarjeta" data-reveal style={`--i:${i}`}><p class="etiqueta">{r.etiqueta}</p><h3>{r.titulo}</h3><p>{r.texto}</p>{r.links.map(([t, h]) => <a href={h} target={h.startsWith('http') ? '_blank' : undefined} rel={h.startsWith('http') ? 'noopener noreferrer' : undefined}>{t}</a>)}</article>)}
       </div>
     </div>
   </section>
 
   <!-- LEGADO -->
   <section class="seccion seccion-oscura" id="legado" aria-labelledby="titulo-legado">
-    <div class="contenedor" style="max-width:46rem">
-      <p class="antetitulo">{ui.nav.legacy}</p>
-      <h2 id="titulo-legado">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
-      <p class="texto-suave">{es ? 'El trabajo de la familia Linares ha llegado a museos de México, Estados Unidos y Europa, pero cada pieza nace en la Ciudad de México, en talleres que son al mismo tiempo casas. De don Pedro a sus hijos Enrique, Felipe y Miguel; de ellos a Felipe, Leonardo, David y Ricardo; y ya a una generación más.' : 'The Linares family’s work has reached museums in Mexico, the United States and Europe, but every piece is born in Mexico City, in workshops that are also homes. From don Pedro to his sons Enrique, Felipe and Miguel; from them to Felipe, Leonardo, David and Ricardo; and now to one more generation.'}</p>
-      <figure class="cita-grande" style="margin-top:2rem"><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? '«Queremos seguir la línea de mi abuelo y de mi padre, pero con una creatividad y con unas formas diferentes».' : '“We want to follow the line of my grandfather and my father, but with our own creativity and different forms.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
-      <div class="botones"><a class="boton boton-principal" href={route('legacy', lang)}>{ui.cta.legacy}</a><a class="boton boton-secundario" style="color:var(--blanco);border-color:var(--blanco)" href={route('archive', lang)}>{ui.nav.archive}</a></div>
+    <div class="contenedor" style="max-width:52rem">
+      <div data-reveal>
+        <p class="antetitulo">{ui.nav.legacy}</p>
+        <h2 id="titulo-legado" class="titulo-gigante">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
+        <p class="texto-suave" style="font-size:1.15rem">{es ? 'El trabajo de la familia Linares ha llegado a museos de México, Estados Unidos y Europa, pero cada pieza nace en la Ciudad de México, en talleres que son al mismo tiempo casas. De don Pedro a sus hijos Enrique, Felipe y Miguel; de ellos a Felipe, Leonardo, David y Ricardo; y ya a una generación más.' : 'The Linares family’s work has reached museums in Mexico, the United States and Europe, but every piece is born in Mexico City, in workshops that are also homes. From don Pedro to his sons Enrique, Felipe and Miguel; from them to Felipe, Leonardo, David and Ricardo; and now to one more generation.'}</p>
+      </div>
+      <figure class="cita-grande" style="margin-top:2.5rem" data-reveal><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? '«Queremos seguir la línea de mi abuelo y de mi padre, pero con una creatividad y con unas formas diferentes».' : '“We want to follow the line of my grandfather and my father, but with our own creativity and different forms.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
+      <div class="botones" data-reveal><a class="boton boton-principal" href={route('legacy', lang)}>{ui.cta.legacy}</a><a class="boton boton-secundario" style="color:var(--crema-texto);border-color:var(--crema-texto)" href={route('archive', lang)}>{ui.nav.archive}</a></div>
     </div>
   </section>
 
   <!-- TALLER / CONTACTO -->
-  <section class="seccion seccion-crema" id="taller" aria-labelledby="titulo-taller">
+  <section class="seccion panel panel-rosa zigzag" id="taller" aria-labelledby="titulo-taller" style="--zig:var(--papel)">
     <div class="contenedor dos-columnas" style="align-items:center">
-      <div>
+      <div data-reveal="izq">
         <p class="antetitulo">{es ? 'El taller' : 'The workshop'}</p>
-        <h2 id="titulo-taller">{S[7].heading}</h2>
+        <h2 id="titulo-taller" class="titulo-gigante">{S[7].heading}</h2>
         <p class="texto-suave">{S[7].text}</p>
         <ul class="contacto-lista">
           <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><div><strong>{es ? 'Taller' : 'Workshop'}</strong>{site.workshopArea[lang]}</div></li>
@@ -209,22 +222,23 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'F
         </ul>
         <div class="botones"><a class="boton boton-principal" href={route('contact', lang)}>{ui.cta.contact}</a></div>
       </div>
-      <figure class="foto"><Image src={cabezaImg} alt={es ? 'Felipe Linares Vargas observa de cerca una cabeza de alebrije en proceso: cuernos grises y melena de tiras anaranjadas.' : 'Felipe Linares Vargas looks closely at an alebrije head in progress: grey horns and a mane of orange strips.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Una cabeza en proceso · fotograma de video.' : 'A head in progress · video still.'}</figcaption></figure>
+      <figure class="foto" data-reveal="der" data-tilt="4" style="--i:1;position:relative;border-radius:var(--radio)"><Image src={cabezaImg} alt={es ? 'Felipe Linares Vargas observa de cerca una cabeza de alebrije en proceso: cuernos grises y melena de tiras anaranjadas.' : 'Felipe Linares Vargas looks closely at an alebrije head in progress: grey horns and a mane of orange strips.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Una cabeza en proceso · fotograma de video.' : 'A head in progress · video still.'}</figcaption></figure>
     </div>
   </section>
 
   <!-- PARA LEER MÁS -->
   <section class="seccion" id="prensa" aria-labelledby="titulo-prensa">
     <div class="contenedor">
-      <div class="encabezado-seccion">
+      <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'Prensa y publicaciones' : 'Press and publications'}</p>
         <h2 id="titulo-prensa">{es ? 'Para leer más' : 'Further reading'}</h2>
       </div>
-      <ul class="prensa">
+      <ul class="prensa" data-reveal>
         {prensa.map((a) => <li><a href={archivePath(a.id, lang)}>{a.data.title[lang]}</a><span>{[a.data.institution, a.data.year].filter(Boolean).join(' · ')}</span></li>)}
       </ul>
-      <div class="botones"><a class="boton boton-secundario" href={route('archive', lang)}>{es ? 'Ver el archivo completo' : 'See the full archive'}</a></div>
+      <div class="botones" data-reveal><a class="boton boton-secundario" href={route('archive', lang)}>{es ? 'Ver el archivo completo' : 'See the full archive'}</a></div>
     </div>
   </section>
   <Lightbox lang={lang} />
 </Base>
+

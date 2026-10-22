@@ -27,7 +27,7 @@ const ld = { '@context': 'https://schema.org', '@type': d.type === 'exhibition' 
           <p class="lema" style="font-family:var(--fuente-titulos);font-style:italic;color:var(--bermellon-oscuro);font-size:1.25rem">{d.dateLabel?.[lang] ?? (d.endYear ? `${d.year}–${d.endYear}` : d.year)}{d.institution && ` · ${d.institution}`}{d.city && ` · ${d.city}`}</p>
           <p style="font-size:1.15rem">{d.summary[lang]}</p>
           {d.body?.[lang] && <p class="texto-suave">{d.body[lang]}</p>}
-          {d.image && <figure class="foto" style="margin-top:1.5rem"><Image src={d.image} alt={d.imageAlt?.[lang] ?? ''} widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 40rem" /></figure>}
+          {d.image && <figure class="foto" data-reveal style="margin-top:1.5rem"><Image src={d.image} alt={d.imageAlt?.[lang] ?? ''} widths={[640, 1024]} sizes="(max-width: 900px) 100vw, 40rem" /></figure>}
         </div>
         <div class="foto-lado">
           {people.length > 0 && <ul class="datos"><li><strong>{ui.archive.people}</strong>{people.map((p) => <span style="display:block"><a href={p.data.isFeaturedArtist ? route('artist', lang) : `${route('legacy', lang)}#arbol`}>{p.data.name}</a> · <span class="texto-suave">{p.data.role[lang]}</span></span>)}</li></ul>}
@@ -41,7 +41,7 @@ const ld = { '@context': 'https://schema.org', '@type': d.type === 'exhibition' 
       <div class="contenedor">
         <h2>{ui.archive.artworks}</h2>
         <ul class="piezas">{artworks.map((w) => { const c = coverOf(w); return (
-          <li class="pieza">{c ? <a class="pieza-imagen" href={workPath(w.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 20rem" loading="lazy" /></a> : <a class="marcador" href={workPath(w.id, lang)} style="aspect-ratio:3/4;border-radius:10px"><strong>{w.data.title[lang]}</strong><span>{ui.works.placeholderText}</span></a>}<p><span><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}</a></strong><span class="pieza-nota">{w.data.collection ?? w.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p></li>
+          <li class="pieza" data-reveal data-tilt="7">{c ? <a class="pieza-imagen" href={workPath(w.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 20rem" loading="lazy" /></a> : <a class="marcador" href={workPath(w.id, lang)} style="aspect-ratio:3/4;border-radius:10px"><strong>{w.data.title[lang]}</strong><span>{ui.works.placeholderText}</span></a>}<p><span><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}</a></strong><span class="pieza-nota">{w.data.collection ?? w.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p></li>
         ); })}</ul>
       </div>
     </section>

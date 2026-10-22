@@ -45,7 +45,7 @@ const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id
           {rest.length > 0 && (
             <ul class="obra-vistas">
               {rest.map((img, i) => (
-                <li><figure class="foto">
+                <li><figure class="foto" data-reveal>
                   <button type="button" class="obra-zoom" data-lb-open data-full={img.full} data-alt={img.alt[lang]} data-title={title} data-caption={captionOf(img)} aria-label={`${ui.works.open}: ${img.alt[lang]}`}>
                     <Image src={img.src} alt={img.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 900px) 45vw, 20rem" loading="lazy" />
                   </button>
@@ -82,7 +82,7 @@ const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id
           <h2 id="titulo-relacionadas" style="font-size:clamp(1.6rem,3vw,2.2rem)">{ui.works.related}</h2>
           <ul class="piezas">
             {related.map((r) => { const c = coverOf(r); return (
-              <li class="pieza">
+              <li class="pieza" data-reveal data-tilt="7">
                 {c ? <a class="pieza-imagen" href={workPath(r.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 20rem" loading="lazy" /></a> : <a class="marcador" href={workPath(r.id, lang)} style="aspect-ratio:3/4"><strong>{r.data.title[lang]}</strong></a>}
                 <p><span><strong><a href={workPath(r.id, lang)}>{r.data.title[lang]}</a></strong><span class="pieza-nota">{r.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p>
               </li>
@@ -118,7 +118,7 @@ const contactHref = `${route('contact', lang)}?obra=${encodeURIComponent(work.id
   .obra-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
   @media (max-width: 900px) { .obra-grid { grid-template-columns: 1fr; } }
   .obra h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin-bottom: 0.4em; }
-  .obra-zoom { display: block; width: 100%; padding: 0; border: 0; background: #221b16; border-radius: var(--radio); overflow: hidden; cursor: zoom-in; box-shadow: 0 0 0 1px rgba(255, 250, 240, 0.14), 0 10px 30px rgba(0, 0, 0, 0.45); }
+  .obra-zoom { display: block; width: 100%; padding: 0; border: 0; background: var(--blanco); border-radius: var(--radio); overflow: hidden; cursor: zoom-in; box-shadow: 0 0 0 1px rgba(255, 250, 240, 0.14), 0 10px 30px rgba(0, 0, 0, 0.45); }
   .obra-zoom :global(img) { width: 100%; height: auto; border-radius: 0; box-shadow: none; transition: transform 0.5s ease; }
   .obra-zoom:hover :global(img) { transform: scale(1.02); }
   .obra-vistas { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }

@@ -64,7 +64,7 @@ const detalles = [
         <p class="entrada">{page.data.lead}</p>
         <div class="botones"><a class="boton boton-principal" href="#pasos">{es ? 'Ver los pasos' : 'See the steps'}</a><a class="boton boton-secundario" href={route('works', lang)}>{ui.cta.works}</a></div>
       </div>
-      <figure class="portada-imagen">
+      <figure class="portada-imagen" data-reveal="zoom" style="--i:1">
         <div class="portada-marco"><Image src={pintandoImg} alt={es ? 'Felipe Linares Vargas pinta con un pincel fino en la mesa del taller; a su lado, un alebrije con cuernos y melena multicolor.' : 'Felipe Linares Vargas paints with a fine brush at the workshop table; beside him, a horned alebrije with a multicolored mane.'} widths={[480, 960, 1400]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="aspect-ratio:4/3;object-position:60% 50%" /></div>
         <figcaption>{es ? 'Felipe pintando en el taller familiar · fotograma de video' : 'Felipe painting in the family workshop · video still'}</figcaption>
       </figure>
@@ -73,25 +73,25 @@ const detalles = [
 
   <section class="seccion seccion-crema" id="pasos" aria-labelledby="titulo-pasos">
     <div class="contenedor">
-      <div class="encabezado-seccion prosa"><p class="antetitulo">{es ? 'Del papel a la criatura' : 'From paper to creature'}</p><h2 id="titulo-pasos">{es ? 'Así se construye una pieza' : 'How a piece is built'}</h2><Content /></div>
-      <ol class="pasos">{pasos.map((p) => <li><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}</ol>
+      <div class="encabezado-seccion prosa" data-reveal><p class="antetitulo">{es ? 'Del papel a la criatura' : 'From paper to creature'}</p><h2 id="titulo-pasos">{es ? 'Así se construye una pieza' : 'How a piece is built'}</h2><Content /></div>
+      <ol class="pasos">{pasos.map((p, i) => <li data-reveal style={`--i:${i}`}><h3>{p.heading}</h3><p>{p.text}</p>{p.note && <p class="pendiente">{p.note}</p>}</li>)}</ol>
       <div class="nota"><p><strong>{es ? '¿Cuánto tarda una pieza?' : 'How long does a piece take?'}</strong> {es ? 'Cada capa de papel se seca antes de la siguiente, a veces durante días. Las piezas grandes requieren semanas de secado y pintura.' : 'Each layer of paper dries before the next, sometimes for days. Large pieces need weeks of drying and painting.'}</p></div>
     </div>
   </section>
 
   <section class="seccion" aria-labelledby="titulo-detalle">
     <div class="contenedor">
-      <div class="encabezado-seccion"><p class="antetitulo">{es ? 'En detalle' : 'In detail'}</p><h2 id="titulo-detalle">{es ? 'Acercamientos a la pintura' : 'Close-ups of the painting'}</h2><p class="texto-suave">{es ? 'Recortes de las fotografías de las obras, sin ampliación artificial.' : 'Crops from the photographs of the works, without artificial enlargement.'}</p></div>
-      <ul class="detalles">{detalles.map((d) => <li><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}</ul>
+      <div class="encabezado-seccion" data-reveal><p class="antetitulo">{es ? 'En detalle' : 'In detail'}</p><h2 id="titulo-detalle">{es ? 'Acercamientos a la pintura' : 'Close-ups of the painting'}</h2><p class="texto-suave">{es ? 'Recortes de las fotografías de las obras, sin ampliación artificial.' : 'Crops from the photographs of the works, without artificial enlargement.'}</p></div>
+      <ul class="detalles">{detalles.map((d, i) => <li data-reveal="zoom" style={`--i:${i % 4}`}><figure><Image src={d.img} alt={d.d} widths={[360, 600]} sizes="(max-width: 1000px) 45vw, 17rem" loading="lazy" /><figcaption><strong>{d.t}</strong>{d.d}</figcaption></figure></li>)}</ul>
     </div>
   </section>
 
   <section class="seccion seccion-oscura" aria-labelledby="titulo-fotos">
     <div class="contenedor">
-      <div class="encabezado-seccion"><p class="antetitulo">{es ? 'Fotografías de taller' : 'Workshop photographs'}</p><h2 id="titulo-fotos">{es ? 'Entre frascos, pinceles y piezas a medio secar' : 'Among jars, brushes and half-dried pieces'}</h2><p class="texto-suave">{ui.home.ch4Note}</p></div>
+      <div class="encabezado-seccion" data-reveal><p class="antetitulo">{es ? 'Fotografías de taller' : 'Workshop photographs'}</p><h2 id="titulo-fotos">{es ? 'Entre frascos, pinceles y piezas a medio secar' : 'Among jars, brushes and half-dried pieces'}</h2><p class="texto-suave">{ui.home.ch4Note}</p></div>
       <ul class="piezas" data-lb-group>
-        {fotosFull.map((f) => <li class="pieza"><a class="pieza-imagen" href={f.full} data-lb-open data-full={f.full} data-alt={f.alt[lang]} data-title={es ? 'Taller' : 'Workshop'} data-caption={f.alt[lang]}><Image src={f.src} alt={f.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 22rem" loading="lazy" /></a></li>)}
-        <li class="pieza"><div class="marcador" style="aspect-ratio:3/4;border-radius:10px"><strong>{es ? 'Video del proceso' : 'Process video'}</strong><span>{es ? 'Por incorporar con autorización del artista.' : 'To be added with the artist’s permission.'}</span></div></li>
+        {fotosFull.map((f) => <li class="pieza" data-reveal data-tilt="7"><a class="pieza-imagen" href={f.full} data-lb-open data-full={f.full} data-alt={f.alt[lang]} data-title={es ? 'Taller' : 'Workshop'} data-caption={f.alt[lang]}><Image src={f.src} alt={f.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 22rem" loading="lazy" /></a></li>)}
+        <li class="pieza" data-reveal data-tilt="7"><div class="marcador" style="aspect-ratio:3/4;border-radius:10px"><strong>{es ? 'Video del proceso' : 'Process video'}</strong><span>{es ? 'Por incorporar con autorización del artista.' : 'To be added with the artist’s permission.'}</span></div></li>
       </ul>
       <div class="nota-oscura"><p class="nota-titulo">{es ? 'Lo que falta por documentar' : 'What remains to be documented'}</p><p>{es ? 'Materiales sobre la mesa, la armadura de una pieza y las capas de papel antes de la pintura. Se fotografiarán en el taller de Felipe con su autorización.' : 'Materials on the table, the armature of a piece and the paper layers before painting. They will be photographed in Felipe’s workshop with his permission.'}</p></div>
     </div>

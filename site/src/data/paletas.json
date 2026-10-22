@@ -2,12 +2,48 @@
  {
   "id": "taller",
   "nombre": {
-   "es": "Taller",
-   "en": "Workshop"
+   "es": "Noche de alebrijes",
+   "en": "Alebrije night"
   },
   "desc": {
-   "es": "Papel, bermellón, cempasúchil y turquesa",
-   "en": "Paper, vermilion, marigold and turquoise"
+   "es": "Violeta profundo con magenta, cempasúchil y turquesa",
+   "en": "Deep violet with magenta, marigold and turquoise"
+  },
+  "t": {
+   "papel": "#120523",
+   "papel-2": "#1c0a36",
+   "tinta": "#fff5e4",
+   "tinta-suave": "#d7c5ea",
+   "bermellon": "#ff2d95",
+   "bermellon-oscuro": "#ff64b2",
+   "cempasuchil": "#ffb400",
+   "turquesa": "#22d3c5",
+   "verde": "#7ee04d",
+   "morado": "#a86cff",
+   "blanco": "#22103f",
+   "blanco-puro": "#fff5e4",
+   "oscuro": "#0a0116",
+   "crema-texto": "#f1e7ff",
+   "crema-suave": "#c9b8e3",
+   "borde": "rgba(255,245,228,0.16)",
+   "sobre-acento": "#140527",
+   "panel-1": "#ff2d95",
+   "panel-2": "#ffb400",
+   "panel-3": "#22d3c5",
+   "tinta-panel": "#140527",
+   "tinta-panel-suave": "#3a1a4f",
+   "realce": "#ffb400"
+  }
+ },
+ {
+  "id": "papel",
+  "nombre": {
+   "es": "Papel",
+   "en": "Paper"
+  },
+  "desc": {
+   "es": "La versión anterior: papel crema, bermellón y cempasúchil",
+   "en": "The previous look: cream paper, vermilion and marigold"
   },
   "t": {
    "papel": "#f6eedd",
@@ -23,7 +59,16 @@
    "blanco": "#fffaf0",
    "oscuro": "#14100d",
    "crema-texto": "#e2d7c6",
-   "crema-suave": "#cbbfae"
+   "crema-suave": "#cbbfae",
+   "blanco-puro": "#fffaf0",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fffaf0",
+   "panel-1": "#e8a01a",
+   "panel-2": "#efe3c9",
+   "panel-3": "#b8cfc3",
+   "tinta-panel": "#1c1612",
+   "tinta-panel-suave": "#54473d",
+   "realce": "#8f2414"
   }
  },
  {
@@ -50,7 +95,16 @@
    "blanco": "#fff9d6",
    "oscuro": "#2a0b45",
    "crema-texto": "#fff1b8",
-   "crema-suave": "#ffd9a8"
+   "crema-suave": "#ffd9a8",
+   "blanco-puro": "#fff9d6",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fff9d6",
+   "panel-1": "#c8f000",
+   "panel-2": "#ff8a1f",
+   "panel-3": "#b8b347",
+   "tinta-panel": "#1e0a33",
+   "tinta-panel-suave": "#4a1f6b",
+   "realce": "#a80057"
   }
  },
  {
@@ -77,7 +131,16 @@
    "blanco": "#fff3fa",
    "oscuro": "#1f0038",
    "crema-texto": "#ffe0f0",
-   "crema-suave": "#ffb8dc"
+   "crema-suave": "#ffb8dc",
+   "blanco-puro": "#fff3fa",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fff3fa",
+   "panel-1": "#ffe600",
+   "panel-2": "#22d3ee",
+   "panel-3": "#b874b3",
+   "tinta-panel": "#1a0030",
+   "tinta-panel-suave": "#3d0d66",
+   "realce": "#43008a"
   }
  },
  {
@@ -104,7 +167,16 @@
    "blanco": "#fff5e0",
    "oscuro": "#03201f",
    "crema-texto": "#dffaf5",
-   "crema-suave": "#a9e8e0"
+   "crema-suave": "#a9e8e0",
+   "blanco-puro": "#fff5e0",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fff5e0",
+   "panel-1": "#ff2fb0",
+   "panel-2": "#ffe600",
+   "panel-3": "#b8812d",
+   "tinta-panel": "#042a2b",
+   "tinta-panel-suave": "#133a3b",
+   "realce": "#35086b"
   }
  },
  {
@@ -131,7 +203,16 @@
    "blanco": "#f8ffd6",
    "oscuro": "#17002b",
    "crema-texto": "#eeffb3",
-   "crema-suave": "#c8f29a"
+   "crema-suave": "#c8f29a",
+   "blanco-puro": "#f8ffd6",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#f8ffd6",
+   "panel-1": "#ff8a00",
+   "panel-2": "#2ee6d6",
+   "panel-3": "#8fcc3f",
+   "tinta-panel": "#1d0033",
+   "tinta-panel-suave": "#45175f",
+   "realce": "#95005d"
   }
  },
  {
@@ -158,7 +239,16 @@
    "blanco": "#fff8ee",
    "oscuro": "#1f1309",
    "crema-texto": "#e6d8c4",
-   "crema-suave": "#cdbba3"
+   "crema-suave": "#cdbba3",
+   "blanco-puro": "#fff8ee",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fff8ee",
+   "panel-1": "#e0a52a",
+   "panel-2": "#ecd9bf",
+   "panel-3": "#c7c9ae",
+   "tinta-panel": "#2e1a10",
+   "tinta-panel-suave": "#5c4332",
+   "realce": "#88391a"
   }
  },
  {
@@ -185,7 +275,16 @@
    "blanco": "#fffafa",
    "oscuro": "#1c0b11",
    "crema-texto": "#efdde2",
-   "crema-suave": "#d2bcc3"
+   "crema-suave": "#d2bcc3",
+   "blanco-puro": "#fffafa",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fffafa",
+   "panel-1": "#3ec4bd",
+   "panel-2": "#f6e1da",
+   "panel-3": "#bbd6d1",
+   "tinta-panel": "#2a1118",
+   "tinta-panel-suave": "#5d3b45",
+   "realce": "#900f50"
   }
  },
  {
@@ -212,7 +311,16 @@
    "blanco": "#ffffff",
    "oscuro": "#0f1f33",
    "crema-texto": "#dde6f0",
-   "crema-suave": "#b9c7d8"
+   "crema-suave": "#b9c7d8",
+   "blanco-puro": "#ffffff",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#ffffff",
+   "panel-1": "#d9a521",
+   "panel-2": "#f1ede0",
+   "panel-3": "#c5dbeb",
+   "tinta-panel": "#142a44",
+   "tinta-panel-suave": "#3f5570",
+   "realce": "#164679"
   }
  },
  {
@@ -239,7 +347,16 @@
    "blanco": "#fffaf2",
    "oscuro": "#121a2e",
    "crema-texto": "#e2e0d8",
-   "crema-suave": "#c3c1b8"
+   "crema-suave": "#c3c1b8",
+   "blanco-puro": "#fffaf2",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fffaf2",
+   "panel-1": "#d2793f",
+   "panel-2": "#eadfcb",
+   "panel-3": "#cecdae",
+   "tinta-panel": "#1b2238",
+   "tinta-panel-suave": "#4a4f5e",
+   "realce": "#162f85"
   }
  },
  {
@@ -266,7 +383,16 @@
    "blanco": "#fff8ea",
    "oscuro": "#1e0810",
    "crema-texto": "#ecdccb",
-   "crema-suave": "#cfbba8"
+   "crema-suave": "#cfbba8",
+   "blanco-puro": "#fff8ea",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fff8ea",
+   "panel-1": "#f2a900",
+   "panel-2": "#f1dfc0",
+   "panel-3": "#ebc2a4",
+   "tinta-panel": "#2e0d16",
+   "tinta-panel-suave": "#5e3540",
+   "realce": "#5b1424"
   }
  },
  {
@@ -293,7 +419,16 @@
    "blanco": "#fdf8f2",
    "oscuro": "#2b2824",
    "crema-texto": "#ebe3da",
-   "crema-suave": "#cfc5b9"
+   "crema-suave": "#cfc5b9",
+   "blanco-puro": "#fdf8f2",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fdf8f2",
+   "panel-1": "#e4b9ad",
+   "panel-2": "#f1dcd3",
+   "panel-3": "#d1cfc1",
+   "tinta-panel": "#35312c",
+   "tinta-panel-suave": "#645b53",
+   "realce": "#43583d"
   }
  },
  {
@@ -320,7 +455,16 @@
    "blanco": "#fffbf3",
    "oscuro": "#142225",
    "crema-texto": "#dfe6e4",
-   "crema-suave": "#bcc8c6"
+   "crema-suave": "#bcc8c6",
+   "blanco-puro": "#fffbf3",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fffbf3",
+   "panel-1": "#ef9b7f",
+   "panel-2": "#ead9c0",
+   "panel-3": "#b7d5c9",
+   "tinta-panel": "#1f3236",
+   "tinta-panel-suave": "#4b5f63",
+   "realce": "#983322"
   }
  },
  {
@@ -347,7 +491,16 @@
    "blanco": "#fcf8ef",
    "oscuro": "#1e1c16",
    "crema-texto": "#e6e1d4",
-   "crema-suave": "#c6c0b1"
+   "crema-suave": "#c6c0b1",
+   "blanco-puro": "#fcf8ef",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#fcf8ef",
+   "panel-1": "#d6b45c",
+   "panel-2": "#e8dfcb",
+   "panel-3": "#ccccb1",
+   "tinta-panel": "#2a271f",
+   "tinta-panel-suave": "#585245",
+   "realce": "#843217"
   }
  },
  {
@@ -374,7 +527,16 @@
    "blanco": "#ffffff",
    "oscuro": "#1a1c1f",
    "crema-texto": "#e3e1dc",
-   "crema-suave": "#c2bfb8"
+   "crema-suave": "#c2bfb8",
+   "blanco-puro": "#ffffff",
+   "borde": "rgba(28,22,18,0.16)",
+   "sobre-acento": "#ffffff",
+   "panel-1": "#c98a48",
+   "panel-2": "#e6e2db",
+   "panel-3": "#c3cad1",
+   "tinta-panel": "#25282c",
+   "tinta-panel-suave": "#555a60",
+   "realce": "#19348a"
   }
  }
 ]

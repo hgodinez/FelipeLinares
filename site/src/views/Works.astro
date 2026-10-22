@@ -65,7 +65,7 @@ const enriched = await Promise.all(salas.map(async (s) => ({ ...s, items: await 
           {s.items.map(({ w, imgs }) => {
             const main = imgs.find((i) => i.kind !== 'workshop') ?? imgs[0];
             return (
-              <li class="muro-pieza work-card" data-title={w.data.title[lang].toLowerCase()}>
+              <li class="muro-pieza work-card" data-reveal data-title={w.data.title[lang].toLowerCase()}>
                 <figure>
                   {main ? (
                     <>
@@ -127,6 +127,6 @@ const enriched = await Promise.all(salas.map(async (s) => ({ ...s, items: await 
 
 <style>
   .filtro-busqueda { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
-  .filtro-busqueda input { font: inherit; color: var(--blanco); background: rgba(255, 250, 240, 0.06); border: 1.5px solid rgba(255, 250, 240, 0.25); border-radius: 999px; padding: 0.55rem 1rem; min-width: min(100%, 22rem); min-height: 44px; }
+  .filtro-busqueda input { font: inherit; color: var(--crema-texto); background: rgba(255, 245, 228, 0.06); border: 1.5px solid rgba(255, 250, 240, 0.25); border-radius: 999px; padding: 0.55rem 1rem; min-width: min(100%, 22rem); min-height: 44px; }
   .filtro-busqueda input::placeholder { color: var(--crema-suave); }
 </style>

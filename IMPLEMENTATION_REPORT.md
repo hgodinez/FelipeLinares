@@ -39,3 +39,14 @@ Tras la revisión del cliente (demasiado contenido, demasiado plano), la direcci
 - No se midieron LCP/INP/CLS en producción; la portada prioriza la foto (`fetchpriority="high"`, dimensiones reservadas) y el resto carga en diferido.
 - El formulario copia el mensaje al portapapeles hasta que exista `formEndpoint` o `contactEmail` (ver README).
 - El panel `/admin/` requiere un proveedor OAuth (ver README).
+
+## Revisión 4 · «Noche de alebrijes» (v3)
+
+A petición del revisor, se reemplazó el lenguaje visual de la v2 (demasiado cercano a la referencia Gorgonio Candelario) por una dirección propia:
+
+- Base nocturna (violeta profundo) con las criaturas iluminadas; paneles saturados en magenta, cempasúchil y turquesa con textura de escamas pintadas; bordes en zigzag entre secciones.
+- Tipografía de titulares Bricolage Grotesque (variable, ancho extendido) en lugar de Fraunces; cuerpo en Source Sans 3.
+- Movimiento: papel picado que se mece bajo el encabezado y en el pie, marquesina de palabras, criatura de portada que flota con halo que late y anillo punteado que gira, chispas de color, revelado escalonado al hacer scroll, inclinación 3D hacia el puntero en fotos y piezas, parallax leve en la portada. Todo respeta `prefers-reduced-motion`.
+- Encabezado flotante en forma de píldora; pie con marca gigante y papel picado invertido.
+- El sistema es totalmente dependiente de tokens: las 15 paletas del selector siguen funcionando; se añadieron tokens para paneles (`panel-1/2/3`, `tinta-panel`), texto sobre acento (`sobre-acento`) y realce (`realce`) para mantener el contraste AA en paletas claras y oscuras.
+- La v2 queda guardada en la etiqueta `v2-papel` y su paleta de colores sobrevive como opción «Papel».

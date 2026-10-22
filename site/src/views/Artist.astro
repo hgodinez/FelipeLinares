@@ -32,7 +32,7 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
         <p class="entrada">{felipe.data.role[lang]}</p>
         <div class="botones"><a class="boton boton-principal" href={route('works', lang)}>{ui.cta.works}</a><a class="boton boton-secundario" href={route('contact', lang)}>{ui.cta.contact}</a></div>
       </div>
-      <figure class="portada-imagen">
+      <figure class="portada-imagen" data-reveal="zoom" style="--i:1">
         <div class="portada-marco"><Image src={retratoImg} alt={es ? 'Felipe Linares Vargas sonríe sentado en su taller, entre dos alebrijes de cartonería: uno con melena anaranjada y otro rojo con escamas y ojos de pavorreal.' : 'Felipe Linares Vargas smiles seated in his workshop, between two cartonería alebrijes: one with an orange mane and one red with scales and peacock eyes.'} widths={[480, 960, 1400]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, 30rem" loading="eager" fetchpriority="high" style="aspect-ratio:4/3;object-position:50% 45%" /></div>
         <figcaption>{es ? 'Felipe Linares Vargas en el taller familiar · fotograma de video' : 'Felipe Linares Vargas in the family workshop · video still'}</figcaption>
       </figure>
@@ -43,8 +43,8 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
     <div class="contenedor dos-columnas">
       <div class="prosa"><Content /></div>
       <div class="foto-lado">
-        <figure class="foto"><Image src={mesaImg} alt={es ? 'Felipe Linares Vargas pinta un alebrije de plumas verdes y azules en la mesa del taller; frente a él, su padre Felipe Linares Mendoza, con gorra, observa la pieza.' : 'Felipe Linares Vargas paints a green-and-blue feathered alebrije at the workshop table; across from him, his father Felipe Linares Mendoza, in a cap, watches the piece.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Felipe y su padre, Felipe Linares Mendoza, en la mesa del taller · fotograma de video.' : 'Felipe and his father, Felipe Linares Mendoza, at the workshop table · video still.'}</figcaption></figure>
-        <figure class="foto"><Image src={pintandoImg} alt={es ? 'Felipe Linares Vargas pinta con un pincel fino en la mesa del taller; a su lado, un alebrije con cuernos y melena multicolor.' : 'Felipe Linares Vargas paints with a fine brush at the workshop table; beside him, a horned alebrije with a multicolored mane.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Pintando en el taller · fotograma de video.' : 'Painting in the workshop · video still.'}</figcaption></figure>
+        <figure class="foto" data-reveal><Image src={mesaImg} alt={es ? 'Felipe Linares Vargas pinta un alebrije de plumas verdes y azules en la mesa del taller; frente a él, su padre Felipe Linares Mendoza, con gorra, observa la pieza.' : 'Felipe Linares Vargas paints a green-and-blue feathered alebrije at the workshop table; across from him, his father Felipe Linares Mendoza, in a cap, watches the piece.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Felipe y su padre, Felipe Linares Mendoza, en la mesa del taller · fotograma de video.' : 'Felipe and his father, Felipe Linares Mendoza, at the workshop table · video still.'}</figcaption></figure>
+        <figure class="foto" data-reveal><Image src={pintandoImg} alt={es ? 'Felipe Linares Vargas pinta con un pincel fino en la mesa del taller; a su lado, un alebrije con cuernos y melena multicolor.' : 'Felipe Linares Vargas paints with a fine brush at the workshop table; beside him, a horned alebrije with a multicolored mane.'} widths={[480, 800, 1200]} sizes="(max-width: 820px) 100vw, 34rem" loading="lazy" /><figcaption>{es ? 'Pintando en el taller · fotograma de video.' : 'Painting in the workshop · video still.'}</figcaption></figure>
         <ul class="datos">
           <li><strong>{es ? 'Padre' : 'Father'}</strong>Felipe Linares Mendoza</li>
           <li><strong>{es ? 'Abuelo' : 'Grandfather'}</strong>Pedro Linares López (1906–1992)</li>
@@ -57,7 +57,7 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
 
   <section class="seccion seccion-oscura" aria-labelledby="titulo-cronologia">
     <div class="contenedor">
-      <div class="encabezado-seccion">
+      <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{ui.legacy.timeline}</p>
         <h2 id="titulo-cronologia">{es ? 'Hitos documentados' : 'Documented milestones'}</h2>
         <p class="texto-suave">{es ? 'Solo se incluyen fechas verificadas en fuentes públicas. Los hitos personales se añadirán con la confirmación del artista.' : 'Only dates verified in public sources are included. Personal milestones will be added with the artist’s confirmation.'}</p>
@@ -72,10 +72,10 @@ const personLd = { '@context': 'https://schema.org', '@type': 'Person', name: fe
 
   <section class="seccion">
     <div class="contenedor">
-      <div class="encabezado-seccion"><p class="antetitulo">{ui.works.eyebrow}</p><h2>{es ? 'Obras seleccionadas' : 'Selected works'}</h2></div>
+      <div class="encabezado-seccion" data-reveal><p class="antetitulo">{ui.works.eyebrow}</p><h2>{es ? 'Obras seleccionadas' : 'Selected works'}</h2></div>
       <ul class="piezas">
         {works.map((w, i) => { const c = coverOf(w)!; return (
-          <li class="pieza">
+          <li class="pieza" data-reveal data-tilt="7">
             <a class="pieza-imagen" href={workPath(w.id, lang)}><Image src={c.src} alt={c.alt[lang]} widths={[360, 600]} sizes="(max-width: 560px) 45vw, 22rem" loading="lazy" /></a>
             <p><span class="pieza-numero" aria-hidden="true">{i + 1}</span><span><strong><a href={workPath(w.id, lang)}>{w.data.title[lang]}</a></strong><span class="pieza-nota">{w.data.categories.map((x) => ui.works.categories[x]).join(' · ')}</span></span></p>
           </li>
