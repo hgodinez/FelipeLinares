@@ -82,9 +82,36 @@ function initContadores() {
   els.forEach((el) => io.observe(el));
 }
 
+function initTiras() {
+  document.querySelectorAll<HTMLElement>('[data-tira]:not([data-tira-ready])').forEach((tira) => {
+    tira.dataset.tiraReady = '1';
+    const cont = tira.previousElementSibling as HTMLElement | null;
+    if (!cont || !cont.classList.contains('tira-controles')) return;
+    const paso = () => { const el = tira.firstElementChild as HTMLElement | null; return el ? el.getBoundingClientRect().width + 16 : 320; };
+    cont.querySelector('[data-tira-prev]')?.addEventListener('click', () => tira.scrollBy({ left: -paso(), behavior: reduce() ? 'auto' : 'smooth' }));
+    cont.querySelector('[data-tira-next]')?.addEventListener('click', () => tira.scrollBy({ left: paso(), behavior: reduce() ? 'auto' : 'smooth' }));
+    tira.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); tira.scrollBy({ left: paso(), behavior: 'smooth' }); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); tira.scrollBy({ left: -paso(), behavior: 'smooth' }); }
+    });
+  });
+}
+
+let progresoBound = false;
+function initProgreso() {
+  const bar = document.querySelector<HTMLElement>('.progreso');
+  if (!bar) return;
+  const pinta = () => { const max = document.documentElement.scrollHeight - window.innerHeight; bar.style.setProperty('--progreso', max > 0 ? `${Math.min(100, (window.scrollY / max) * 100).toFixed(2)}%` : '0%'); };
+  pinta();
+  if (progresoBound) return;
+  progresoBound = true;
+  window.addEventListener('scroll', pinta, { passive: true });
+  window.addEventListener('resize', pinta);
+}
+
 export function initMotion() {
   document.documentElement.classList.add('js');
-  initReveal(); initTilt(); initParallax(); initContadores();
+  initReveal(); initTilt(); initParallax(); initContadores(); initTiras(); initProgreso();
 }
 
 /** Recuerda qué obra se abrió desde una galería para devolverle el foco al volver. */

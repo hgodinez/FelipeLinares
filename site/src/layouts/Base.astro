@@ -66,6 +66,7 @@ const ld = [websiteLd, ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : 
     <ClientRouter fallback="none" />
   </head>
   <body class={bodyClass}>
+    <div class="progreso" aria-hidden="true"></div>
     <a class="salto" href="#main">{ui.skip}</a>
     <Header lang={lang} alternates={alternates} />
     <PapelPicado />

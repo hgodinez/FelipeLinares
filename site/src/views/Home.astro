@@ -8,6 +8,7 @@ import { route, alternates, workPath, archivePath, type Lang } from '@/i18n/rout
 import { getPage, getPeople, getWorks, getArchive, coverOf } from '@/lib/content';
 import site from '@/data/site.json';
 import heroImg from '@/assets/works/alebrije-cabra-gallo-estudio.jpg';
+import heroCut from '@/assets/works/alebrije-cabra-gallo-recorte.png';
 import retratoImg from '@/assets/video/felipe-retrato-taller.webp';
 import cabezaImg from '@/assets/video/felipe-cabeza-astada.webp';
 import contraluzImg from '@/assets/video/alebrije-astado-contraluz.webp';
@@ -66,19 +67,19 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
       {chispas.map((c) => <i style={`--x:${c.x}%;--y:${c.y}%;--c:${c.c};--t:${c.t}s;--d:${c.d}s`}></i>)}
     </div>
     <div class="contenedor">
-      <div data-reveal>
-        <p class="antetitulo">{page.data.eyebrow}</p>
-        <h1 id="titulo-portada">Felipe Linares <em>Vargas</em></h1>
-        <p class="lema">{site.heroStatement[lang]}</p>
-        <p class="entrada">{page.data.lead}</p>
-        <div class="botones">
+      <div>
+        <p class="antetitulo" data-reveal>{page.data.eyebrow}</p>
+        <h1 id="titulo-portada" data-reveal style="--i:1">Felipe Linares <em>Vargas</em></h1>
+        <p class="lema" data-reveal style="--i:2">{site.heroStatement[lang]}</p>
+        <p class="entrada" data-reveal style="--i:3">{page.data.lead}</p>
+        <div class="botones" data-reveal style="--i:4">
           <a class="boton boton-principal" href="#maestro">{es ? 'Conoce su historia' : 'Discover his story'}</a>
           <a class="boton boton-secundario" href="#obras">{ui.cta.works}</a>
         </div>
       </div>
-      <figure class="portada-imagen" data-reveal="zoom" style="--i:2;--proporcion:1.08;--ancho-portada:36rem">
+      <figure class="portada-imagen portada-recorte" data-reveal="zoom" style="--i:2;--ancho-portada:40rem">
         <span class="sello" data-parallax="-0.06">{es ? 'Papel y cartón' : 'Paper and cardboard'}<small>{es ? 'Ciudad de México' : 'Mexico City'}</small></span>
-        <div class="portada-marco" data-parallax="0.025"><Image src={heroImg} alt={es ? 'Alebrije de cartonería con cabeza de cabra y cuernos rayados, lengua roja, melena de tiras anaranjadas, cuerpo de gallo con plumas verdes, azules y rojas y patas amarillas escamadas.' : 'Cartonería alebrije with a goat head and striped horns, red tongue, a mane of orange strips, a rooster body with green, blue and red feathers and scaled yellow legs.'} widths={[480, 880]} sizes="(max-width: 440px) 88vw, (max-width: 760px) 24rem, (max-width: 1160px) 42vw, 32rem" loading="eager" fetchpriority="high" style="object-position:30% 50%" /></div>
+        <div class="portada-marco" data-parallax="0.025"><Image src={heroCut} alt={es ? 'Alebrije de cartonería con cabeza de cabra y cuernos rayados, lengua roja, melena de tiras anaranjadas, cuerpo de gallo con plumas verdes, azules y rojas y patas amarillas escamadas.' : 'Cartonería alebrije with a goat head and striped horns, red tongue, a mane of orange strips, a rooster body with green, blue and red feathers and scaled yellow legs.'} widths={[520, 781]} sizes="(max-width: 440px) 92vw, (max-width: 760px) 28rem, (max-width: 1160px) 46vw, 40rem" loading="eager" fetchpriority="high" /></div>
         <figcaption>{es ? 'Alebrije de cabra con cuerpo de gallo · título y fotografía por confirmar' : 'Goat alebrije with a rooster body · title and photograph to be confirmed'}</figcaption>
       </figure>
     </div>
@@ -91,7 +92,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor dos-columnas">
       <div data-reveal="izq">
         <p class="antetitulo">{ui.nav.artist}</p>
-        <h2 id="titulo-maestro" class="titulo-gigante">{S[0].heading}</h2>
+        <h2 id="titulo-maestro" class="titulo-gigante pincelada">{S[0].heading}</h2>
         <p style="font-size:1.15rem">{S[0].text}</p>
         <h3 class="subtitulo-seccion" style="margin-top:1.5rem">{S[1].heading}</h3>
         <p>{S[1].text}</p>
@@ -121,7 +122,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
         <figure class="foto foto-brillo" data-reveal="izq" data-tilt="4" style="position:relative;border-radius:var(--radio)"><Image src={contraluzImg} alt={es ? 'Alebrije con cabeza de cabra, cuernos rayados, lengua roja y melena de tiras multicolores, iluminado por luz de atardecer que proyecta su sombra en la pared.' : 'Alebrije with a goat head, striped horns, red tongue and a mane of multicolored strips, lit by evening light that casts its shadow on the wall.'} widths={[480, 800, 940]} sizes="(max-width: 820px) 100vw, 36rem" loading="lazy" style="aspect-ratio:4/3;object-fit:cover" /><figcaption>{es ? 'Alebrije astado en el taller, a contraluz · fotograma de video.' : 'Horned alebrije in the workshop, against the light · video still.'}</figcaption></figure>
         <div data-reveal="der" style="--i:1">
           <p class="antetitulo">{es ? 'Tradición de la Ciudad de México' : 'A Mexico City tradition'}</p>
-          <h2 id="titulo-alebrijes" class="titulo-gigante">{S[2].heading}</h2>
+          <h2 id="titulo-alebrijes" class="titulo-gigante pincelada">{S[2].heading}</h2>
           <p class="texto-suave" style="font-size:1.15rem">{S[2].text}</p>
           <h3 class="subtitulo-seccion" style="margin-top:1.5rem">{S[3].heading}</h3>
           <p class="texto-suave">{S[3].text}</p>
@@ -141,7 +142,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor">
       <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'La técnica' : 'The technique'}</p>
-        <h2 id="titulo-tecnica" class="titulo-gigante">{S[4].heading}</h2>
+        <h2 id="titulo-tecnica" class="titulo-gigante pincelada">{S[4].heading}</h2>
         <p class="texto-suave">{S[4].text}</p>
       </div>
       <h3 class="subtitulo-seccion" style="margin-top:0" data-reveal>{es ? 'Del papel a la criatura' : 'From paper to creature'}</h3>
@@ -164,12 +165,13 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor">
       <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'Su obra' : 'His work'}</p>
-        <h2 id="titulo-obras" class="titulo-gigante">{S[5].heading}</h2>
+        <h2 id="titulo-obras" class="titulo-gigante pincelada">{S[5].heading}</h2>
         <p class="texto-suave">{S[5].text}</p>
       </div>
-      <ul class="piezas" data-lb-group>
+      <div class="tira-controles" aria-hidden="true"><button type="button" class="tira-boton" data-tira-prev>←</button><button type="button" class="tira-boton" data-tira-next>→</button></div>
+      <ul class="piezas tira" data-lb-group data-tira tabindex="0" aria-label={es ? 'Obras seleccionadas, desplazamiento horizontal' : 'Selected works, horizontal scroll'}>
         {piezas.map(({ w, cover, full }, i) => (
-          <li class="pieza" data-reveal data-tilt="7" style={`--i:${i % 3}`}>
+          <li class="pieza" data-reveal data-tilt="6" style={`--i:${i % 3}`}>
             <a class="pieza-imagen" href={workPath(w.id, lang)} data-lb-open data-full={full} data-alt={cover.alt[lang]} data-title={w.data.title[lang]} data-caption={w.data.description[lang].slice(0, 180) + '…'}>
               <Image src={cover.src} alt={cover.alt[lang]} widths={[360, 600, 900]} sizes="(max-width: 560px) 45vw, (max-width: 1160px) 30vw, 22rem" loading="lazy" />
             </a>
@@ -187,7 +189,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor">
       <div class="encabezado-seccion" data-reveal>
         <p class="antetitulo">{es ? 'Reconocimientos' : 'Recognition'}</p>
-        <h2 id="titulo-reconocimientos" class="titulo-gigante">{S[6].heading}</h2>
+        <h2 id="titulo-reconocimientos" class="titulo-gigante pincelada">{S[6].heading}</h2>
         <p class="texto-suave">{S[6].text}</p>
       </div>
       <div class="tarjetas">
@@ -201,7 +203,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor" style="max-width:52rem">
       <div data-reveal>
         <p class="antetitulo">{ui.nav.legacy}</p>
-        <h2 id="titulo-legado" class="titulo-gigante">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
+        <h2 id="titulo-legado" class="titulo-gigante pincelada">{es ? 'Una historia que continúa' : 'A story that continues'}</h2>
         <p class="texto-suave" style="font-size:1.15rem">{es ? 'El trabajo de la familia Linares ha llegado a museos de México, Estados Unidos y Europa, pero cada pieza nace en la Ciudad de México, en talleres que son al mismo tiempo casas. De don Pedro a sus hijos Enrique, Felipe y Miguel; de ellos a Felipe, Leonardo, David y Ricardo; y ya a una generación más.' : 'The Linares family’s work has reached museums in Mexico, the United States and Europe, but every piece is born in Mexico City, in workshops that are also homes. From don Pedro to his sons Enrique, Felipe and Miguel; from them to Felipe, Leonardo, David and Ricardo; and now to one more generation.'}</p>
       </div>
       <figure class="cita-grande" style="margin-top:2.5rem" data-reveal><span class="franja-corta" aria-hidden="true"></span><blockquote><p>{es ? '«Queremos seguir la línea de mi abuelo y de mi padre, pero con una creatividad y con unas formas diferentes».' : '“We want to follow the line of my grandfather and my father, but with our own creativity and different forms.”'}</p></blockquote><figcaption>Felipe Linares Vargas</figcaption></figure>
@@ -214,7 +216,7 @@ const chispas = Array.from({ length: 14 }, (_, i) => ({ x: 8 + ((i * 37) % 84), 
     <div class="contenedor dos-columnas" style="align-items:center">
       <div data-reveal="izq">
         <p class="antetitulo">{es ? 'El taller' : 'The workshop'}</p>
-        <h2 id="titulo-taller" class="titulo-gigante">{S[7].heading}</h2>
+        <h2 id="titulo-taller" class="titulo-gigante pincelada">{S[7].heading}</h2>
         <p class="texto-suave">{S[7].text}</p>
         <ul class="contacto-lista">
           <li><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><div><strong>{es ? 'Taller' : 'Workshop'}</strong>{site.workshopArea[lang]}</div></li>

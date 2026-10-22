@@ -50,3 +50,13 @@ A petición del revisor, se reemplazó el lenguaje visual de la v2 (demasiado ce
 - Encabezado flotante en forma de píldora; pie con marca gigante y papel picado invertido.
 - El sistema es totalmente dependiente de tokens: las 15 paletas del selector siguen funcionando; se añadieron tokens para paneles (`panel-1/2/3`, `tinta-panel`), texto sobre acento (`sobre-acento`) y realce (`realce`) para mantener el contraste AA en paletas claras y oscuras.
 - La v2 queda guardada en la etiqueta `v2-papel` y su paleta de colores sobrevive como opción «Papel».
+
+### Revisión 4b · más movimiento
+
+- Portada: la criatura recortada de su fondo de estudio (recorte semiautomático con OpenCV: modelo de color del fondo, relleno desde el borde y GrabCut sembrado) flota libre sobre el halo y el anillo punteado, con sombra proyectada. El archivo original sigue usándose como imagen Open Graph.
+- Pinceladas: los títulos principales reciben una pincelada ondulada que se pinta de izquierda a derecha al entrar en pantalla.
+- Obras en Inicio: tira horizontal con desplazamiento por tramos (scroll-snap), botones anterior/siguiente y flechas de teclado.
+- Transición entre páginas (view transitions): la página saliente se desvanece hacia arriba y la entrante sube.
+- Barra de progreso de lectura con los filetes de colores, fija arriba.
+- Cifras de la galería que cuentan hasta su valor al entrar en pantalla.
+- Entrada escalonada del título, lema, texto y botones de la portada.

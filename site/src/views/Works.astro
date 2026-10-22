@@ -32,9 +32,9 @@ const enriched = await Promise.all(salas.map(async (s) => ({ ...s, items: await 
       <h1 id="titulo-galeria">{es ? 'Las obras de Felipe Linares Vargas' : 'The works of Felipe Linares Vargas'}</h1>
       <p>{es ? 'Alebrijes y calaveras modelados en papel y cartón, ordenados en salas como en un museo. Toca cualquier pieza para verla en grande y recorrer todas sus vistas; cada obra tiene además su propia página.' : 'Alebrijes and skeletons modeled in paper and cardboard, arranged in rooms like a museum. Tap any piece to see it large and browse all its views; each work also has its own page.'}</p>
       <ul class="galeria-cifras">
-        <li><strong>{works.length}</strong>{es ? 'obras' : 'works'}</li>
-        <li><strong>{totalFotos}</strong>{es ? 'fotografías' : 'photographs'}</li>
-        <li><strong>{salas.length}</strong>{es ? 'salas' : 'rooms'}</li>
+        <li><strong data-contar={works.length}>{works.length}</strong>{es ? 'obras' : 'works'}</li>
+        <li><strong data-contar={totalFotos}>{totalFotos}</strong>{es ? 'fotografías' : 'photographs'}</li>
+        <li><strong data-contar={salas.length}>{salas.length}</strong>{es ? 'salas' : 'rooms'}</li>
       </ul>
     </div>
   </section>

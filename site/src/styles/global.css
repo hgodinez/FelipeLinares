@@ -516,3 +516,36 @@ a.pieza-imagen:hover img { transform: scale(1.06); filter: saturate(1.2); }
 
 /* ---------- Archivo (lista) ---------- */
 .archivo-item { padding: 1rem 0; border-bottom: 1px solid var(--borde); }
+
+/* ---------- Portada con recorte ---------- */
+.portada-recorte .portada-marco::after { inset: 8% 4% 6% 4%; border-radius: 50%; }
+.portada-recorte .portada-marco::before { inset: 0 -4% 10% -4%; }
+.portada-recorte img { aspect-ratio: auto; object-fit: contain; border-radius: 0; box-shadow: none; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 24px color-mix(in srgb, var(--bermellon) 35%, transparent)); animation: flotar 7s ease-in-out infinite; }
+@media (max-width: 760px) { .portada-recorte img { aspect-ratio: auto; } }
+
+/* ---------- Pincelada bajo los títulos ---------- */
+.pincelada { position: relative; display: block; width: fit-content; max-width: 100%; padding-bottom: 0.18em; isolation: isolate; }
+.pincelada::after { content: ''; position: absolute; left: -0.05em; bottom: 0; width: 0; height: 0.32em; background: var(--pincel, var(--cempasuchil)); clip-path: polygon(0 42%, 6% 18%, 14% 48%, 23% 12%, 31% 40%, 40% 8%, 50% 44%, 60% 14%, 69% 46%, 78% 10%, 87% 40%, 100% 22%, 100% 70%, 92% 92%, 84% 60%, 74% 96%, 64% 58%, 54% 94%, 45% 62%, 35% 98%, 25% 60%, 16% 92%, 7% 64%, 0 88%); transition: width 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s; z-index: -1; opacity: 0.9; }
+.pincelada.visible::after, .visible .pincelada::after, html:not(.js) .pincelada::after { width: calc(100% + 0.1em); }
+.panel .pincelada::after, .seccion-crema .pincelada::after { --pincel: color-mix(in srgb, var(--blanco-puro) 70%, transparent); }
+.seccion-oscura .pincelada::after { --pincel: var(--bermellon); }
+
+/* ---------- Tira horizontal de obras ---------- */
+.tira-controles { display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1rem; }
+.tira-boton { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 2px solid var(--crema-texto); background: transparent; color: var(--crema-texto); font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease; }
+.tira-boton:hover { background: var(--cempasuchil); border-color: var(--cempasuchil); color: var(--sobre-acento); transform: scale(1.08); }
+ul.tira { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(16rem, 28vw, 22rem); grid-template-columns: none; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--margen); padding: 0.5rem calc((100vw - min(100vw - 2 * var(--margen), var(--ancho))) / 2) 1.25rem; margin-inline: calc(-1 * (100vw - min(100vw - 2 * var(--margen), var(--ancho))) / 2); width: 100vw; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+ul.tira::-webkit-scrollbar { display: none; }
+ul.tira > li { scroll-snap-align: start; }
+ul.tira:focus-visible { outline-offset: -3px; }
+@media (max-width: 560px) { ul.tira { grid-auto-columns: 78vw; } }
+
+/* ---------- Transiciones entre páginas ---------- */
+@keyframes vt-salir { to { opacity: 0; transform: translateY(-18px) scale(0.985); } }
+@keyframes vt-entrar { from { opacity: 0; transform: translateY(26px) scale(0.985); } }
+::view-transition-old(root) { animation: vt-salir 0.3s cubic-bezier(0.4, 0, 1, 1) both; }
+::view-transition-new(root) { animation: vt-entrar 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root) { animation: none; } }
+
+/* ---------- Barra de progreso ---------- */
+.progreso { position: fixed; left: 0; top: 0; z-index: 90; height: 5px; width: var(--progreso, 0%); background: var(--franjas); background-size: 216px 100%; pointer-events: none; transition: width 0.1s linear; }
