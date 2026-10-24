@@ -578,3 +578,10 @@ ul.muro.tira-galeria > li[hidden] { display: none; }
 .js.intro .portada [data-reveal].visible { animation-delay: calc(1.2s + var(--i, 0) * 130ms); }
 .intro .marquesina { animation: entrar-arriba 0.8s ease 1.9s both; }
 @media (prefers-reduced-motion: reduce) { .intro .picado li, .intro .portada-recorte .portada-marco, .intro .marquesina { animation: none !important; opacity: 1; } .js.intro .portada [data-reveal].visible { animation-delay: 0s; } }
+
+/* ---------- Crédito Plutus iQ ---------- */
+.pie .pie-plutus { position: relative; margin-top: 2rem; margin-bottom: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 245, 228, 0.12); display: flex; justify-content: flex-end; }
+.powered-by-plutus { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em; color: var(--crema-suave); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255, 245, 228, 0.18); transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
+.powered-by-plutus:hover { color: var(--cempasuchil); border-color: var(--cempasuchil); transform: translateY(-1px); }
+.powered-by-plutus img { width: 18px; height: 18px; border-radius: 4px; }
+@media (max-width: 760px) { .pie .pie-plutus { justify-content: flex-start; } }
