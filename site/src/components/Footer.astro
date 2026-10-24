@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { t } from '@/i18n/ui';
 import plutusLogo from '@/assets/plutusiq-logo.png';
+import plutusLogoBlanco from '@/assets/plutusiq-logo-blanco.png';
 import { route, type Lang, type RouteKey } from '@/i18n/routes';
 import PapelPicado from '@/components/PapelPicado.astro';
 import site from '@/data/site.json';
@@ -30,7 +31,8 @@ const year = new Date().getFullYear();
   </div>
   <div class="contenedor pie-plutus">
     <a href="https://plutusiq-ai.com/" target="_blank" rel="noopener noreferrer" class="powered-by-plutus">
-      <Image src={plutusLogo} alt="" width={36} height={36} loading="lazy" decoding="async" />
+      <Image src={plutusLogoBlanco} alt="" width={36} height={36} loading="lazy" decoding="async" class="plutus-blanco" />
+      <Image src={plutusLogo} alt="" width={36} height={36} loading="lazy" decoding="async" class="plutus-azul" />
       <span>Powered by Plutus iQ AI</span>
     </a>
   </div>

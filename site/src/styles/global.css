@@ -585,3 +585,6 @@ ul.muro.tira-galeria > li[hidden] { display: none; }
 .powered-by-plutus:hover { color: var(--cempasuchil); border-color: var(--cempasuchil); transform: translateY(-1px); }
 .powered-by-plutus img { width: 18px; height: 18px; border-radius: 4px; }
 @media (max-width: 760px) { .pie .pie-plutus { justify-content: flex-start; } }
+
+/* El pie es siempre oscuro: logo blanco; el azul queda para fondos claros si el pie cambia */
+.powered-by-plutus .plutus-azul { display: none; }
